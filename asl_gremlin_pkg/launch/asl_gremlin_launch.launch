@@ -1,0 +1,4 @@
+<launch>
+<rosparam command="load" file="$(find asl_gremlin_pkg)/config/default.yaml" />
+
+</launch>
