@@ -53,11 +53,10 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   Message1.msg
+#add_message_files(
+#    FILES
 #   Message2.msg
-# )
+#)
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -74,10 +73,10 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   geometry_msgs#   mavros_msgs#   nav_msgs#   sensor_msgs#   std_msgs
-# )
+#generate_messages(
+#    DEPENDENCIES
+#    geometry_msgs std_msgs sensor_msgs
+#)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -109,10 +108,10 @@ generate_dynamic_reconfigure_options(
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-  INCLUDE_DIRS include
-  LIBRARIES state_feedback utility_pkg
-  CATKIN_DEPENDS geometry_msgs mavros_msgs nav_msgs roscpp rospy sensor_msgs std_msgs  message_runtime
- utility_pkg
+      INCLUDE_DIRS include
+      LIBRARIES state_feedback utility_pkg
+      CATKIN_DEPENDS geometry_msgs mavros_msgs nav_msgs roscpp rospy sensor_msgs std_msgs message_runtime
+     utility_pkg
   #  DEPENDS system_lib
 )
 
@@ -133,12 +132,13 @@ add_library(${PROJECT_NAME}
             src/${PROJECT_NAME}/GetCompassHdg.cpp
             src/${PROJECT_NAME}/EncoderDataToOmega.cpp
             src/${PROJECT_NAME}/Gps2xy.cpp
+            src/${PROJECT_NAME}/FeedbackSelected.cpp
 )
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
 ## either from message generation or dynamic reconfigure
-# add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
@@ -146,6 +146,7 @@ add_library(${PROJECT_NAME}
 add_executable(encoder_to_pose          src/encoder_to_pose.cpp)
 add_executable(encoder_data_stamped     src/encoder_data_stamped.cpp)
 add_executable(gps_to_pose              src/gps_to_pose.cpp)
+add_executable(feedback_selected        src/feedback_selected.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -158,6 +159,7 @@ add_executable(gps_to_pose              src/gps_to_pose.cpp)
 add_dependencies(encoder_to_pose        ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(encoder_data_stamped   ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(gps_to_pose            ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(feedback_selected      ${PROJECT_NAME}_generate_messages_cpp)
 
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
@@ -165,6 +167,7 @@ add_dependencies(gps_to_pose            ${PROJECT_NAME}_generate_messages_cpp)
 target_link_libraries(encoder_to_pose           ${PROJECT_NAME} ${catkin_LIBRARIES})
 target_link_libraries(encoder_data_stamped      ${PROJECT_NAME} ${catkin_LIBRARIES})
 target_link_libraries(gps_to_pose               ${PROJECT_NAME} ${catkin_LIBRARIES})
+target_link_libraries(feedback_selected         ${PROJECT_NAME} ${catkin_LIBRARIES})
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )

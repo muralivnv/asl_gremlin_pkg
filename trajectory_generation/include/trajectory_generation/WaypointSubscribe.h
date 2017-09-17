@@ -1,5 +1,5 @@
-#ifndef TRAJECTORY_GENERATION__WAYPOINT_SUBSCRIBE_H
-#define TRAJECTORY_GENERATION__WAYPOINT_SUBSCRIBE_H
+#ifndef _trajectory_generation_WAYPOINTSUBSCRIBE_H_
+#define _trajectory_generation_WAYPOINTSUBSCRIBE_H_
 
 #include <iostream> 
 #include <vector> 

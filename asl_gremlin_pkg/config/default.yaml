@@ -10,12 +10,14 @@ asl_gremlin:
         left_encoder_ticks_per_meter: 8268.5
         right_encoder_ticks_per_meter: 8269.3
         omega_to_pwm:
-            omega: [-12.98,  -12.659,  -12.338,  -11.474,  -10.881,  -10.24,  -9.0049,  -7.4494,  -4.7247,  -4.0704,   -3.9914,  -3.0494,  -2.9877,  -0.0005,  -0.000005,
-                     0, 0.0005, 2.9877, 3.0494, 3.9914, 4.0704, 4.7247, 7.4494, 9.0049, 10.24, 10.881, 11.474, 12.338, 12.659, 12.98]
+            omega: [-12.98,-12.659,-12.338,-11.474,-10.881,-10.24,-9.0049,
+                    -7.4494,-4.7247,-4.0704,-3.9914,-3.0494,-2.9877,-0.0005,
+                    -0.000005,0,0.0005,2.9877,3.0494,3.9914,4.0704,4.7247,7.4494,
+                    9.0049,10.24,10.881,11.474,12.338,12.659,12.98]
 
-            pwm: [-200, -185, -165, -145, -125, -105, -85, -65, -45, -40, -39, -37, -36, -35, -33,
-                    33, 35, 36, 37, 39, 40, 45, 65, 85, 105, 125, 145, 165, 185, 200]
-
+            pwm: [-200,-185,-165,-145,-125,-105,-85,-65,-45,-40,-39,-37,-36,-35,
+                    -33,33,35,36,37,39,40,45,65,85,105,125,145,165,185,200]
+# Topic Names
     trajectory:
         publisher_topic: /asl_gremlin/trajectory_generation/reference_trajectory
         waypoint_server_topic: /asl_gremlin/trajectory_generation/set_parameters
@@ -31,4 +33,6 @@ asl_gremlin:
             right_timeStamped_topic: /asl_gremlin/state_feedback/encoder_right_timeStamped
         gps:
             pose_topic: /asl_gremlin/state_feedback/position_from_gps
+
+        feedback_selected: /asl_gremlin/state_feedback/selected_feedback
 

@@ -3,7 +3,7 @@
 #include <trajectory_generation/WaypointSubscribe.h>
 #include <ros/ros.h>
 #include <ros/time.h>
-#include <trajectory_generation/ref_traj.h>
+#include <asl_gremlin_msgs/RefTraj.h>
 #include <utility_pkg/str_manip.h>
 #include <string>
 
@@ -35,7 +35,7 @@ int main(int argc, char** argv)
         ros::shutdown();
     }
 
-    ros::Publisher traj_pub = traj_nh.advertise<trajectory_generation::ref_traj>(traj_pub_name, 10);
+    ros::Publisher traj_pub = traj_nh.advertise<asl_gremlin_msgs::RefTraj>(traj_pub_name, 10);
 
     ros::Rate loop_rate(10);
 

@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
-  <name>trajectory_generation</name>
+  <name>asl_gremlin_msgs</name>
   <version>0.0.0</version>
-  <description>The trajectory_generation package</description>
+  <description>The asl_gremlin_msgs package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
@@ -19,7 +19,7 @@
   <!-- Url tags are optional, but multiple are allowed, one per tag -->
   <!-- Optional attribute type can be: website, bugtracker, or repository -->
   <!-- Example: -->
-  <!-- <url type="website">http://wiki.ros.org/trajectory_generation</url> -->
+  <!-- <url type="website">http://wiki.ros.org/asl_gremlin_msgs</url> -->
 
 
   <!-- Author tags are optional, multiple are allowed, one per tag -->
@@ -41,25 +41,22 @@
   <!--   <test_depend>gtest</test_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>geometry_msgs</build_depend>
-  <build_depend>nav_msgs</build_depend>
+  <build_depend>mavros_msgs</build_depend>
   <build_depend>roscpp</build_depend>
   <build_depend>rospy</build_depend>
   <build_depend>sensor_msgs</build_depend>
   <build_depend>std_msgs</build_depend>
-  <build_depend>dynamic_reconfigure</build_depend>
+  <build_depend>message_generation</build_depend>
   <build_depend>message_runtime</build_depend>
-  <build_depend>utility_pkg </build_depend>
-
 
   <run_depend>geometry_msgs</run_depend>
-  <run_depend>nav_msgs</run_depend>
+  <run_depend>mavros_msgs</run_depend>
   <run_depend>roscpp</run_depend>
   <run_depend>rospy</run_depend>
   <run_depend>sensor_msgs</run_depend>
   <run_depend>std_msgs</run_depend>
-  <run_depend>dynamic_reconfigure</run_depend>
+  <run_depend>message_generation</run_depend>
   <run_depend>message_runtime</run_depend>
-  <run_depend> utility_pkg </run_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->

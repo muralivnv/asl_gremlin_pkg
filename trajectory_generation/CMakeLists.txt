@@ -53,11 +53,10 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-add_message_files(
-   FILES
-   ref_traj.msg
-#   Message2.msg
-)
+# add_message_files(
+#    FILES
+#   Message1.msg
+# )
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -74,11 +73,11 @@ add_message_files(
 # )
 
 ## Generate added messages and services with any dependencies listed here
-generate_messages(
-    DEPENDENCIES
-    std_msgs
+# generate_messages(
+#    DEPENDENCIES
+#    std_msgs
     # geometry_msgs   nav_msgs   sensor_msgs   std_msgs
-)
+    # )
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -135,6 +134,7 @@ add_library(${PROJECT_NAME}
     src/${PROJECT_NAME}/WaypointSubscribe.cpp
     src/${PROJECT_NAME}/trajectory_publisher.cpp
     src/${PROJECT_NAME}/TrajectoryBase.cpp
+    src/${PROJECT_NAME}/DistanceToWaypoint.cpp
 )
 
 ## Add cmake target dependencies of the library
@@ -146,9 +146,8 @@ add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EX
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(trajectory_generator src/trajectory_generator.cpp )
 add_executable(waypointSet_client src/waypointSet_client.cpp)
-add_executable(trajectory_generator_node_v2 src/trajectory_generator_node_v2.cpp)
+add_executable(trajectory_generator_node src/trajectory_generator_node.cpp)
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use
@@ -157,14 +156,12 @@ add_executable(trajectory_generator_node_v2 src/trajectory_generator_node_v2.cpp
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-add_dependencies(trajectory_generator ${PROJECT_NAME}_gencfg ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(waypointSet_client  ${PROJECT_NAME}_gencfg ${PROJECT_NAME}_generate_messages_cpp)
-add_dependencies(trajectory_generator_node_v2 ${PROJECT_NAME}_gencfg ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(trajectory_generator_node ${PROJECT_NAME}_gencfg ${PROJECT_NAME}_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(trajectory_generator ${catkin_LIBRARIES})
 target_link_libraries(waypointSet_client  ${catkin_LIBRARIES})
-target_link_libraries(trajectory_generator_node_v2 ${PROJECT_NAME} ${catkin_LIBRARIES})
+target_link_libraries(trajectory_generator_node ${PROJECT_NAME} ${catkin_LIBRARIES})
 #############
 ## Install ##
 #############
@@ -186,10 +183,10 @@ target_link_libraries(trajectory_generator_node_v2 ${PROJECT_NAME} ${catkin_LIBR
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 # )
 
-install (DIRECTORY include/${PROJECT_NAME}/
-        DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-        FILES_MATCHING PATTERN "*.hpp"
-        PATTERN ".svn" EXCLUDE)
+#install (DIRECTORY include/${PROJECT_NAME}/
+#        DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+#        FILES_MATCHING PATTERN "*.hpp"
+#        PATTERN ".svn" EXCLUDE)
 
 ## Mark cpp header files for installation
 # install(DIRECTORY include/${PROJECT_NAME}/

@@ -4,7 +4,7 @@
 #include <iostream>
 #include "TrajectoryBase.h"
 #include <array>
-#include <trajectory_generation/ref_traj.h>
+#include <asl_gremlin_msgs/RefTraj.h>
 #include <ros/ros.h>
 #include <ros/time.h>
 #include "EvaluatePolynomial.h"
@@ -25,7 +25,7 @@ class MinimumJerkTrajectory :
         void calc_coeff() override;
         void generate_traj(double) override;
 
-        trajectory_generation::ref_traj* get_trajectory() override;
+        asl_gremlin_msgs::RefTraj* get_trajectory() override;
 
     private:
         T* params_ = nullptr;
@@ -37,7 +37,7 @@ class MinimumJerkTrajectory :
         double x_final_ = 0.0, y_final_ = 0.0;
         double t_initial_ = 0.0, t_final_ = 0.0;
         
-        trajectory_generation::ref_traj ref_traj_obj_;
+        asl_gremlin_msgs::RefTraj ref_traj_obj_;
         void calc_x_coeff_(double);
         void calc_y_coeff_(double);
         int msg_count = 0;
@@ -121,7 +121,7 @@ void MinimumJerkTrajectory<T>::generate_traj(double time)
 }
 
 template<typename T>
-trajectory_generation::ref_traj* MinimumJerkTrajectory<T>::get_trajectory()
+asl_gremlin_msgs::RefTraj* MinimumJerkTrajectory<T>::get_trajectory()
 {
     return &ref_traj_obj_;
 }
