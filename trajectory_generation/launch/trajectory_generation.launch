@@ -3,7 +3,7 @@
 <node   ns="asl_gremlin"
         name="trajectory_generation" 
         pkg="trajectory_generation" 
-        type="trajectory_generator_node_v2" 
+        type="trajectory_generator_node" 
         respawn="true" 
         output="screen"/>
 
