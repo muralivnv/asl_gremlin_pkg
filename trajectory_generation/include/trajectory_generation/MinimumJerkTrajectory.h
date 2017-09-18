@@ -30,8 +30,8 @@ class MinimumJerkTrajectory :
     private:
         T* params_ = nullptr;
 
-        std::array<double, 6> x_coeff_;
-        std::array<double, 6> y_coeff_;
+        std::array<double, 6> x_coeff_{{0,0,0,0,0,0}};
+        std::array<double, 6> y_coeff_{{0,0,0,0,0,0}};
 
         double x_ini_ = 0.0, y_ini_ = 0.0;
         double x_final_ = 0.0, y_final_ = 0.0;

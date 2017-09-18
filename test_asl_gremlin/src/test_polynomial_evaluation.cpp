@@ -36,7 +36,8 @@ int main(int argc, char** argv)
     std::vector<double> waypoint{10,20};
     
     std::ofstream file_write("reference_traj.dat");
-    assert(file_write.is_open());
+    assert( file_write.is_open() );
+
     file_write << "#time  " <<"#x  "<<"#x_dot  "<<"#x_ddot  "<<"#y  "<<"#y_dot  "<<"y_ddot" <<'\n';
     
     double initial_time = 0;
