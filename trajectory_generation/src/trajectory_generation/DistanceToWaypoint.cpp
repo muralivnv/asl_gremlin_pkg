@@ -11,7 +11,7 @@ DistanceToWaypoint::DistanceToWaypoint(ros::NodeHandle& nh)
         utility_pkg::throw_error_and_shutdown("/asl_gremlin/state_feedback/feedback_selected",__LINE__);
     }
 
-    vehicle_state_sub_ = nh.subscribe(feedback_selected_topic, 10
+    vehicle_state_sub_ = nh.subscribe(feedback_selected_topic, 10,
                                      &DistanceToWaypoint::vehicle_state_callback,
                                      this);
     ros::spinOnce();

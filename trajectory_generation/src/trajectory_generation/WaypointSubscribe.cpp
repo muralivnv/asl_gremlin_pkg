@@ -4,6 +4,14 @@ std::vector<double> WaypointSubscribe::x_waypoints_ = {0};
 std::vector<double> WaypointSubscribe::y_waypoints_ = {0};
 
 
+WaypointSubscribe::WaypointSubscribe(ros::NodeHandle& nh)
+{
+    fun_ = boost::bind(&WaypointSubscribe::dynamic_reconfigure_waypointSet_callback,
+                       _1, _2);
+
+    dr_wp_srv_.setCallback(fun_);
+}
+
 void WaypointSubscribe::dynamic_reconfigure_waypointSet_callback(trajectory_generation::waypointSetConfig & config,  uint32_t level)
 {
     x_waypoints_ = utility_pkg::string_to_vector<double>(config.X_waypoint);
