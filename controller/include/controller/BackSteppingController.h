@@ -9,10 +9,11 @@
 #include <controller/controllerGainSetConfig.h>
 #include "controller_utilities.h"
 #include <dynamic_reconfigure/server.h>
+#include <asl_gremlin_msgs/MotorCmd.h>
 
 using namespace controller;
 
-#define sign(x) (x>0?1:-1)
+#define sign(x) (x>0?1:(x==0?0:-1))
 
 namespace controller{
 

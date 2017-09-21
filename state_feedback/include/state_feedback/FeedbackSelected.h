@@ -33,6 +33,7 @@ class FeedbackSelected{
     dynamic_reconfigure::Server<feedbackSelectConfig>::CallbackType fun_;
 
     ros::Publisher feedback_pub_;
+    ros::Subscriber gps_pose_sub_, enco_pose_sub_;
 
     GetCompassHdg* compass_hdg_;
 
@@ -54,18 +55,37 @@ FeedbackSelected<N>::FeedbackSelected(ros::NodeHandle& nh) : pose_(new pose_type
 
     dr_feedback_srv_.setCallback(fun_);
 
-    std::string feedback_topic;
+    std::string feedback_topic, enco_pose_topic, gps_pose_topic;
+
     if (!nh.getParam("/asl_gremlin/state_feedback/feedback_selected", feedback_topic))
     {
         utility_pkg::throw_error_and_shutdown("/asl_gremlin/state_feedback/feedback_selected",
                                                 __LINE__);
     }
+    if (!nh.getParam("/asl_gremlin/state_feedback/encoder/pose_topic", enco_pose_topic))
+    {
+        utility_pkg::throw_error_and_shutdown("/asl_gremlin/state_feedback/encoder/pose_topic",
+                                                __LINE__);
+    }
+
+    if (!nh.getParam("/asl_gremlin/state_feedback/gps/pose_topic", gps_pose_topic))
+    {
+        utility_pkg::throw_error_and_shutdown("/asl_gremlin/state_feedback/gps/pose_topic",
+                                                __LINE__);
+    }
+
+    
     feedback_pub_ = nh.advertise<pose_type>(feedback_topic, 10);
+
+    gps_pose_sub_ = nh.subscribe(gps_pose_topic, 10, 
+                                    &FeedbackSelected<N>::gps_to_pose_callback,this);
+
+    enco_pose_sub_ = nh.subscribe(enco_pose_topic, 10, 
+                                    &FeedbackSelected<N>::encoder_to_pose_callback,this);
 
     compass_hdg_ = new GetCompassHdg(nh);
 
     ros::spinOnce();
-
 }
 
 template<int N>
