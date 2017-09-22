@@ -55,6 +55,7 @@ add_message_files(
       FILES
       VehicleState.msg
       MotorCmd.msg
+      MotorAngVel.msg
       RefTraj.msg
 )
 

@@ -29,6 +29,7 @@ asl_gremlin:
     state_feedback:
         encoder:
             pose_topic: /asl_gremlin/state_feedback/position_from_encoder
+            ang_vel_topic: /asl_gremlin/state_feedback/encoder/actual_ang_vel
             left_timeStamped_topic: /asl_gremlin/state_feedback/encoder_left_timeStamped
             right_timeStamped_topic: /asl_gremlin/state_feedback/encoder_right_timeStamped
         gps:
