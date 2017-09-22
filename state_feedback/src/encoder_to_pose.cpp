@@ -1,7 +1,7 @@
 #include <ros/ros.h>
 #include <geometry_msgs/PointStamped.h>
 #include <state_feedback/ForwardEuler.h>
-#include <state_feedback/EncoderDataToOmega.h>
+#include <state_feedback/GetConvertedOmega.h>
 #include <state_feedback/GetCompassHdg.h>
 #include <array>
 #include <cmath>
@@ -43,7 +43,8 @@ int main(int argc, char** argv)
         ros::shutdown();
     }
     ros::Publisher encoder_data_pub = enco2w_nh.advertise<geometry_msgs::PointStamped>(encoder_pub_name,10);
-    EncoderDataToOmega encoder_data_to_omega(enco2w_nh);
+
+    GetConvertedOmega actual_angular_vel(enco2w_nh);
     GetCompassHdg compass_hdg(enco2w_nh);
 
     roverParam params;
@@ -67,12 +68,13 @@ int main(int argc, char** argv)
     encoder_pose.header.frame_id = "local_tangent_enu";
 
     encoder_data_pub.publish(encoder_pose);
+    asl_gremlin_msgs::MotorAngVel* actual_omega;
 
     while(ros::ok())
     {
-        encoder_data_to_omega.calculate_angular_velocities();
-        params.wl = encoder_data_to_omega.get_left_wheel_angular_vel();
-        params.wr = encoder_data_to_omega.get_right_wheel_angular_vel();
+        actual_omega = actual_angular_vel.get_ang_vel();
+        params.wl = actual_omega->wl;
+        params.wr = actual_omega->wr;
 
         initial_states[2] = compass_hdg.data_ENU() * deg2rad;
 

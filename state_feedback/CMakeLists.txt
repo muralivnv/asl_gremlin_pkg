@@ -133,6 +133,7 @@ add_library(${PROJECT_NAME}
             src/${PROJECT_NAME}/EncoderDataToOmega.cpp
             src/${PROJECT_NAME}/Gps2xy.cpp
             src/${PROJECT_NAME}/FeedbackSelected.cpp
+            src/${PROJECT_NAME}/GetConvertedOmega.cpp
 )
 
 ## Add cmake target dependencies of the library
