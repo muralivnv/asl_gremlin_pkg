@@ -146,6 +146,7 @@ add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EX
 # add_executable(${PROJECT_NAME}_node src/controller_node.cpp)
 add_executable(controllerGainSet_client src/controllerGainSet_client.cpp)
 add_executable(backstepping_controller_node src/backstepping_controller_node.cpp)
+add_executable(angular_vel_to_pwm_node src/angular_vel_to_pwm_node.cpp)
 
 
 ## Rename C++ executable without prefix
@@ -159,6 +160,7 @@ add_executable(backstepping_controller_node src/backstepping_controller_node.cpp
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(controllerGainSet_client ${PROJECT_NAME}_gencfg)
 add_dependencies(backstepping_controller_node ${PROJECT_NAME}_generate_messages_cpp ${PROJECT_NAME}_gencfg)
+add_dependencies(angular_vel_to_pwm_node ${PROJECT_NAME}_generate_messages_cpp ${PROJECT_NAME}_gencfg)
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(${PROJECT_NAME}_node
@@ -166,6 +168,7 @@ add_dependencies(backstepping_controller_node ${PROJECT_NAME}_generate_messages_
 # )
 target_link_libraries(controllerGainSet_client ${catkin_LIBRARIES})
 target_link_libraries(backstepping_controller_node ${PROJECT_NAME} ${catkin_LIBRARIES})
+target_link_libraries(angular_vel_to_pwm_node ${PROJECT_NAME} ${catkin_LIBRARIES})
 #############
 ## Install ##
 #############

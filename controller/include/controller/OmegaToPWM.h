@@ -20,7 +20,7 @@ class OmegaToPWM{
     public:
         OmegaToPWM(ros::NodeHandle&);
         ~OmegaToPWM();
-        asl_gremlin_msgs::MotorPwm* convert_omega_to_pwm(double);
+        asl_gremlin_msgs::MotorPwm* convert_omega_to_pwm();
         void ang_vel_callback(const asl_gremlin_msgs::MotorAngVel::ConstPtr);
 
 };
