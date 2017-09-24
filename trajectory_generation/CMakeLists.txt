@@ -131,11 +131,11 @@ include_directories(
 
 ## Declare a C++ library
 add_library(${PROJECT_NAME}
-    src/${PROJECT_NAME}/MinimumJerkTrajectory.cpp 
-    src/${PROJECT_NAME}/WaypointSubscribe.cpp
-    src/${PROJECT_NAME}/trajectory_publisher.cpp
-    src/${PROJECT_NAME}/TrajectoryBase.cpp
-    src/${PROJECT_NAME}/DistanceToWaypoint.cpp
+            src/${PROJECT_NAME}/MinimumJerkTrajectory.cpp 
+            src/${PROJECT_NAME}/WaypointSubscribe.cpp
+            src/${PROJECT_NAME}/trajectory_publisher.cpp
+            src/${PROJECT_NAME}/TrajectoryBase.cpp
+            src/${PROJECT_NAME}/DistanceToWaypoint.cpp
 )
 
 ## Add cmake target dependencies of the library

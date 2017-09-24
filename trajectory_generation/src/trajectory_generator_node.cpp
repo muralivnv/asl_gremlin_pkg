@@ -4,7 +4,6 @@
 #include <trajectory_generation/DistanceToWaypoint.h>
 #include <asl_gremlin_pkg/StartSim.h>
 #include <asl_gremlin_msgs/RefTraj.h>
-#include <utility_pkg/str_manip.h>
 
 #include <ros/ros.h>
 #include <ros/time.h>
@@ -16,7 +15,6 @@ using namespace trajectory_generation;
 struct traj_params{
    double accel_max = 0.5;
 };
-
 
 int main(int argc, char** argv)
 {
@@ -56,7 +54,6 @@ int main(int argc, char** argv)
                 waypoint = waypoint_stack.get_current_waypoint();
                 dist_to_wp->set_waypoint(waypoint[0], waypoint[1]);
                 
-                min_jerk_traj->update_start_time(ros::Time::now().toSec());
                 min_jerk_traj->set_final_pose(waypoint[0], waypoint[1]);
                 min_jerk_traj->calc_coeff();
 
@@ -70,7 +67,6 @@ int main(int argc, char** argv)
                 waypoint = waypoint_stack.get_next_waypoint();
                 dist_to_wp->set_waypoint(waypoint[0], waypoint[1]);
                 
-                min_jerk_traj->update_start_time(ros::Time::now().toSec());
                 min_jerk_traj->set_final_pose(waypoint[0], waypoint[1]);
                 min_jerk_traj->calc_coeff();
             }

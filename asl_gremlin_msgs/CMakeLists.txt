@@ -57,6 +57,7 @@ add_message_files(
       MotorCmd.msg
       MotorAngVel.msg
       RefTraj.msg
+      MotorPwm.msg
 )
 
 ## Generate services in the 'srv' folder

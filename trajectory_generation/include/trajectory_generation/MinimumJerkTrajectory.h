@@ -70,6 +70,7 @@ void MinimumJerkTrajectory<T>::set_final_pose(  double x_final,
                                                 double y_final,
                                                 double theta_final)
 {
+    update_start_time(ros::Time::now().toSec());
     x_final_ = x_final;
     y_final_ = y_final;
 }

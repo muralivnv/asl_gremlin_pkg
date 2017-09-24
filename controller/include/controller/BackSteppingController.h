@@ -81,5 +81,5 @@ std::array<double, 2> BackSteppingController<ref_state_type, act_state_type>::ge
 }
 
 
-} // end namespace
+} // end namespace {controller}
 #endif
