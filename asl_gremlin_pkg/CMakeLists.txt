@@ -125,6 +125,7 @@ include_directories(
 ## Declare a C++ library
 add_library(${PROJECT_NAME}
                 src/${PROJECT_NAME}/StartSim.cpp
+                src/${PROJECT_NAME}/SubscribeTopic.cpp
 )
 
 ## Add cmake target dependencies of the library

@@ -7,8 +7,8 @@
 #include <ros/time.h>
 
 #include <string>
-#include <fstream>
-#include <cassert>
+//#include <fstream>
+//#include <cassert>
 
 using namespace trajectory_generation;
 
@@ -35,10 +35,10 @@ int main(int argc, char** argv)
     bool updated_ini_params = false;
     std::vector<double> waypoint{10,20};
     
-    std::ofstream file_write("reference_traj.dat");
-    assert( file_write.is_open() );
+  //  std::ofstream file_write("reference_traj.dat");
+  //  assert( file_write.is_open() );
 
-    file_write << "#time  " <<"#x  "<<"#x_dot  "<<"#x_ddot  "<<"#y  "<<"#y_dot  "<<"y_ddot" <<'\n';
+  //  file_write << "#time  " <<"#x  "<<"#x_dot  "<<"#x_ddot  "<<"#y  "<<"#y_dot  "<<"y_ddot" <<'\n';
     
     double initial_time = 0;
     asl_gremlin_msgs::RefTraj* traj;
@@ -61,10 +61,10 @@ int main(int argc, char** argv)
 
             min_jerk_traj->generate_traj(ros::Time::now().toSec());
             traj = min_jerk_traj->get_trajectory();
-            file_write << (traj->header.stamp.sec + traj->header.stamp.nsec*1e-9) - initial_time;
-            file_write << "  " << traj->x << "  "<< traj->x_dot << "  " << traj->x_ddot;
-            file_write << "  " << traj->y << "  "<< traj->y_dot << "  " << traj->y_ddot;
-            file_write << '\n';
+    //        file_write << (traj->header.stamp.sec + traj->header.stamp.nsec*1e-9) - initial_time;
+    //        file_write << "  " << traj->x << "  "<< traj->x_dot << "  " << traj->x_ddot;
+    //        file_write << "  " << traj->y << "  "<< traj->y_dot << "  " << traj->y_ddot;
+    //        file_write << '\n';
         }
 
         trajectory_generation::publish_trajectory(traj_pub, min_jerk_traj);
@@ -73,5 +73,5 @@ int main(int argc, char** argv)
         loop_rate.sleep();
     }
 
-    file_write.close();
+   // file_write.close();
 }

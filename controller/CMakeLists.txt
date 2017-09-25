@@ -8,6 +8,7 @@ add_compile_options(-std=c++14)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  asl_gremlin_pkg
   utility_pkg
   dynamic_reconfigure
   geometry_msgs
@@ -109,8 +110,8 @@ generate_dynamic_reconfigure_options(
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES controller utility_pkg 
-  CATKIN_DEPENDS dynamic_reconfigure geometry_msgs mavros_msgs nav_msgs roscpp rospy sensor_msgs std_msgs utility_pkg
+  LIBRARIES controller utility_pkg asl_gremlin_pkg
+  CATKIN_DEPENDS dynamic_reconfigure geometry_msgs mavros_msgs nav_msgs roscpp rospy sensor_msgs std_msgs utility_pkg asl_gremlin_pkg
   DEPENDS system_lib
 )
 
@@ -130,9 +131,6 @@ include_directories(
             src/${PROJECT_NAME}/ControllerBase.cpp
             src/${PROJECT_NAME}/BackSteppingController.cpp
             src/${PROJECT_NAME}/OmegaToPWM.cpp
-            src/${PROJECT_NAME}/GetRefTraj.cpp
-            src/${PROJECT_NAME}/GetSelectedFeedback.cpp
-
 )
 
 ## Add cmake target dependencies of the library
