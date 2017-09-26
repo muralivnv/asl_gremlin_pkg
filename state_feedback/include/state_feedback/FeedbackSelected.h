@@ -9,6 +9,7 @@
 #include <utility_pkg/error_util.h>
 #include <array>
 #include <asl_gremlin_msgs/VehicleState.h>
+#include <asl_gremlin_pkg/SubscribeTopic.h>
 #include "GetCompassHdg.h"
 
 enum Feedback{
@@ -33,17 +34,18 @@ class FeedbackSelected{
     dynamic_reconfigure::Server<feedbackSelectConfig>::CallbackType fun_;
 
     ros::Publisher feedback_pub_;
-    ros::Subscriber gps_pose_sub_, enco_pose_sub_;
-
-    GetCompassHdg* compass_hdg_;
+    
+    asl_gremlin_pkg::SubscribeTopic<geometry_msgs::PointStamped>* gps_pose_data_;
+    asl_gremlin_pkg::SubscribeTopic<geometry_msgs::PointStamped>* enco_pose_data_;
+    asl_gremlin_pkg::SubscribeTopic<std_msgs::Float64>* compass_data_;
 
     public:
         FeedbackSelected(ros::NodeHandle&);
         ~FeedbackSelected();
 
         void dynamic_reconfigure_feedback_callback(feedbackSelectConfig& , uint32_t);
-        void gps_to_pose_callback(const geometry_msgs::PointStamped::ConstPtr );
-        void encoder_to_pose_callback(const geometry_msgs::PointStamped::ConstPtr );
+        void get_gps_data();
+        void get_enco_data();
         void publish();
 };
 
@@ -77,13 +79,9 @@ FeedbackSelected<N>::FeedbackSelected(ros::NodeHandle& nh) : pose_(new pose_type
     
     feedback_pub_ = nh.advertise<pose_type>(feedback_topic, 10);
 
-    gps_pose_sub_ = nh.subscribe(gps_pose_topic, 10, 
-                                    &FeedbackSelected<N>::gps_to_pose_callback,this);
-
-    enco_pose_sub_ = nh.subscribe(enco_pose_topic, 10, 
-                                    &FeedbackSelected<N>::encoder_to_pose_callback,this);
-
-    compass_hdg_ = new GetCompassHdg(nh);
+    gps_pose_data_  = new asl_gremlin_pkg::SubscribeTopic<geometry_msgs::PointStamped>(nh, gps_pose_topic,10);
+    enco_pose_data_ = new asl_gremlin_pkg::SubscribeTopic<geometry_msgs::PointStamped>(nh, enco_pose_topic,10);
+    compass_data_   = new asl_gremlin_pkg::SubscribeTopic<std_msgs::Float64>(nh,"/mavros/global_position/compass_hdg" ,10);
 
     ros::spinOnce();
 }
@@ -92,7 +90,9 @@ template<int N>
 FeedbackSelected<N>::~FeedbackSelected()
 {
     delete[] pose_;
-    delete compass_hdg_;
+    delete compass_data_;
+    delete gps_pose_data_;
+    delete enco_pose_data_;
 }
 
 template<int N>
@@ -102,34 +102,33 @@ void FeedbackSelected<N>::dynamic_reconfigure_feedback_callback(feedbackSelectCo
 }
 
 template<int N>
-void FeedbackSelected<N>::gps_to_pose_callback(const geometry_msgs::PointStamped::ConstPtr data)
+void FeedbackSelected<N>::get_gps_data()
 {
-    double theta_enu = compass_hdg_->data_ENU();
+    double theta_enu = (compass_data_->get_data())->data;
 
-    pose_[0].pose.point = data->point;
-    pose_[0].pose.header = data->header;
-    pose_[0].heading = theta_enu;
+    pose_[0].pose.point  = (gps_pose_data_->get_data())->point;
+    pose_[0].pose.header = (gps_pose_data_->get_data())->header;
+    pose_[0].heading     = theta_enu;
 
-    pose_[1].pose.point.z = data->point.z;
+    pose_[1].pose.point.z = (gps_pose_data_->get_data())->point.z;
     pose_[1].heading = theta_enu;
     
-    double theta_gps = std::atan2(data->point.y - pose_[2].pose.point.y,
-                                    data->point.x - pose_[2].pose.point.x);
+    double theta_gps = std::atan2((gps_pose_data_->get_data())->point.y - pose_[2].pose.point.y,
+                                    (gps_pose_data_->get_data())->point.x - pose_[2].pose.point.x);
 
-    pose_[2].pose.point = data->point;
-    pose_[2].pose.header = data->header;
-    pose_[2].heading = theta_gps;
+    pose_[2].pose.point  = (gps_pose_data_->get_data())->point;
+    pose_[2].pose.header = (gps_pose_data_->get_data())->header;
+    pose_[2].heading     = theta_gps;
 }
 
 
 template<int N>
-void FeedbackSelected<N>::encoder_to_pose_callback(const geometry_msgs::PointStamped::ConstPtr data)
+void FeedbackSelected<N>::get_enco_data()
 {
-    pose_[1].pose.header = data->header;
-    pose_[1].pose.point.x = data->point.x;
-    pose_[1].pose.point.y = data->point.y;
+    pose_[1].pose.header = (enco_pose_data_->get_data())->header;
+    pose_[1].pose.point.x = (enco_pose_data_->get_data())->point.x;
+    pose_[1].pose.point.y = (enco_pose_data_->get_data())->point.y;
 }
-
 
 template<int N>
 void FeedbackSelected<N>::publish()
@@ -138,4 +137,6 @@ void FeedbackSelected<N>::publish()
 }
 
 } // end namespace { state_feedback}
+
+
 #endif
