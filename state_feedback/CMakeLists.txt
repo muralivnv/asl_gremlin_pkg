@@ -9,6 +9,7 @@ add_compile_options(-std=c++14 -g)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   utility_pkg
+  asl_gremlin_pkg
   dynamic_reconfigure
   geometry_msgs
   mavros_msgs
@@ -109,9 +110,9 @@ generate_dynamic_reconfigure_options(
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
       INCLUDE_DIRS include
-      LIBRARIES state_feedback utility_pkg
+      LIBRARIES state_feedback utility_pkg asl_gremlin_pkg
       CATKIN_DEPENDS geometry_msgs mavros_msgs nav_msgs roscpp rospy sensor_msgs std_msgs message_runtime
-     utility_pkg
+     utility_pkg asl_gremlin_pkg
   #  DEPENDS system_lib
 )
 

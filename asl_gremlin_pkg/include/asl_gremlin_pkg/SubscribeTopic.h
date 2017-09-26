@@ -16,7 +16,7 @@ class SubscribeTopic{
         SubscribeTopic(ros::NodeHandle&, 
                         const std::string& ,int = 20);
         ~SubscribeTopic();
-        void topic_callback(const typename T::ConstPtr);
+        void topic_callback(const typename T::ConstPtr& );
         T* get_data();
 };
 
@@ -40,8 +40,11 @@ SubscribeTopic<T>::~SubscribeTopic()
 }
 
 template<typename T>
-void SubscribeTopic<T>::topic_callback(const typename T::ConstPtr topic_data)
+void SubscribeTopic<T>::topic_callback(const typename T::ConstPtr& topic_data)
 {
+    /* Can't use topic_data.get() as passed is const ptr 
+     *  Don't ever use "CONST_CAST" to remove the pointer constness
+    */
     *data_ = *(topic_data);
 }
 

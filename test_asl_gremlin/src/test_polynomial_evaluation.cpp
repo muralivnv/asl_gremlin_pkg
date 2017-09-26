@@ -1,6 +1,7 @@
 #include <trajectory_generation/MinimumJerkTrajectory.h>
 #include <trajectory_generation/trajectory_publisher.h>
-#include <asl_gremlin_pkg/StartSim.h>
+#include <std_msgs/Bool.h>
+#include <asl_gremlin_pkg/SubscribeTopic.h>
 #include <asl_gremlin_msgs/RefTraj.h>
 
 #include <ros/ros.h>
@@ -25,8 +26,8 @@ int main(int argc, char** argv)
     traj_params params;
 
     TrajectoryBase* min_jerk_traj = new MinimumJerkTrajectory<traj_params>(&params);
-    asl_gremlin_pkg::StartSim sim(traj_nh);
-    
+    asl_gremlin_pkg::SubscribeTopic<std_msgs::Bool> sim(traj_nh,"/asl_gremlin/start_sim"); 
+
     std::string traj_pub_name = "/asl_gremlin/trajectory_generation/test_poly";
     
     ros::Publisher traj_pub = traj_nh.advertise<asl_gremlin_msgs::RefTraj>(traj_pub_name, 10);
@@ -45,7 +46,7 @@ int main(int argc, char** argv)
 
     while(ros::ok())
     {
-        if ( sim.start() )
+        if ( (sim.get_data())->data )
         {
             if ( updated_ini_params == false )
             {

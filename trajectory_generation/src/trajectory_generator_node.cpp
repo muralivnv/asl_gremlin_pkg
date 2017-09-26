@@ -2,7 +2,8 @@
 #include <trajectory_generation/trajectory_publisher.h>
 #include <trajectory_generation/WaypointSubscribe.h>
 #include <trajectory_generation/DistanceToWaypoint.h>
-#include <asl_gremlin_pkg/StartSim.h>
+#include <std_msgs/Bool.h>
+#include <asl_gremlin_pkg/SubscribeTopic.h>
 #include <asl_gremlin_msgs/RefTraj.h>
 
 #include <ros/ros.h>
@@ -26,7 +27,8 @@ int main(int argc, char** argv)
     TrajectoryBase* min_jerk_traj = new MinimumJerkTrajectory<traj_params>(&params);
     WaypointSubscribe waypoint_stack(traj_nh);
     DistanceToWaypoint* dist_to_wp = new DistanceToWaypoint(traj_nh);
-    asl_gremlin_pkg::StartSim sim(traj_nh);
+
+    asl_gremlin_pkg::SubscribeTopic<std_msgs::Bool> sim(traj_nh,"/asl_gremlin/start_sim"); 
     
     std::string traj_pub_name;
     
@@ -45,7 +47,7 @@ int main(int argc, char** argv)
     
     while(ros::ok())
     {
-        if ( sim.start() )
+        if ( (sim.get_data())->data )
         {
             if ( updated_ini_params == false )
             {

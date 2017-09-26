@@ -3,6 +3,7 @@
 
 #include <ros/ros.h>
 #include <asl_gremlin_msgs/VehicleState.h>
+#include <asl_gremlin_pkg/SubscribeTopic.h>
 #include <utility_pkg/error_util.h>
 #include <cmath>
 #include <string>
@@ -11,14 +12,13 @@ namespace trajectory_generation{
 
 class DistanceToWaypoint{
     double x_wp_, y_wp_;
-    double x_current_, y_current_;
-    
-    ros::Subscriber vehicle_state_sub_;
+
+    asl_gremlin_pkg::SubscribeTopic<asl_gremlin_msgs::VehicleState>* vehicle_state_;
 
     public:
         DistanceToWaypoint(ros::NodeHandle&);
+        ~DistanceToWaypoint();
         
-        void vehicle_state_callback(const asl_gremlin_msgs::VehicleState::ConstPtr );
         void set_waypoint(double, double);
         bool is_reached_waypoint();
 };

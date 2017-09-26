@@ -8,20 +8,19 @@ DistanceToWaypoint::DistanceToWaypoint(ros::NodeHandle& nh)
     if (!nh.getParam("/asl_gremlin/state_feedback/feedback_selected", 
                         feedback_selected_topic))
     {
-        utility_pkg::throw_error_and_shutdown("/asl_gremlin/state_feedback/feedback_selected",__LINE__);
+        utility_pkg::throw_error_and_shutdown("/asl_gremlin/state_feedback/feedback_selected",
+                                                __LINE__);
     }
 
-    vehicle_state_sub_ = nh.subscribe(feedback_selected_topic, 10,
-                                     &DistanceToWaypoint::vehicle_state_callback,
-                                     this);
+    vehicle_state_ = new asl_gremlin_pkg::SubscribeTopic<asl_gremlin_msgs::VehicleState>
+                                                        (nh, feedback_selected_topic);
+
     ros::spinOnce();
 }
 
-
-void DistanceToWaypoint::vehicle_state_callback(const asl_gremlin_msgs::VehicleState::ConstPtr data)
+DistanceToWaypoint::~DistanceToWaypoint()
 {
-    x_current_ = data->pose.point.x;
-    y_current_ = data->pose.point.y;
+    delete vehicle_state_;
 }
 
 void DistanceToWaypoint::set_waypoint(double x, double y)
@@ -31,7 +30,10 @@ void DistanceToWaypoint::set_waypoint(double x, double y)
 
 bool DistanceToWaypoint::is_reached_waypoint()
 {
-    return std::sqrt( std::pow(x_current_ - x_wp_,2) + 
-                        (std::pow(y_current_ - y_wp_, 2))) < 
+    double x_current = (vehicle_state_->get_data())->pose.point.x;
+    double y_current = (vehicle_state_->get_data())->pose.point.y;
+
+    return std::sqrt( std::pow(x_current - x_wp_,2) + 
+                        (std::pow(y_current - y_wp_, 2))) < 
             0.8 ? true : false;
 }
