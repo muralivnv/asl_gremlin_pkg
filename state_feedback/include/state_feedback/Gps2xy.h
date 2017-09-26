@@ -22,7 +22,6 @@ class Gps2xy{
     const double eccen_sq = 0.0066943800; // eccentricity squared
 
 public:
-
     void update_ecef_ini();
     void geod2ecef();
     void ecef2enu();

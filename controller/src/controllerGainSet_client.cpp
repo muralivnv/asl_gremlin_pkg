@@ -9,7 +9,6 @@
 int main(int argc, char** argv)
 {
     ros::init(argc, argv, "controllerGainSet_client");
-
     ros::NodeHandle gain_nh;
 
     dynamic_reconfigure::ReconfigureRequest srv_req;

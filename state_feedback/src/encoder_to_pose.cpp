@@ -1,10 +1,15 @@
 #include <ros/ros.h>
 #include <geometry_msgs/PointStamped.h>
 #include <state_feedback/ForwardEuler.h>
-#include <state_feedback/GetConvertedOmega.h>
-#include <state_feedback/GetCompassHdg.h>
+#include <asl_gremlin_pkg/SubscribeTopic.h>
+#include <asl_gremlin_msgs/MotorAngVel.h>
+#include <std_msgs/Float64.h>
+#include <utility_pkg/error_util.h>
+#include <utility_pkg/utilities.h>
+
 #include <array>
 #include <cmath>
+#include <string>
 
 #define deg2rad M_PI/180.0
 
@@ -36,16 +41,23 @@ int main(int argc, char** argv)
     ros::init(argc, argv,"encoder_to_pose");
     ros::NodeHandle enco2w_nh;
 
-    std::string encoder_pub_name;
+    std::string encoder_pub_name, ang_vel_topic;
     if (!enco2w_nh.getParam("/asl_gremlin/state_feedback/encoder/pose_topic", encoder_pub_name) )
     {
-        ROS_ERROR("Can't access param /asl_gremlin/state_feedback/encoder/pose_topic");
-        ros::shutdown();
+        utility_pkg::throw_error_and_shutdown("/asl_gremlin/state_feedback/encoder/pose_topic",
+                                                __LINE__);
     }
+
     ros::Publisher encoder_data_pub = enco2w_nh.advertise<geometry_msgs::PointStamped>(encoder_pub_name,10);
 
-    GetConvertedOmega actual_angular_vel(enco2w_nh);
-    GetCompassHdg compass_hdg(enco2w_nh);
+    if(!enco2w_nh.getParam("/asl_gremlin/state_feedback/encoder/ang_vel_topic",ang_vel_topic))
+    {
+        utility_pkg::throw_error_and_shutdown("/asl_gremlin/state_feedback/encoder/ang_vel_topic",
+                                                __LINE__);
+    }
+
+    asl_gremlin_pkg::SubscribeTopic<asl_gremlin_msgs::MotorAngVel> actual_angular_vel(enco2w_nh, ang_vel_topic);
+    asl_gremlin_pkg::SubscribeTopic<std_msgs::Float64> compass_hdg(enco2w_nh, "/mavros/global_position/compass_hdg");
 
     roverParam params;
     geometry_msgs::PointStamped encoder_pose;
@@ -56,7 +68,8 @@ int main(int argc, char** argv)
     std::array<double, 3> initial_states{0,0,0};
 
     ros::spinOnce();
-    initial_states[2] = compass_hdg.data_ENU() * deg2rad;
+
+    initial_states[2] = utility_pkg::compass_angle_to_polar_angle((compass_hdg.get_data())->data) * deg2rad;
     double t_initial = 0.0, t_final = t_initial + forward_euler_step_size;
 
     int msg_count = 0;
@@ -72,16 +85,15 @@ int main(int argc, char** argv)
 
     while(ros::ok())
     {
-        actual_omega = actual_angular_vel.get_ang_vel();
+        actual_omega = actual_angular_vel.get_data();
         params.wl = actual_omega->wl;
         params.wr = actual_omega->wr;
 
-        initial_states[2] = compass_hdg.data_ENU() * deg2rad;
+        initial_states[2] = utility_pkg::compass_angle_to_polar_angle((compass_hdg.get_data())->data) * deg2rad;
 
         integrated_states = forwardEuler_integration(rover_kinematics,
-                                                initial_states,
-                                                t_initial, t_final, &params);
-
+                                                    initial_states,
+                                                    t_initial, t_final, &params);
         ++msg_count;
         encoder_pose.point.x = integrated_states[0];
         encoder_pose.point.y = integrated_states[1];
@@ -98,4 +110,3 @@ int main(int argc, char** argv)
         t_final = t_final + forward_euler_step_size;
     }
 }
-

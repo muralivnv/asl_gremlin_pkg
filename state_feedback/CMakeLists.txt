@@ -130,11 +130,9 @@ include_directories(
 ## Declare a C++ library
 add_library(${PROJECT_NAME}
             src/${PROJECT_NAME}/ForwardEuler.cpp
-            src/${PROJECT_NAME}/GetCompassHdg.cpp
             src/${PROJECT_NAME}/EncoderDataToOmega.cpp
             src/${PROJECT_NAME}/Gps2xy.cpp
             src/${PROJECT_NAME}/FeedbackSelected.cpp
-            src/${PROJECT_NAME}/GetConvertedOmega.cpp
 )
 
 ## Add cmake target dependencies of the library

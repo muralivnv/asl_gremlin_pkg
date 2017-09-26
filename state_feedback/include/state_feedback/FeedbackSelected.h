@@ -9,8 +9,9 @@
 #include <utility_pkg/error_util.h>
 #include <array>
 #include <asl_gremlin_msgs/VehicleState.h>
+#include <std_msgs/Float64.h>
 #include <asl_gremlin_pkg/SubscribeTopic.h>
-#include "GetCompassHdg.h"
+#include <utility_pkg/utilities.h>
 
 enum Feedback{
     gps_compass = 0,
@@ -104,7 +105,7 @@ void FeedbackSelected<N>::dynamic_reconfigure_feedback_callback(feedbackSelectCo
 template<int N>
 void FeedbackSelected<N>::get_gps_data()
 {
-    double theta_enu = (compass_data_->get_data())->data;
+    double theta_enu = utility_pkg::compass_angle_to_polar_angle((compass_data_->get_data())->data);
 
     pose_[0].pose.point  = (gps_pose_data_->get_data())->point;
     pose_[0].pose.header = (gps_pose_data_->get_data())->header;
