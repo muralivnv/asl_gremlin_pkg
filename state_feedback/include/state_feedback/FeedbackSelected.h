@@ -6,7 +6,7 @@
 #include <ros/ros.h>
 #include <geometry_msgs/PointStamped.h>
 #include <cmath>
-#include <utility_pkg/error_util.h>
+#include <asl_gremlin_pkg/GetParam.h>
 #include <array>
 #include <asl_gremlin_msgs/VehicleState.h>
 #include <std_msgs/Float64.h>
@@ -60,24 +60,12 @@ FeedbackSelected<N>::FeedbackSelected(ros::NodeHandle& nh) : pose_(new pose_type
 
     std::string feedback_topic, enco_pose_topic, gps_pose_topic;
 
-    if (!nh.getParam("/asl_gremlin/state_feedback/feedback_selected", feedback_topic))
-    {
-        utility_pkg::throw_error_and_shutdown("/asl_gremlin/state_feedback/feedback_selected",
-                                                __LINE__);
-    }
-    if (!nh.getParam("/asl_gremlin/state_feedback/encoder/pose_topic", enco_pose_topic))
-    {
-        utility_pkg::throw_error_and_shutdown("/asl_gremlin/state_feedback/encoder/pose_topic",
-                                                __LINE__);
-    }
-
-    if (!nh.getParam("/asl_gremlin/state_feedback/gps/pose_topic", gps_pose_topic))
-    {
-        utility_pkg::throw_error_and_shutdown("/asl_gremlin/state_feedback/gps/pose_topic",
-                                                __LINE__);
-    }
-
-    
+    feedback_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>(nh, "/state_feedback/feedback_selected",
+                                                                 __LINE__);
+    enco_pose_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>(nh, "/state_feedback/encoder/pose_topic",
+                                                                                __LINE__);
+    gps_pose_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>(nh, "/state_feedback/gps/pose_topic",
+                                                                               __LINE__);
     feedback_pub_ = nh.advertise<pose_type>(feedback_topic, 10);
 
     gps_pose_data_  = new asl_gremlin_pkg::SubscribeTopic<geometry_msgs::PointStamped>(nh, gps_pose_topic,10);

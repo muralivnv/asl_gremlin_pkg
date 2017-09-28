@@ -13,7 +13,7 @@
 
 namespace controller{
 
-int get_quadrant(double angle)
+int get_angle_quadrant(double angle)
 {
     double sin_of_angle = std::sin(angle);
     double cos_of_angle = std::cos(angle);
@@ -37,8 +37,8 @@ int get_quadrant(double angle)
 
 double delta_theta(double theta_act, double theta_ref)
 {
-    int rover_quadrant   = get_quadrant(theta_act);
-    int ref_hdg_quadrant = get_quadrant(theta_ref);
+    int rover_quadrant   = get_angle_quadrant(theta_act);
+    int ref_hdg_quadrant = get_angle_quadrant(theta_ref);
     
     double delta_theta = 0.0;
 

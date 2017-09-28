@@ -33,7 +33,7 @@ int main(int argc, char** argv)
     
     std::string traj_pub_name;
     
-    traj_pub_name = asl_gremlin_pkg::GetParam_with_shutdown(traj_nh, "/trajectory/publisher_topic", __LINE__);
+    traj_pub_name = asl_gremlin_pkg::GetParam_with_shutdown<std::string>(traj_nh, "/trajectory/publisher_topic", __LINE__);
 
     ros::Publisher traj_pub = traj_nh.advertise<asl_gremlin_msgs::RefTraj>(traj_pub_name, 10);
     ros::Rate loop_rate(10);

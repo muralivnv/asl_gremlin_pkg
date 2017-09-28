@@ -4,6 +4,7 @@
 #include <ros/ros.h>
 #include <std_msgs/Float64MultiArray.h>
 #include <asl_gremlin_pkg/SubscribeTopic.h>
+#include <asl_gremlin_pkg/GetParam.h>
 #include <utility_pkg/error_util.h>
 #include <string>
 

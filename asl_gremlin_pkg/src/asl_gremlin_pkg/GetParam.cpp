@@ -20,34 +20,3 @@ void asl_gremlin_pkg::throw_error_and_shutdown(const std::string& param_name, in
 
     ros::shutdown();
 }
-
-std::string asl_gremlin_pkg::GetParam_with_shutdown( ros::NodeHandle& nh, 
-                                    const std::string& const_param_name, int line_num)
-{
-    auto node_namespace = ros::this_node::getNamespace();
-    auto param_name = node_namespace + const_param_name;
-    
-    std::string topic_name;
-    
-    if(!nh.getParam(param_name, topic_name))
-    {
-        asl_gremlin_pkg::throw_error_and_shutdown(param_name, line_num); 
-    }
-    else
-    { return topic_name; }
-}
-
-std::string asl_gremlin_pkg::GetParam_with_warn(ros::NodeHandle& nh, const std::string& const_param_name, int line_num)
-{
-    auto node_namespace = ros::this_node::getNamespace();
-    auto param_name = node_namespace + const_param_name;
-    
-    std::string topic_name;
-    
-    if(!nh.getParam(param_name, topic_name))
-    {
-        asl_gremlin_pkg::throw_warn(param_name, line_num); 
-    }
-    else
-    { return topic_name; }
-}

@@ -5,9 +5,9 @@ using namespace trajectory_generation;
 DistanceToWaypoint::DistanceToWaypoint(ros::NodeHandle& nh)
 {
     std::string feedback_selected_topic = 
-                                    asl_gremlin_pkg::GetParam_with_shutdown(nh, 
-                                                                            "/state_feedback/feedback_selected",
-                                                                            __LINE__);
+                                    asl_gremlin_pkg::GetParam_with_shutdown<std::string>(nh, 
+                                                                                        "/state_feedback/feedback_selected",
+                                                                                        __LINE__);
 
     vehicle_state_ = new asl_gremlin_pkg::SubscribeTopic<asl_gremlin_msgs::VehicleState>
                                                         (nh, feedback_selected_topic);

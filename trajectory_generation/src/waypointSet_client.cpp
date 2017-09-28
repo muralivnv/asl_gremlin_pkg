@@ -19,7 +19,7 @@ int main(int argc, char** argv)
     dynamic_reconfigure::Config conf;
 
     std::string waypoint_server_topic_name;
-    waypoint_server_topic_name = asl_gremlin_pkg::GetParam_with_shutdown(wp_nh,"/trajectory/waypoint_server_topic",
+    waypoint_server_topic_name = asl_gremlin_pkg::GetParam_with_shutdown<std::string>(wp_nh,"/trajectory/waypoint_server_topic",
                                                                                 __LINE__);
 	try{
 	    if (argc > 2)
