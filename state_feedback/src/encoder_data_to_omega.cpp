@@ -1,7 +1,7 @@
 #include <ros/ros.h>
 #include <state_feedback/EncoderDataToOmega.h>
 #include <asl_gremlin_msgs/MotorAngVel.h>
-#include <utility_pkg/error_util.h>
+#include <asl_gremlin_pkg/GetParam.h>
 
 #include <cmath>
 #include <string>
@@ -14,11 +14,9 @@ int main(int argc, char** argv)
     ros::NodeHandle enco2w_nh;
 
     std::string actual_w_topic;
-    if (!enco2w_nh.getParam("/asl_gremlin/state_feedback/encoder/ang_vel_topic", actual_w_topic))
-    {
-        utility_pkg::throw_error_and_shutdown("/asl_gremlin/state_feedback/encoder/ang_vel_topic",
-                                                __LINE__);
-    }
+    actual_w_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>(  enco2w_nh, 
+                                                                            "/state_feedback/encoder/ang_vel_topic",
+                                                                           __LINE__);
 
     ros::Publisher enco2w_pub = enco2w_nh.advertise<asl_gremlin_msgs::MotorAngVel>(actual_w_topic,
                                                                                     100);

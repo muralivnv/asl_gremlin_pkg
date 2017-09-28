@@ -3,6 +3,7 @@
 #include <std_msgs/Int32.h>
 #include <std_msgs/Bool.h>
 #include <asl_gremlin_pkg/SubscribeTopic.h>
+#include <asl_gremlin_pkg/GetParam.h>
 
 int main(int argc, char** argv)
 {
@@ -14,17 +15,13 @@ int main(int argc, char** argv)
                                                         reset_encoder(nh, "/enco_reset", 10);
 
     std::string left_encoder_stamped_topic, right_encoder_stamped_topic;
-    if (!nh.getParam("/asl_gremlin/state_feedback/encoder/left_timeStamped_topic", left_encoder_stamped_topic))
-    {
-        ROS_ERROR("can't access parameter: /asl_gremlin/state_feedback/encoder/left_timeStamped_topic");
-        ros::shutdown();
-    }
+    left_encoder_stamped_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>(nh, 
+                                                                        "/state_feedback/encoder/left_timeStamped_topic",
+                                                                        __LINE__);
 
-    if (!nh.getParam("/asl_gremlin/state_feedback/encoder/right_timeStamped_topic", right_encoder_stamped_topic))
-    {
-        ROS_ERROR("can't access parameter: /asl_gremlin/state_feedback/encoder/right_timeStamped_topic");
-        ros::shutdown();
-    }
+    right_encoder_stamped_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>(nh, 
+                                                                        "/state_feedback/encoder/right_timeStamped_topic",
+                                                                        __LINE__);
 
 	ros::Publisher left_encoder_data_stamped  = nh.advertise < std_msgs::Float64MultiArray >(left_encoder_stamped_topic, 100);
 	ros::Publisher right_encoder_data_stamped = nh.advertise < std_msgs::Float64MultiArray >(right_encoder_stamped_topic,100);

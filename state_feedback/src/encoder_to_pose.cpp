@@ -4,7 +4,7 @@
 #include <asl_gremlin_pkg/SubscribeTopic.h>
 #include <asl_gremlin_msgs/MotorAngVel.h>
 #include <std_msgs/Float64.h>
-#include <utility_pkg/error_util.h>
+#include <asl_gremlin_pkg/GetParam.h>
 #include <utility_pkg/utilities.h>
 
 #include <array>
@@ -42,19 +42,13 @@ int main(int argc, char** argv)
     ros::NodeHandle enco2w_nh;
 
     std::string encoder_pub_name, ang_vel_topic;
-    if (!enco2w_nh.getParam("/asl_gremlin/state_feedback/encoder/pose_topic", encoder_pub_name) )
-    {
-        utility_pkg::throw_error_and_shutdown("/asl_gremlin/state_feedback/encoder/pose_topic",
-                                                __LINE__);
-    }
+    encoder_pub_name = asl_gremlin_pkg::GetParam_with_shutdown<std::string>(enco2w_nh, "/state_feedback/encoder/pose_topic",
+                                                                            __LINE__);
+
+    ang_vel_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>(enco2w_nh, "/state_feedback/encoder/ang_vel_topic",
+                                                                            __LINE__);
 
     ros::Publisher encoder_data_pub = enco2w_nh.advertise<geometry_msgs::PointStamped>(encoder_pub_name,10);
-
-    if(!enco2w_nh.getParam("/asl_gremlin/state_feedback/encoder/ang_vel_topic",ang_vel_topic))
-    {
-        utility_pkg::throw_error_and_shutdown("/asl_gremlin/state_feedback/encoder/ang_vel_topic",
-                                                __LINE__);
-    }
 
     asl_gremlin_pkg::SubscribeTopic<asl_gremlin_msgs::MotorAngVel> actual_angular_vel(enco2w_nh, ang_vel_topic);
     asl_gremlin_pkg::SubscribeTopic<std_msgs::Float64> compass_hdg(enco2w_nh, "/mavros/global_position/compass_hdg");

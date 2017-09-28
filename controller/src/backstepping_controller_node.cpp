@@ -5,11 +5,10 @@
 #include <asl_gremlin_msgs/VehicleState.h>
 #include <asl_gremlin_msgs/RefTraj.h>
 #include <asl_gremlin_pkg/SubscribeTopic.h>
-#include <utility_pkg/error_util.h>
+#include <asl_gremlin_pkg/GetParam.h>
 
 
 using namespace controller;
-using namespace utility_pkg;
 using namespace asl_gremlin_msgs;
 using namespace asl_gremlin_pkg;
 
@@ -19,18 +18,11 @@ int main(int argc, char** argv)
     ros::NodeHandle ctrl_nh;
     
     std::string ref_traj_topic_name, act_state_topic;
-    if (!ctrl_nh.getParam("/asl_gremlin/trajectory/publisher_topic",
-                            ref_traj_topic_name) )
-    {
-        throw_error_and_shutdown("/asl_gremlin/trajectory/publisher_topic",
-                                    __LINE__);
-    }
-    if (!ctrl_nh.getParam("/asl_gremlin/state_feedback/feedback_selected",
-                            act_state_topic))
-    {
-        throw_error_and_shutdown("/asl_gremlin/state_feedback/feedback_selected",
-                                    __LINE__);
-    }
+    ref_traj_topic_name = GetParam_with_shutdown<std::string>
+                            (ctrl_nh, "/trajectory/publisher_topic", __LINE__);
+
+    act_state_topic = GetParam_with_shutdown<std::string>
+                        (ctrl_nh,"/state_feedback/feedback_selected", __LINE__); 
 
     SubscribeTopic<asl_gremlin_msgs::RefTraj> ref_traj(ctrl_nh, ref_traj_topic_name);
     SubscribeTopic<asl_gremlin_msgs::VehicleState> act_state(ctrl_nh, act_state_topic);
@@ -40,12 +32,9 @@ int main(int argc, char** argv)
                             new BackSteppingController<RefTraj, VehicleState>(ctrl_nh);
     
     std::string ang_vel_topic;
-    if (!ctrl_nh.getParam("/asl_gremlin/controller/cmd_angular_vel_topic",
-                          ang_vel_topic))
-    {
-        utility_pkg::throw_error_and_shutdown("/asl_gremlin/controller/cmd_angular_vel_topic",
-                                                __LINE__);
-    }
+    ang_vel_topic = GetParam_with_shutdown<std::string>
+                        (ctrl_nh, "/controller/cmd_angular_vel_topic",__LINE__);
+
     ros::Publisher ang_vel_cmd = ctrl_nh.advertise<MotorAngVel>
                                                     (ang_vel_topic, 20);
     ros::Rate loop_rate(10);

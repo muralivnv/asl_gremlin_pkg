@@ -5,23 +5,15 @@ using namespace utility_pkg::custom_algorithms;
 
 OmegaToPWM::OmegaToPWM(ros::NodeHandle& nh)
 {
-    if (!nh.getParam("/asl_gremlin/motor/omega_to_pwm/omega", omega_lookup_))
-    {
-        utility_pkg::throw_error_and_shutdown("/asl_gremlin/motor/omega_to_pwm/omega",__LINE__);
-    }
+    omega_lookup_ = asl_gremlin_pkg::GetParam_with_shutdown<std::vector<double>>
+                    (nh, "/motor/omega_to_pwm/omega", __LINE__);
 
-    if (!nh.getParam("/asl_gremlin/motor/omega_to_pwm/pwm",  pwm_lookup_))
-    {
-        utility_pkg::throw_error_and_shutdown("/asl_gremlin/motor/omega_to_pwm/pwm",__LINE__);
-    }
+    pwm_lookup_ = asl_gremlin_pkg::GetParam_with_shutdown<std::vector<double>>
+                    (nh, "/motor/omega_to_pwm/pwm", __LINE__);
 
     std::string ang_vel_topic;
-    if (!nh.getParam("/asl_gremlin/controller/cmd_angular_vel_topic",
-                       ang_vel_topic))
-    {
-        utility_pkg::throw_error_and_shutdown("/asl_gremlin/controller/cmd_angular_vel_topic",
-                                              __LINE__);
-    }
+    ang_vel_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>
+                    (nh, "/controller/cmd_angular_vel_topic",__LINE__);
 
     pwm_cmd_ = new asl_gremlin_msgs::MotorPwm();
     omega_cmd_ = new asl_gremlin_pkg::SubscribeTopic<asl_gremlin_msgs::MotorAngVel>(nh, ang_vel_topic,20);

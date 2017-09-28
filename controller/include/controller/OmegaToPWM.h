@@ -4,7 +4,7 @@
 #include <vector>
 #include <ros/ros.h>
 #include <utility_pkg/custom_algorithms.h>
-#include <utility_pkg/error_util.h>
+#include <asl_gremlin_pkg/GetParam.h>
 #include <asl_gremlin_msgs/MotorPwm.h>
 #include <asl_gremlin_msgs/MotorAngVel.h>
 #include <asl_gremlin_pkg/SubscribeTopic.h>
