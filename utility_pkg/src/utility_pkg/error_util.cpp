@@ -25,7 +25,6 @@ void utility_pkg::throw_warn(const std::string& param_name, int line_num, const 
                 msg.c_str());
 }
 
-
 void utility_pkg::throw_error_and_shutdown(const std::string& param_name, int line_num)
 {
     utility_pkg::throw_error(param_name, line_num);

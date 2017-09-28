@@ -69,6 +69,7 @@ int main(int argc, char** argv)
         }
 
         trajectory_generation::publish_trajectory(traj_pub, min_jerk_traj);
+        std::cout<<ros::this_node::getNamespace()<<'\n';
 
         ros::spinOnce();
         loop_rate.sleep();

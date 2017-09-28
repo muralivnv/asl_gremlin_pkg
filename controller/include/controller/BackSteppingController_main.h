@@ -137,7 +137,7 @@ asl_gremlin_msgs::MotorAngVel* BackSteppingController<ref_state_type, act_state_
 }
 
 template<typename ref_state_type, typename act_state_type>
-void BackSteppingController<ref_state_type, act_state_type>::dynamic_reconfigure_gain_callback(controller::controllerGainSetConfig& config, uint32_t leve)
+void BackSteppingController<ref_state_type, act_state_type>::dynamic_reconfigure_gain_callback(controller::controllerGainSetConfig& config, uint32_t level)
 {
     lambda_gains_[0] = config.lambda_x;
     lambda_gains_[1] = config.lambda_y;

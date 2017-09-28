@@ -19,17 +19,13 @@ enum orderOfDiff{
 double expand_Nth_differentiation_coeff(int N, int order)
 {
     if ( N < 0)
-    {
-        return 0;
-    }
+    { return 0; }
+
     else if (order == 0)
-    {
-        return 1;
-    }
+    { return 1; }
+
     else
-    {
-        return N*expand_Nth_differentiation_coeff(N-1, order-1);
-    }
+    { return N*expand_Nth_differentiation_coeff(N-1, order-1); }
 }
 
 template <int N, std::size_t array_size>

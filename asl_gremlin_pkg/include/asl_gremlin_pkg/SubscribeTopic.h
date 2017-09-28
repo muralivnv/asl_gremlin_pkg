@@ -16,6 +16,7 @@ class SubscribeTopic{
         SubscribeTopic(ros::NodeHandle&, 
                         const std::string& ,int = 20);
         ~SubscribeTopic();
+
         void topic_callback(const typename T::ConstPtr& );
         T* get_data();
 };

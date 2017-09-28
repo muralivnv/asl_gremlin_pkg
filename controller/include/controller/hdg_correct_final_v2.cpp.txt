@@ -1,0 +1,176 @@
+%% Heading Correct( to get required delta_theta )
+function delta_psi = hdg_correct(theta_act, theta)
+flag_1 = get_quadrant(theta_act);
+flag_2 = get_quadrant(theta);
+delta_psi = 0;
+%%
+% if rover(theta_act) is in 2st Quadrant and it needs to go towards(theta)
+switch flag_1
+    case 2
+        switch flag_2
+            case 2
+                delta_psi = (theta_act - theta);
+% -------------------------------------------------------------------------                
+            % if (theta is in 3rd quadrant), then obtained delta_theta
+            % would be definitely +ve, and -ve is added as there is -ve in
+            % del_W(theta_dot-lambda*delta_psi), therefore we will get +ve
+            % rotation
+            case 3
+                delta_psi = -((pi-theta_act) -(-pi-theta));
+% -------------------------------------------------------------------------                
+                % if (theta is in 1st quadrant), then a simple delta_theta
+                % would do the trick. Output would be +ve and as del_W has -ve
+                % in it, therefore we will get -ve rotation
+            case 1
+                delta_psi = (theta_act - theta);
+% -------------------------------------------------------------------------                
+                % if (theta is in 4th quadrant), then look at either
+                % way(2->1->4) quadrant direction and (2->3->4) quadrant
+                % direction. pick the one which way is smaller to turn
+% -------------------------------------------------------------------------                
+            case 4
+                % (2->1->4)quadrant direction is smaller, then go that way
+                if (abs(theta_act-theta) <= abs(-(pi-theta_act-(-pi-theta))))
+                    % Output would be +ve, and del_W has (-ve) in it.
+                    % Therefore we will get -ve rotation
+                    delta_psi = (theta_act-theta);
+                else
+                    % if (2->3->4) quadrant direction is smaller, then go
+                    % that way. Output would be -ve and del_W has (-ve)
+                    % in it. Therefore we will +ve rotation
+                    delta_psi =  -(pi-theta_act-(-pi-theta));
+                end
+% -------------------------------------------------------------------------                
+            
+        end
+%%        
+% if rover(theta_act) is in 3rd Quadrant and it needs to go towards(theta)
+    case 3
+        switch flag_2
+            case 3
+                delta_psi = (theta_act - theta);
+% -------------------------------------------------------------------------                
+            % if (theta) is in 2nd qaudrant, then we need (-ve) rotation.
+            % and the Output would be +ve and del_W has -ve in it
+            case 2
+                delta_psi = ((pi-theta) - (-pi-theta_act));
+% -------------------------------------------------------------------------
+                % if (theta) is in 1st quadrant, then look at either way
+                % (3->4->1) and (3->2->1)
+            case 1
+                % if (3->2->1) is smaller, then go that way
+                if (((pi-theta) - (-pi-theta_act)) <= abs(theta_act-theta))
+                    % (3->2->1) is -ve rotation, so Output would be +ve and
+                    % del_W has -ve in it, therfore we will get +ve
+                    % rotation
+                    delta_psi = (pi-theta) - (-pi-theta_act);
+                else
+                    % (3->4->1) is +ve rotation, so Output would be -ve and
+                    % del_W has -ve in it, therefore we will get +ve
+                    % rotation
+                    delta_psi = (theta_act-theta);
+                end
+% -------------------------------------------------------------------------
+                % if (theta is in 4th quadrant)
+            case 4
+                % So Output would be -ve and del_W has -ve in it. Therefore
+                % we will get +ve rotation
+                delta_psi = (theta_act - theta);
+% -------------------------------------------------------------------------
+            
+        end
+
+%%        
+% if rover is in 1st Quadrant and need to go towards(theta)
+    case 1
+        switch flag_2
+            case 1
+                delta_psi = (theta_act - theta);
+% -------------------------------------------------------------------------                
+            % if (theta is in 4th quadrant)
+            case 4
+                % Output would be +ve and del_W has -ve in it. Therefore we
+                % will get -ve rotation
+                delta_psi = (theta_act - theta);
+% -------------------------------------------------------------------------                
+                % if (theta is in 2nd quadrant)
+            case 2
+                % Output would be -ve, del_W has -ve in it. Therefore we
+                % will get +ve rotation
+                delta_psi = (theta_act - theta);
+% -------------------------------------------------------------------------                
+                % if (theta is in 3rd quadrant)
+            case 3
+                % look which way is smaller to turn, (1->4->3)quadrant direction
+                % || (1->2->3) quadrant direction.
+                
+                % if (1->2->3) direction is smaller, then go that way
+                if (abs((pi-theta_act) - (-pi-theta)) <= abs(theta_act-theta))
+                    % Output would be -ve and del_W has +ve in it.
+                    % Therefore we will get +ve rotation.
+                    delta_psi = -((pi-theta_act) -(-pi-theta));
+                else
+                    % if (1->4->3) direction is smaller, then go that way
+                    % Output would be +ve and del_W has -ve in it.
+                    % Therefore we will get -ve rotation.
+                    delta_psi = (theta_act-theta);
+                end
+% -------------------------------------------------------------------------                
+            
+        end
+
+%%         
+% if rover is in 4th quadrant and need to go towards(theta)
+    case 4
+        switch flag_2  
+            case 4
+                delta_psi = (theta_act - theta);
+% -------------------------------------------------------------------------                
+            % if (theta is in 1st quadrant)
+            case 1
+                % Output would be -ve and del_W has -ve in it.
+                % Therefore we would get +ve rotation.
+                delta_psi = (theta_act - theta);
+% -------------------------------------------------------------------------                
+                % if (theta is in 2nd quadrant)
+            case 2
+                % look at either way, (4->1->2) quadrant direction and
+                % (4->3->2) quadrant direction.
+                
+                % if (4->1->2) is smaller, then go that way
+                if (abs(theta_act-theta) <= abs(pi-theta-(-pi-theta_act)))
+                    % Output would be -ve and del_W has -ve in it.
+                    % Therefore we would get +ve rotation.
+                    delta_psi = (theta_act-theta);
+                else
+                    % if (4->3->2) is smaller, then go that way
+                    % Output would be +ve and del_W has -ve in it.
+                    % Therefore we would get -ve rotation.
+                    delta_psi =  (pi-theta-(-pi-theta_act));
+                end
+% -------------------------------------------------------------------------                
+                % if (theta is in 3rd quadrant)
+            case 3
+                % Output would be +ve and del_W has -ve in it.
+                % Therefore we would get -ve rotation.
+                delta_psi = (theta_act-theta);
+            
+        end
+end
+end
+
+%% helper function to get the quadrant of the angle
+function flag = get_quadrant(theta)
+flag = 1;
+%
+if (sin(theta) >=0 && cos(theta) >= 0) % 1st Quadrant
+    flag = 1;
+elseif (sin(theta) > 0 && cos(theta) < 0) % 2nd Quadrant
+    flag = 2;
+elseif (sin(theta) <= 0 && cos(theta) <= 0) % 3rd Quadrant
+    flag = 3;
+elseif (sin(theta) < 0 && cos(theta) > 0) % 4th Quadrant
+    flag = 4;
+end
+%
+end

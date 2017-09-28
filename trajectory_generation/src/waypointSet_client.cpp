@@ -4,6 +4,7 @@
 #include <dynamic_reconfigure/Config.h>
 #include <string>
 #include <utility_pkg/CmdArgParser.h>
+#include <asl_gremlin_pkg/GetParam.h>
 
 int main(int argc, char** argv)
 {
@@ -18,11 +19,10 @@ int main(int argc, char** argv)
     dynamic_reconfigure::Config conf;
 
     std::string waypoint_server_topic_name;
-    bool got_waypoint_server_topic_name = wp_nh.getParam("/asl_gremlin/trajectory/waypoint_server_topic",
-                                                            waypoint_server_topic_name);
-
+    waypoint_server_topic_name = asl_gremlin_pkg::GetParam_with_shutdown(wp_nh,"/trajectory/waypoint_server_topic",
+                                                                                __LINE__);
 	try{
-	    if (argc > 2  && got_waypoint_server_topic_name)
+	    if (argc > 2)
 	    {
             utility_pkg::CmdArgParser cmd_arg_parser(argc, argv);
 

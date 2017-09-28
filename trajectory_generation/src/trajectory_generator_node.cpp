@@ -5,6 +5,7 @@
 #include <std_msgs/Bool.h>
 #include <asl_gremlin_pkg/SubscribeTopic.h>
 #include <asl_gremlin_msgs/RefTraj.h>
+#include <asl_gremlin_pkg/GetParam.h>
 
 #include <ros/ros.h>
 #include <ros/time.h>
@@ -28,20 +29,15 @@ int main(int argc, char** argv)
     WaypointSubscribe waypoint_stack(traj_nh);
     DistanceToWaypoint* dist_to_wp = new DistanceToWaypoint(traj_nh);
 
-    asl_gremlin_pkg::SubscribeTopic<std_msgs::Bool> sim(traj_nh,"/asl_gremlin/start_sim"); 
+    asl_gremlin_pkg::SubscribeTopic<std_msgs::Bool> sim(traj_nh, ros::this_node::getNamespace()+"/start_sim"); 
     
     std::string traj_pub_name;
     
-    if (!traj_nh.getParam("/asl_gremlin/trajectory/publisher_topic", traj_pub_name))
-    {
-        ROS_ERROR("Can't acces parameter '/asl_gremlin/trajectory/publisher_topic ");
-        ros::shutdown();
-    }
+    traj_pub_name = asl_gremlin_pkg::GetParam_with_shutdown(traj_nh, "/trajectory/publisher_topic", __LINE__);
 
     ros::Publisher traj_pub = traj_nh.advertise<asl_gremlin_msgs::RefTraj>(traj_pub_name, 10);
     ros::Rate loop_rate(10);
 
-    int wp_trig = 0;
     bool updated_ini_params = false;
     std::vector<double> waypoint(2,0);
     
