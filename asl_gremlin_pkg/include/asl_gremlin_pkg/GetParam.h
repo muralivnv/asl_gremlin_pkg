@@ -16,6 +16,10 @@ T GetParam_with_shutdown(ros::NodeHandle& nh,
 {
 
     auto node_namespace = ros::this_node::getNamespace();
+    if (node_namespace[0] == '/' && node_namespace[1] == '/')
+    {
+        node_namespace.erase(0,1);
+    }
     auto param_name = node_namespace + const_param_name;
     
     T param_value;
@@ -33,6 +37,10 @@ T GetParam_with_warn(ros::NodeHandle& nh, const std::string& const_param_name, i
 {
     
     auto node_namespace = ros::this_node::getNamespace();
+    if (node_namespace[0] == '/' && node_namespace[1] == '/')
+    {
+        node_namespace.erase(0,1);
+    }
     auto param_name = node_namespace + const_param_name;
     
     T param_value;

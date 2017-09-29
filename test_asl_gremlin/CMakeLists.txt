@@ -145,6 +145,8 @@ include_directories(
 ## The recommended prefix ensures that target names across packages don't collide
 add_executable(test_polynomial_evaluation src/test_polynomial_evaluation.cpp)
 add_executable(test_SubscribeTopic src/test_SubscribeTopic.cpp)
+add_executable(test_publish_encoder_ticks src/test_publish_encoder_ticks.cpp)
+add_executable(test_encoder_to_omega src/test_encoder_to_omega.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -156,10 +158,14 @@ add_executable(test_SubscribeTopic src/test_SubscribeTopic.cpp)
 ## same as for the library above
 add_dependencies(test_polynomial_evaluation ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(test_SubscribeTopic ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(test_publish_encoder_ticks ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(test_encoder_to_omega ${PROJECT_NAME}_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(test_polynomial_evaluation ${catkin_LIBRARIES} )
 target_link_libraries(test_SubscribeTopic ${catkin_LIBRARIES} )
+target_link_libraries(test_publish_encoder_ticks ${catkin_LIBRARIES} )
+target_link_libraries(test_encoder_to_omega ${catkin_LIBRARIES} )
 
 #############
 ## Install ##

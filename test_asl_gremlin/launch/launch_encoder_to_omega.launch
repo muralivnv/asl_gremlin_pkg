@@ -1,0 +1,5 @@
+<launch>
+
+<node ns="asl_gremlin1" launch-prefix="gdb -q -ex --args" name="test_encoder_to_omega" pkg="test_asl_gremlin" type="test_encoder_to_omega" output="screen" />
+
+</launch>
