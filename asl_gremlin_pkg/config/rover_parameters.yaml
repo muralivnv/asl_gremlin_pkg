@@ -1,13 +1,13 @@
 wheel:
-    radius: 0.6858 #(m)
+    radius: 0.06858 #(m)
     max_angular_vel: 20.5 #(rad.sec)
 
 chassis:
     base_length: 0.3353  #(m)
 
 motor:
-    left_encoder_ticks_per_meter: 8268.5
-    right_encoder_ticks_per_meter: 8269.3
+    left_encoder_ticks_per_meter: 11308.0
+    right_encoder_ticks_per_meter: 11325.0
     omega_to_pwm:
         omega: [-12.98,-12.659,-12.338,-11.474,-10.881,-10.24,-9.0049,
                 -7.4494,-4.7247,-4.0704,-3.9914,-3.0494,-2.9877,-0.0005,

@@ -15,7 +15,7 @@ int main(int argc, char** argv)
                                                         10);
     
     std::ifstream file;
-    file.open("/home/vnv/asl_gremlin1/src/test_asl_gremlin/src/data/encoder_data.txt",
+    file.open("/home/vnv/asl_gremlin1/src/test_asl_gremlin/src/matlab_data/encoder_data.txt",
                     std::ifstream::in);
 
     std::string str;

@@ -37,33 +37,44 @@ EncoderDataToOmega::~EncoderDataToOmega()
 
 void EncoderDataToOmega::update_encoder_starting_values()
 {
-    prev_left_encoder_ticks_ = (left_wheel_data_->get_data())->data[0];
-    prev_left_encoder_time_  = (left_wheel_data_->get_data())->data[1];
+    if ( !(left_wheel_data_->get_data())->data.empty())
+    {
+        prev_left_encoder_ticks_ = (left_wheel_data_->get_data())->data[0];
+        prev_left_encoder_time_  = (left_wheel_data_->get_data())->data[1];
+    }
 
-    prev_right_encoder_ticks_ = (right_wheel_data_->get_data())->data[0];
-    prev_right_encoder_time_  = (right_wheel_data_->get_data())->data[1];
+    if ( !(right_wheel_data_->get_data())->data.empty())
+    {
+        prev_right_encoder_ticks_ = (right_wheel_data_->get_data())->data[0];
+        prev_right_encoder_time_  = (right_wheel_data_->get_data())->data[1];
+    }
 }
 
 void EncoderDataToOmega::update_delta_ticks()
 {
-   double left_encoder_ticks_now = (left_wheel_data_->get_data())->data[0];
-   double left_encoder_time_now =  (left_wheel_data_->get_data())->data[1];
+    if ( !(left_wheel_data_->get_data())->data.empty())
+    {
+        double left_encoder_ticks_now = (left_wheel_data_->get_data())->data[0];
+        double left_encoder_time_now =  (left_wheel_data_->get_data())->data[1];
 
-   delta_left_encoder_ticks_ = left_encoder_ticks_now - prev_left_encoder_ticks_;
-   delta_left_encoder_time_  = left_encoder_time_now  - prev_left_encoder_time_;
+       delta_left_encoder_ticks_ = left_encoder_ticks_now - prev_left_encoder_ticks_;
+       delta_left_encoder_time_  = left_encoder_time_now  - prev_left_encoder_time_;
 
-   prev_left_encoder_ticks_ = left_encoder_ticks_now;
-   prev_left_encoder_time_ = left_encoder_time_now;
+       prev_left_encoder_ticks_ = left_encoder_ticks_now;
+       prev_left_encoder_time_ = left_encoder_time_now;
+    }
 
+    if ( !(right_wheel_data_->get_data())->data.empty())
+    {
+        double right_encoder_ticks_now = (right_wheel_data_->get_data())->data[0];
+        double right_encoder_time_now =  (right_wheel_data_->get_data())->data[1];
 
-   double right_encoder_ticks_now = (right_wheel_data_->get_data())->data[0];
-   double right_encoder_time_now =  (right_wheel_data_->get_data())->data[1];
+       delta_right_encoder_ticks_ = right_encoder_ticks_now - prev_right_encoder_ticks_;
+       delta_right_encoder_time_  = right_encoder_time_now  - prev_right_encoder_time_;
 
-   delta_right_encoder_ticks_ = right_encoder_ticks_now - prev_right_encoder_ticks_;
-   delta_right_encoder_time_  = right_encoder_time_now  - prev_right_encoder_time_;
-
-   prev_right_encoder_ticks_ = right_encoder_ticks_now;
-   prev_right_encoder_time_ = right_encoder_time_now;
+       prev_right_encoder_ticks_ = right_encoder_ticks_now;
+       prev_right_encoder_time_ = right_encoder_time_now;
+    }
 }
 
 
@@ -72,11 +83,18 @@ void EncoderDataToOmega::calculate_angular_velocities()
     ros::spinOnce();
     update_delta_ticks();
 
-    left_wheel_angular_velocity_ = (delta_left_encoder_ticks_)/
-                    (encoder_left_ticks_per_meter_*radius_of_wheel_*delta_left_encoder_time_);
+    if (delta_left_encoder_time_ != 0.0)
+    {
+        std::cout<<"radius_of_wheel_: "<<radius_of_wheel_<<'\n';
+        left_wheel_angular_velocity_ = (delta_left_encoder_ticks_)/
+                        (encoder_left_ticks_per_meter_*radius_of_wheel_*delta_left_encoder_time_);
+    }
 
-    right_wheel_angular_velocity_ = (delta_right_encoder_ticks_)/
-                    (encoder_right_ticks_per_meter_*radius_of_wheel_*delta_right_encoder_time_);
+    if (delta_right_encoder_time_ != 0.0)
+    {
+        right_wheel_angular_velocity_ = (delta_right_encoder_ticks_)/
+                        (encoder_right_ticks_per_meter_*radius_of_wheel_*delta_right_encoder_time_);
+    }
 }
 
 
