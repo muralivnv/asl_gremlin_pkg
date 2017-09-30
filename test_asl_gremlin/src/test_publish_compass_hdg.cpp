@@ -2,6 +2,7 @@
 #include <std_msgs/Float64.h>
 
 #include <fstream>
+#include <string>
 
 int main(int argc, char** argv)
 {
@@ -11,17 +12,21 @@ int main(int argc, char** argv)
     ros::Publisher cmp_hdg_pub = nh.advertise<std_msgs::Float64>("/mavros/global_position/compass_hdg",
                                                                  10);
 
+    std::string tmp_string;
     std::ifstream cmp_hdg_data_file;
-    cmp_hdg_data_file.open("/home/vnv/asl_gremlin1/src/test_asl_gremlin/src/matlab_data/cmp_hdg_data.txt",
+    cmp_hdg_data_file.open("/home/vnv/asl_gremlin1/src/test_asl_gremlin/src/matlab_data/compass_hdg_data.txt",
                                 std::ifstream::in);
     
-    std_msgs::Float64 cmp_hdg_pub_data;
+    std::getline(cmp_hdg_data_file, tmp_string);
 
-    ros::Rate loop_rate(10);
+    std_msgs::Float64 cmp_hdg_pub_data;
+    double time = 0.0;
+    ros::Rate loop_rate(5);
 
     while (ros::ok() && !cmp_hdg_data_file.eof())
     {
-        cmp_hdg_data_file >> cmp_hdg_pub_data.data;
+        cmp_hdg_data_file >> time >> cmp_hdg_pub_data.data;
+        
         cmp_hdg_pub.publish(cmp_hdg_pub_data);
         loop_rate.sleep();
     }

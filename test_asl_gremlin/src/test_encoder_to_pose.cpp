@@ -10,6 +10,8 @@
 #include <array>
 #include <cmath>
 #include <string>
+#include <cassert>
+#include <fstream>
 
 #define deg2rad M_PI/180.0
 
@@ -18,17 +20,17 @@ using namespace state_feedback;
 
 struct roverParam{
     double wl = 0.0, wr = 0.0;
-    double r  = 0.6858, b = 0.3353;
+    double r  = 0.06858, b = 0.3353;
 };
 
 std::array<double, 3> rover_kinematics(double time,
                                        std::array<double, 3> states,
-                                        roverParam params)
+                                        roverParam* params)
 {
-    std::array<double, 3> dx_dt;
-    double x_dot = (params.wl + params.wr)*0.5*params.r*std::cos(states[2]);
-    double y_dot = (params.wl + params.wr)*0.5*params.r*std::sin(states[2]);
-    double theta_dot = (params.r/params.b)*(params.wr - params.wl);
+    std::array<double, 3> dx_dt{{0.0,0.0,0.0}};
+    double x_dot = (params->wl + params->wr)*0.5*params->r*std::cos(states[2]);
+    double y_dot = (params->wl + params->wr)*0.5*params->r*std::sin(states[2]);
+    double theta_dot = (params->r/params->b)*(params->wr - params->wl);
 
     dx_dt[0] = x_dot; dx_dt[1] = y_dot; dx_dt[2] = theta_dot;
 
@@ -40,6 +42,10 @@ int main(int argc, char** argv)
 {
     ros::init(argc, argv,"test_encoder_to_pose");
     ros::NodeHandle enco2w_nh;
+    
+    std::string tmp_str;
+    std::ofstream out_file("/home/vnv/asl_gremlin1/src/test_asl_gremlin/src/pose_from_encoder.txt");
+    assert(out_file.is_open());
 
     std::string encoder_pub_name, ang_vel_topic;
     encoder_pub_name = asl_gremlin_pkg::GetParam_with_shutdown<std::string>(enco2w_nh, "/state_feedback/encoder/pose_topic",
@@ -56,15 +62,15 @@ int main(int argc, char** argv)
     roverParam params;
     geometry_msgs::PointStamped encoder_pose;
 
-    ros::Rate loop_rate(10);
+    ros::Rate loop_rate(5);
 
-    std::array<double ,3> integrated_states;
-    std::array<double, 3> initial_states{0,0,0};
+    std::array<double ,3> integrated_states{{0.0,0.0,0.0}};
+    std::array<double, 3> initial_states{{0.0,0.0,0.0}};
 
     ros::spinOnce();
 
     initial_states[2] = utility_pkg::compass_angle_to_polar_angle((compass_hdg.get_data())->data) * deg2rad;
-    double t_initial = 0.0, t_final = t_initial + forward_euler_step_size;
+    double t_initial = 0.0, t_final = t_initial + 0.2;
 
     int msg_count = 0;
     encoder_pose.point.x = initial_states[0];
@@ -77,6 +83,8 @@ int main(int argc, char** argv)
     encoder_data_pub.publish(encoder_pose);
     asl_gremlin_msgs::MotorAngVel* actual_omega;
 
+    out_file << "#pose_x " << "   " << "#pose_y" << "   " << "#theta_enu\n";
+    forward_euler_step_size = 0.001;
     while(ros::ok())
     {
         actual_omega = actual_angular_vel.get_data();
@@ -88,6 +96,10 @@ int main(int argc, char** argv)
         integrated_states = forwardEuler_integration(rover_kinematics,
                                                     initial_states,
                                                     t_initial, t_final, &params);
+
+        out_file  << initial_states[0] << "    " << integrated_states[1] << "    " << integrated_states[2] << '\n';
+        std::cout << integrated_states[0] << "    " << integrated_states[1] << "    " << initial_states[2] << '\n';
+
         ++msg_count;
         encoder_pose.point.x = integrated_states[0];
         encoder_pose.point.y = integrated_states[1];
@@ -101,6 +113,7 @@ int main(int argc, char** argv)
 
         initial_states = integrated_states;
         t_initial = t_final;
-        t_final = t_final + forward_euler_step_size;
+        t_final = t_final + 0.2;
     }
+    out_file.close();
 }

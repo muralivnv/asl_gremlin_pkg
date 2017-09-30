@@ -21,7 +21,7 @@ int main(int argc, char** argv)
     std::string str;
     std::getline(file, str);
     
-    ros::Rate loop_rate(10);
+    ros::Rate loop_rate(5);
     std_msgs::Float64MultiArray right_ticks, left_ticks;
     
     double left_time = 0.0, left_msg_count = 0.0, left_ticks_tmp = 0.0;

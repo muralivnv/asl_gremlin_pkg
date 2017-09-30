@@ -22,7 +22,7 @@ State_type forwardEuler_integration(System system, State_type& initial_state, ti
     for (time_type t = start_time + forward_euler_step_size;
               t <= end_time; t += forward_euler_step_size)
     {
-        x_current = x_current + system(t, x_current, *param);
+        x_current = x_current + forward_euler_step_size*system(t, x_current, param);
     }
 
     return x_current;

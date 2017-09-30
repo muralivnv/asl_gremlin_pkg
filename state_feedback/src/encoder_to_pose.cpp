@@ -23,12 +23,12 @@ struct roverParam{
 
 std::array<double, 3> rover_kinematics(double time,
                                        std::array<double, 3> states,
-                                        roverParam params)
+                                        roverParam* params)
 {
     std::array<double, 3> dx_dt;
-    double x_dot = (params.wl + params.wr)*0.5*params.r*std::cos(states[2]);
-    double y_dot = (params.wl + params.wr)*0.5*params.r*std::sin(states[2]);
-    double theta_dot = (params.r/params.b)*(params.wr - params.wl);
+    double x_dot = (params->wl + params->wr)*0.5*params->r*std::cos(states[2]);
+    double y_dot = (params->wl + params->wr)*0.5*params->r*std::sin(states[2]);
+    double theta_dot = (params->r/params->b)*(params->wr - params->wl);
 
     dx_dt[0] = x_dot; dx_dt[1] = y_dot; dx_dt[2] = theta_dot;
 
