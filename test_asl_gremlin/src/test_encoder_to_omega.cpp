@@ -5,8 +5,8 @@
 
 #include <cmath>
 #include <string>
-#include <cassert>
-#include <fstream>
+//#include <cassert>
+//#include <fstream>
 
 using namespace state_feedback;
 
@@ -14,9 +14,9 @@ int main(int argc, char** argv)
 {
     ros::init(argc, argv, "test_encoder_to_omega");
     ros::NodeHandle enco2w_nh;
-    std::ofstream out_file("/home/vnv/asl_gremlin1/src/test_asl_gremlin/src/converted_encoder_to_omega.dat");
+  //  std::ofstream out_file("/home/vnv/asl_gremlin1/src/test_asl_gremlin/src/converted_encoder_to_omega.dat");
     
-    assert(out_file.is_open());
+  //  assert(out_file.is_open());
 
     std::string actual_w_topic("/asl_gremlin1/state_feedback/encoder/actual_ang_vel");
 
@@ -39,10 +39,10 @@ int main(int argc, char** argv)
         motor_ang_vel.wr = encoder_data_to_omega.get_right_wheel_angular_vel();
         motor_ang_vel.header.seq = msg_count;
         motor_ang_vel.header.stamp = ros::Time::now();
-        out_file << motor_ang_vel.wl << "   " << motor_ang_vel.wr << '\n';
+    //    out_file << motor_ang_vel.wl << "   " << motor_ang_vel.wr << '\n';
         enco2w_pub.publish(motor_ang_vel);
         ros::spinOnce();
         loop_rate.sleep();
     }
-    out_file.close();
+    //out_file.close();
 }

@@ -1,0 +1,9 @@
+<launch>
+
+<include file="$(find test_asl_gremlin)/launch/test_encoder_to_omega.launch" />
+
+<node ns="asl_gremlin1" name="test_publish_compass_hdg" pkg="test_asl_gremlin" type="test_publish_compass_hdg" output="screen" />
+
+<node ns="asl_gremlin1" name="test_encoder_to_pose" pkg="test_asl_gremlin" type="test_encoder_to_pose" output="screen" />
+
+</launch>

@@ -85,7 +85,6 @@ void EncoderDataToOmega::calculate_angular_velocities()
 
     if (delta_left_encoder_time_ != 0.0)
     {
-        std::cout<<"radius_of_wheel_: "<<radius_of_wheel_<<'\n';
         left_wheel_angular_velocity_ = (delta_left_encoder_ticks_)/
                         (encoder_left_ticks_per_meter_*radius_of_wheel_*delta_left_encoder_time_);
     }
