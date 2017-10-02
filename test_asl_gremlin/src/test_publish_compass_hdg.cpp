@@ -14,7 +14,7 @@ int main(int argc, char** argv)
 
     std::string tmp_string;
     std::ifstream cmp_hdg_data_file;
-    cmp_hdg_data_file.open("/home/vnv/asl_gremlin1/src/test_asl_gremlin/src/matlab_data/compass_hdg_data.txt",
+    cmp_hdg_data_file.open("/home/vnv/asl_gremlin1/src/test_asl_gremlin/src/matlab_data/compass_hdg_ENU.txt",
                                 std::ifstream::in);
     
     std::getline(cmp_hdg_data_file, tmp_string);

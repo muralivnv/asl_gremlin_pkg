@@ -27,14 +27,12 @@ std::array<double, 3> rover_kinematics(double time,
                                        std::array<double, 3> states,
                                         roverParam* params)
 {
-    std::array<double, 3> dx_dt{{0.0,0.0,0.0}};
     double x_dot = (params->wl + params->wr)*0.5*params->r*std::cos(states[2]);
     double y_dot = (params->wl + params->wr)*0.5*params->r*std::sin(states[2]);
     double theta_dot = (params->r/params->b)*(params->wr - params->wl);
 
-    dx_dt[0] = x_dot; dx_dt[1] = y_dot; dx_dt[2] = theta_dot;
 
-    return dx_dt;
+    return {x_dot, y_dot, theta_dot};
 }
 
 
@@ -44,7 +42,7 @@ int main(int argc, char** argv)
     ros::NodeHandle enco2w_nh;
     
     std::string tmp_str;
-    std::ofstream out_file("/home/vnv/asl_gremlin1/src/test_asl_gremlin/src/pose_from_encoder.txt");
+    std::ofstream out_file("/home/vnv/asl_gremlin1/src/test_asl_gremlin/src/cpp_output_data/pose_from_encoder.txt");
     assert(out_file.is_open());
 
     std::string encoder_pub_name, ang_vel_topic;
@@ -69,7 +67,7 @@ int main(int argc, char** argv)
 
     ros::spinOnce();
 
-    initial_states[2] = utility_pkg::compass_angle_to_polar_angle((compass_hdg.get_data())->data) * deg2rad;
+    initial_states[2] = (compass_hdg.get_data())->data * deg2rad;
     double t_initial = 0.0, t_final = t_initial + 0.2;
 
     int msg_count = 0;
@@ -84,21 +82,21 @@ int main(int argc, char** argv)
     asl_gremlin_msgs::MotorAngVel* actual_omega;
 
     out_file << "#pose_x " << "   " << "#pose_y" << "   " << "#theta_enu\n";
-    forward_euler_step_size = 0.001;
+    forward_euler_step_size = 0.1;
     while(ros::ok())
     {
         actual_omega = actual_angular_vel.get_data();
         params.wl = actual_omega->wl;
         params.wr = actual_omega->wr;
 
-        initial_states[2] = utility_pkg::compass_angle_to_polar_angle((compass_hdg.get_data())->data) * deg2rad;
+        initial_states[2] = (compass_hdg.get_data())->data * deg2rad;
 
         integrated_states = forwardEuler_integration(rover_kinematics,
                                                     initial_states,
                                                     t_initial, t_final, &params);
 
-        out_file  << initial_states[0] << "    " << integrated_states[1] << "    " << integrated_states[2] << '\n';
-        std::cout << integrated_states[0] << "    " << integrated_states[1] << "    " << initial_states[2] << '\n';
+        out_file  << integrated_states[0] << "    " << integrated_states[1] << "    " << initial_states[2]*180/M_PI << '\n';
+        std::cout << integrated_states[0] << "    " << integrated_states[1] << "    " << initial_states[2]*180/M_PI << '\n';
 
         ++msg_count;
         encoder_pose.point.x = integrated_states[0];

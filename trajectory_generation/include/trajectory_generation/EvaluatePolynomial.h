@@ -61,7 +61,7 @@ double get_Nth_order_polynomial(double time, std::array<double, coeff_size>& coe
         return polynomial_obj(time, coefficients, order);
     }
     catch (const char* msg){
-        ROS_ERROR("%s\n", msg);
+        ROS_ERROR("%s\n %s at %d", msg, __FILE__, __LINE__);
     }
 }
 
