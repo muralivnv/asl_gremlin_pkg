@@ -41,5 +41,7 @@ int main(int argc, char** argv)
 
         loop_rate.sleep();
     }
+
+    ref_traj_data.close();
     return EXIT_SUCCESS;
 }

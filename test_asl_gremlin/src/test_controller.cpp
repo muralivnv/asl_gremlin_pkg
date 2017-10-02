@@ -6,6 +6,7 @@
 #include <asl_gremlin_msgs/RefTraj.h>
 #include <asl_gremlin_pkg/SubscribeTopic.h>
 #include <asl_gremlin_pkg/GetParam.h>
+#include <fstream>
 
 using namespace controller;
 using namespace asl_gremlin_msgs;
@@ -39,16 +40,22 @@ int main(int argc, char** argv)
     ros::Rate loop_rate(10);
     ros::spinOnce();
 
+    std::ofstream ang_vel_log("/home/vnv/asl_gremlin1/src/test_asl_gremlin/src/cpp_output_data/cmd_ang_vel.dat");
+    
+    assert(ang_vel_log.is_open());
+    ang_vel_log << "#wl" << "    " << "#wr\n";
     while(ros::ok())
     {
        controller->calculate_control_action(*(ref_traj.get_data()),
                                             *(act_state.get_data()));
 
        ang_vel_cmd.publish(*(controller->get_control_action()));
-
+        
+       ang_vel_log << (controller->get_control_action())->wl << (controller->get_control_action())->wr <<'\n';
        ros::spinOnce();
        loop_rate.sleep();
     }
 
+    ang_vel_log.close();
     return EXIT_SUCCESS;
 }

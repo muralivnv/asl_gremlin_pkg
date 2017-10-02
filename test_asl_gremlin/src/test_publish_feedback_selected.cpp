@@ -45,4 +45,6 @@ int main(int argc, char** argv)
         loop_rate.sleep();
     }
 
+    act_gps_data.close();
+
 }
