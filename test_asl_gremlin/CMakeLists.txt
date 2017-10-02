@@ -150,6 +150,8 @@ add_executable(test_encoder_to_omega src/test_encoder_to_omega.cpp)
 add_executable(test_encoder_to_pose src/test_encoder_to_pose.cpp)
 add_executable(test_publish_compass_hdg src/test_publish_compass_hdg.cpp)
 add_executable(test_forward_euler src/test_forward_euler.cpp)
+add_executable(test_publish_feedback_selected src/test_publish_feedback_selected.cpp)
+add_executable(test_publish_ref_traj src/test_publish_ref_traj.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -166,6 +168,8 @@ add_dependencies(test_encoder_to_omega ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(test_encoder_to_pose ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(test_publish_compass_hdg ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(test_forward_euler ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(test_publish_feedback_selected ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(test_publish_ref_traj ${PROJECT_NAME}_generate_messages_cpp)
 
 
 ## Specify libraries to link a library or executable target against
@@ -176,6 +180,8 @@ target_link_libraries(test_encoder_to_omega ${catkin_LIBRARIES} )
 target_link_libraries(test_encoder_to_pose ${catkin_LIBRARIES} )
 target_link_libraries(test_publish_compass_hdg ${catkin_LIBRARIES} )
 target_link_libraries(test_forward_euler ${catkin_LIBRARIES} )
+target_link_libraries(test_publish_feedback_selected ${catkin_LIBRARIES} )
+target_link_libraries(test_publish_ref_traj ${catkin_LIBRARIES} )
 
 #############
 ## Install ##
