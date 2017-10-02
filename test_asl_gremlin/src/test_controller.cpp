@@ -13,7 +13,7 @@ using namespace asl_gremlin_pkg;
 
 int main(int argc, char** argv)
 {
-    ros::init(argc, argv , "backstepping_controller"); 
+    ros::init(argc, argv , "test_controller"); 
     ros::NodeHandle ctrl_nh;
     
     std::string ref_traj_topic_name, act_state_topic;
