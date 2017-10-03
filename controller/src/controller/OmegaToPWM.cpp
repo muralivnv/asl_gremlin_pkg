@@ -29,8 +29,9 @@ asl_gremlin_msgs::MotorPwm*
 OmegaToPWM::convert_omega_to_pwm()
 {
     ros::spinOnce();
-   int left_idx = get_lower_index(omega_lookup_, (omega_cmd_->get_data())->wl);
-   pwm_cmd_->pwm_l  = linear_interpolate(pwm_lookup_, omega_lookup_, left_idx, (omega_cmd_->get_data())->wl);
+    int left_idx = get_lower_index(omega_lookup_, (omega_cmd_->get_data())->wl);
+    
+    pwm_cmd_->pwm_l  = linear_interpolate(pwm_lookup_, omega_lookup_, left_idx, (omega_cmd_->get_data())->wl);
    
    int right_idx = get_lower_index(omega_lookup_, (omega_cmd_->get_data())->wr);
    pwm_cmd_->pwm_r  = linear_interpolate(pwm_lookup_, omega_lookup_, right_idx, (omega_cmd_->get_data())->wr);

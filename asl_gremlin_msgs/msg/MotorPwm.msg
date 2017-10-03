@@ -1,3 +1,3 @@
 Header header
-int8 pwm_l
-int8 pwm_r
+int16 pwm_l
+int16 pwm_r

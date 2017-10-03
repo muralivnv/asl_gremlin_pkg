@@ -1,0 +1,12 @@
+<launch>
+
+<include file="$(find test_asl_gremlin)/launch/test_encoder_to_pose.launch" />
+
+<node ns="asl_gremlin1" name="test_publish_ref_traj" type="test_publish_ref_traj" pkg="test_asl_gremlin" output="screen" />
+<node ns="asl_gremlin1" name="test_publish_feedback_selected" type="test_publish_feedback_selected" pkg="test_asl_gremlin" output="screen" />
+
+<node ns="asl_gremlin1" name="test_ang_vel_to_pwm" type="test_ang_vel_to_pwm" pkg="test_asl_gremlin" output="screen" />
+
+<node ns="asl_gremlin1" name="test_controller" type="test_controller" pkg="test_asl_gremlin" output="screen" />
+
+</launch>

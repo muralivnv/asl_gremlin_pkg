@@ -1,6 +1,6 @@
 wheel:
     radius: 0.06858 #(m)
-    max_angular_vel: 20.5 #(rad.sec)
+    max_angular_vel: 12.5 #(rad.sec)
 
 chassis:
     base_length: 0.3353  #(m)

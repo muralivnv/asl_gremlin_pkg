@@ -21,7 +21,7 @@ int main(int argc, char** argv)
 
     std_msgs::Float64 cmp_hdg_pub_data;
     double time = 0.0;
-    ros::Rate loop_rate(5);
+    ros::Rate loop_rate(10);
 
     while (ros::ok() && !cmp_hdg_data_file.eof())
     {

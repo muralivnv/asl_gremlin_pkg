@@ -60,7 +60,7 @@ int main(int argc, char** argv)
     roverParam params;
     geometry_msgs::PointStamped encoder_pose;
 
-    ros::Rate loop_rate(5);
+    ros::Rate loop_rate(10);
 
     std::array<double ,3> integrated_states{{0.0,0.0,0.0}};
     std::array<double, 3> initial_states{{0.0,0.0,0.0}};
@@ -96,7 +96,6 @@ int main(int argc, char** argv)
                                                     t_initial, t_final, &params);
 
         out_file  << integrated_states[0] << "    " << integrated_states[1] << "    " << initial_states[2]*180/M_PI << '\n';
-        std::cout << integrated_states[0] << "    " << integrated_states[1] << "    " << initial_states[2]*180/M_PI << '\n';
 
         ++msg_count;
         encoder_pose.point.x = integrated_states[0];

@@ -51,7 +51,9 @@ int main(int argc, char** argv)
 
        ang_vel_cmd.publish(*(controller->get_control_action()));
         
-       ang_vel_log << (controller->get_control_action())->wl << (controller->get_control_action())->wr <<'\n';
+       ang_vel_log << (controller->get_control_action())->wl << "    "<< (controller->get_control_action())->wr <<'\n';
+       //std::cout << (controller->get_control_action())->wl << "    "<<(controller->get_control_action())->wr <<'\n';
+
        ros::spinOnce();
        loop_rate.sleep();
     }

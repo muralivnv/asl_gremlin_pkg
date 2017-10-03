@@ -38,7 +38,7 @@ class BackSteppingController :
 
             asl_gremlin_msgs::MotorAngVel* wheel_angular_vel_;
 
-            double radius_of_wheel_ = 0.6858, vehicle_base_length_ = 0.3353,
+            double radius_of_wheel_ = 0.06858, vehicle_base_length_ = 0.3353,
                    max_wheel_angular_vel_ = 12.5; 
 
             dynamic_reconfigure::Server<controller::controllerGainSetConfig> dr_gain_srv_;
@@ -55,17 +55,17 @@ BackSteppingController<ref_state_type, act_state_type>::BackSteppingController(r
                         this, _1, _2);
     dr_gain_srv_.setCallback(fun_);
 
-    if (!nh.getParam("/asl_gremlin/wheel/radius",radius_of_wheel_))
+    if (!nh.getParam(ros::this_node::getNamespace()+"/wheel/radius",radius_of_wheel_))
     {
-        ROS_WARN("Can't access parameter: /asl_gremlin/wheel/radius, setting to 0.6858m");
+        ROS_WARN("Can't access parameter: /wheel/radius, setting to 0.6858m");
     }
 
-    if (!nh.getParam("/asl_gremlin/chassis/base_length",radius_of_wheel_))
+    if (!nh.getParam(ros::this_node::getNamespace()+"/chassis/base_length",vehicle_base_length_))
     {
         ROS_WARN("Can't access parameter: /asl_gremlin/chassis/base_length, setting to 0.3353m");
     }
 
-    if (!nh.getParam("/asl_gremlin/wheel/max_angular_vel",radius_of_wheel_))
+    if (!nh.getParam(ros::this_node::getNamespace()+"/wheel/max_angular_vel",max_wheel_angular_vel_))
     {
         ROS_WARN("Can't access parameter: /asl_gremlin/wheel/max_angular_vel, setting to 12.5(rad/sec)");
     }
@@ -77,23 +77,25 @@ BackSteppingController<ref_state_type, act_state_type>::BackSteppingController(r
 template<typename ref_state_type, typename act_state_type>
 void BackSteppingController<ref_state_type, act_state_type>::calculate_control_action(const ref_state_type& ref, const act_state_type& actual)
 {
+    double actual_hdg = actual.heading*M_PI/180.0;
+
     double error_x = actual.pose.point.x - ref.x;
     double error_y = actual.pose.point.y - ref.y;
     
-    lambda_x_ = lambda_gains_[0]*std::log( std::fabs(error_x)/0.1 + 0.01 );
-    lambda_y_ = lambda_gains_[1]*std::log( std::fabs(error_y)/0.1 + 0.01 );
+    lambda_x_ = lambda_gains_[0]*std::fabs(std::log(std::fabs(error_x/0.1 + 0.01)));
+    lambda_y_ = lambda_gains_[1]*std::fabs(std::log(std::fabs(error_y/0.1 + 0.01)));
 
     double x_act_dot_req = ref.x_dot  - lambda_x_*error_x;
     double y_act_dot_req = ref.y_dot  - lambda_y_*error_y;
 
     double theta_cmd = std::atan2(y_act_dot_req, x_act_dot_req);
 
-    double error_theta = controller::delta_theta(actual.heading, theta_cmd);
+    double error_theta = controller::delta_theta(actual_hdg, theta_cmd);
     
     if (std::fabs(error_theta) >= 7*M_PI/180.0)
-        lambda_theta_ = lambda_gains_[2]*std::log( std::fabs(error_theta)/0.1 + 0.01 );
+    { lambda_theta_ = lambda_gains_[2]*std::fabs(std::log( std::fabs(error_theta/0.1 + 0.01 ))); }
 
-    double vel_cmd = std::sqrt( std::pow(x_act_dot_req,2) + std::pow(y_act_dot_req,2) );
+    double vel_cmd = std::sqrt( x_act_dot_req*x_act_dot_req + y_act_dot_req*y_act_dot_req );
 
     
     double angular_vel_sum = (2/radius_of_wheel_)*vel_cmd,
@@ -101,12 +103,12 @@ void BackSteppingController<ref_state_type, act_state_type>::calculate_control_a
 
     if ( vel_cmd <= 0.2 )
     {
-        angular_vel_diff = -lambda_theta_ * controller::delta_theta(actual.heading, ref.theta);
+        angular_vel_diff = -lambda_theta_ * controller::delta_theta(actual_hdg, ref.theta);
     }
     else
     {
-        double theta_dot_req = (1/vel_cmd)*(std::cos(theta_cmd)*(ref.y_ddot - lambda_y_*(vel_cmd*std::sin(actual.heading) - ref.y_dot)) - 
-                                            std::sin(theta_cmd)*(ref.x_ddot - lambda_x_*(vel_cmd*std::cos(actual.heading) - ref.x_dot)));
+        double theta_dot_req = (1/vel_cmd)*(std::cos(theta_cmd)*(ref.y_ddot - lambda_y_*(vel_cmd*std::sin(actual_hdg) - ref.y_dot)) - 
+                                            std::sin(theta_cmd)*(ref.x_ddot - lambda_x_*(vel_cmd*std::cos(actual_hdg) - ref.x_dot)));
 
         angular_vel_diff = (vehicle_base_length_/radius_of_wheel_)*(lambda_thetaDot_*theta_dot_req - lambda_theta_*error_theta);
     }

@@ -27,7 +27,7 @@ int main(int argc, char** argv)
     asl_gremlin_msgs::MotorAngVel motor_ang_vel;
     motor_ang_vel.header.frame_id = "none";
 
-    ros::Rate loop_rate(5);
+    ros::Rate loop_rate(10);
 
     int msg_count = 0;
     ros::spinOnce();

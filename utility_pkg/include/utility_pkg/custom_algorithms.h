@@ -36,7 +36,6 @@ int get_lower_index(T& container, S value)
     }
 }
 
-
 template<typename T, typename S, typename N, typename val>
 auto linear_interpolate(T& y_container, S& x_container, N index, val x)
 {
@@ -45,14 +44,12 @@ auto linear_interpolate(T& y_container, S& x_container, N index, val x)
 
     auto x0 = *(x_container.begin() + index);
     auto x1 = *(x_container.begin() + index + 1);
-    
-    auto y  = y0 + (x - x0)*(y1 - y0)/(x1 - x0);
 
-    return y;
+    return y0 + (x - x0)*(y1 - y0)/(x1 - x0);
 }
 
-    } // end namespace{custom_algorithms}
-} // end namespace{utility_pkg}
+} // end namespace { custom_algorithms }
+} // end namespace { utility_pkg }
 
 
 
