@@ -1,5 +1,5 @@
 #ifndef _controller_CONTROLLERUTLITIES_H_
-#define CONTROLLER_CONTROLLERUTILITIES_H_
+#define _controller_CONTROLLERUTILITIES_H_
 
 #include <iostream>
 #include <cmath>

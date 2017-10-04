@@ -1,5 +1,5 @@
-#ifndef CONTROLLER__CONTROLLER_BASE_H
-#define CONTROLLER__CONTROLLER_BASE_H
+#ifndef _controller_CONTROLLERBASE_H_
+#define _controller_CONTROLLERBASE_H_
 
 #include <iostream>
 #include <array>

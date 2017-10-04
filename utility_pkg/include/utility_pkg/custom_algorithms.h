@@ -8,17 +8,15 @@
 #include <stdexcept>
 
 namespace utility_pkg{
-    namespace custom_algorithms{
+namespace custom_algorithms{
 
 template<typename T, typename S>
 int get_lower_index(T& container, S value)
 {
     try{
-
         if (value < *(container.begin()) || value > *(container.end()-1))
         {
             throw std::length_error("value is out-of-bounds on either side of range");
-            return 0;
         }
         else
         {
@@ -33,6 +31,7 @@ int get_lower_index(T& container, S value)
     catch(std::length_error& msg)
     {
         ROS_WARN("%s", msg.what());
+        return 0;
     }
 }
 

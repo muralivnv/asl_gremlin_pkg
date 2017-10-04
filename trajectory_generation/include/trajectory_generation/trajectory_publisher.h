@@ -1,5 +1,5 @@
-#ifndef TRAJECTORY_GENERATION__TRAJECTORY_PUBLISHER_HPP
-#define TRAJECTORY_GENERATION__TRAJECTORY_PUBLISHER_HPP
+#ifndef _trajectory_generation_TRAJECTORYPUBLISHER_H_
+#define _trajectory_generation_TRAJECTORYPUBLISHER_H_
 
 #include "TrajectoryBase.h"
 #include <ros/ros.h>

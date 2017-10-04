@@ -1,6 +1,6 @@
 <launch>
 
-<arg name="robot_name" value="asl_gremlin1" />
+<arg name="robot_name"/>
 
 <rosparam   ns="$(arg robot_name)"
             command="load" 

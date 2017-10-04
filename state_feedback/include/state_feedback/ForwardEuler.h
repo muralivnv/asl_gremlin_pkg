@@ -1,9 +1,9 @@
-#ifndef STATE_FEEDBACK__FORWARD_EULER_H
-#define STATE_FEEDBACK__FORWARD_EULER_H
+#ifndef _state_feedback_FORWARDEULER_H_
+#define _state_feedback_FORWARDEULER_H_
 
 #include <iostream>
 #include <array>
-#include "vector_arithmetic.h"
+#include <utility_pkg/vector_arithmetic.h>
 
 namespace state_feedback{
 namespace numerical_diff{

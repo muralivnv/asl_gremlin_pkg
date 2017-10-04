@@ -1,0 +1,40 @@
+<launch>
+
+<arg name="robot_name" />
+
+<node   ns="$(arg robot_name)"
+        name="timestamp_encoder"
+        pkg="state_feedback"
+        type="encoder_data_stamped"
+        respawn="true"
+        output="screen" />
+
+<node   ns="$(arg robot_name)"
+        name="encoder_data_to_omega"
+        pkg="state_feedback"
+        type="encoder_data_to_omega"
+        respawn="true"
+        output="screen" />
+
+<node   ns="$(arg robot_name)"
+        name="pose_from_encoder"
+        pkg="state_feedback"
+        type="encoder_to_pose"
+        respawn="true"
+        output="screen" />
+ 
+<node   ns="$(arg robot_name)"
+        name="pose_from_gps"
+        pkg="state_feedback"
+        type="gps_to_pose"
+        respawn="true"
+        output="screen" />
+
+<node   ns="$(arg robot_name)"
+        name="feedback_selected"
+        pkg="state_feedback"
+        type="feedback_selected"
+        respawn="true"
+        output="screen" />
+
+</launch>

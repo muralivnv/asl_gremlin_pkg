@@ -73,6 +73,7 @@ FeedbackSelected<N>::FeedbackSelected(ros::NodeHandle& nh) : pose_(new pose_type
     compass_data_   = new asl_gremlin_pkg::SubscribeTopic<std_msgs::Float64>(nh,"/mavros/global_position/compass_hdg" ,10);
 
     ros::spinOnce();
+
 }
 
 template<int N>
@@ -94,7 +95,7 @@ template<int N>
 void FeedbackSelected<N>::get_gps_data()
 {
     double theta_enu = utility_pkg::compass_angle_to_polar_angle((compass_data_->get_data())->data);
-
+    
     pose_[0].pose.point  = (gps_pose_data_->get_data())->point;
     pose_[0].pose.header = (gps_pose_data_->get_data())->header;
     pose_[0].heading     = theta_enu;

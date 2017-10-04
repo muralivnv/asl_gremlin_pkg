@@ -1,0 +1,23 @@
+<launch>
+<arg name="robot_name" value="asl_gremlin1" />
+
+<include file="$(find asl_gremlin_pkg)/launch/load_parameters.launch" >
+    <arg name="robot_name" value="$(arg robot_name)" />
+</include>
+
+
+<include file="$(find trajectory_generation)/launch/launch_trajectory_generation.launch" >
+    <arg name="robot_name" value="$(arg robot_name)" />
+</include>
+
+<include file="$(find controller)/launch/launch_controller.launch" >
+    <arg name="robot_name" value="$(arg robot_name)" />
+</include>
+
+<include file="$(find state_feedback)/launch/launch_state_feedback.launch" >
+    <arg name="robot_name" value="$(arg robot_name)" />
+</include>
+
+
+</launch>
+

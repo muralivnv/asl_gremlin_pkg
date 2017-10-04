@@ -1,5 +1,5 @@
-#ifndef STATE_FEEDBACK__GPS2XY_HPP
-#define STATE_FEEDBACK__GPS2XY_HPP
+#ifndef _state_feedback_GPS2XY_H_
+#define _state_feedback_GPS2XY_H_
 
 #include <iostream>
 #include <cmath>
@@ -14,7 +14,9 @@ class Gps2xy{
     double lat_ini = 0.0, lon_ini = 0.0, alt_ini = 0.0;
     double lat = 0.0, lon = 0.0, alt = 0.0;
 
-    std::array<double, 3> pos_ECEF, pos_ECEF_ini, pos_ENU;
+    std::array<double, 3>   pos_ECEF{{0.0,0.0,0.0}}, 
+                            pos_ECEF_ini{{0.0,0.0,0.0}}, 
+                            pos_ENU{{0.0,0.0,0.0}};
 
     const double rad_earth = 6371000;  // (m)
     const double semi_major = 6378137;  // (m)

@@ -1,7 +1,8 @@
 <launch>
+<arg name="robot_name" />
 
-<node   ns="asl_gremlin"
-        name="trajectory_generation" 
+<node   ns="$(arg robot_name)"
+        name="trajectory_generator" 
         pkg="trajectory_generation" 
         type="trajectory_generator_node" 
         respawn="true" 

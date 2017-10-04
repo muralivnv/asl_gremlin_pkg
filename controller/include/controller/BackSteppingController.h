@@ -1,5 +1,5 @@
-#ifndef _controller_BACKSTEPPINGCONTROLLER_H
-#define _controller_BACKSTEPPINGCONTROLLER_H
+#ifndef _controller_BACKSTEPPINGCONTROLLER_H_
+#define _controller_BACKSTEPPINGCONTROLLER_H_
 
 #include "ControllerBase.h"
 #include <array>
@@ -69,6 +69,8 @@ BackSteppingController<ref_state_type, act_state_type>::BackSteppingController(r
     }
 
     wheel_angular_vel_ = new asl_gremlin_msgs::MotorAngVel();
+    wheel_angular_vel_->wl = 0.0;
+    wheel_angular_vel_->wr = 0.0;
 }
 
 
@@ -85,6 +87,7 @@ void BackSteppingController<ref_state_type, act_state_type>::calculate_control_a
 
     double x_act_dot_req = ref.x_dot  - lambda_x_*error_x;
     double y_act_dot_req = ref.y_dot  - lambda_y_*error_y;
+
 
     double theta_cmd = std::atan2(y_act_dot_req, x_act_dot_req);
 

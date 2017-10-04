@@ -6,6 +6,7 @@
 #include <asl_gremlin_msgs/RefTraj.h>
 #include <asl_gremlin_pkg/SubscribeTopic.h>
 #include <asl_gremlin_pkg/GetParam.h>
+#include <std_msgs/Bool.h>
 
 using namespace controller;
 using namespace asl_gremlin_msgs;
@@ -34,6 +35,8 @@ int main(int argc, char** argv)
     ang_vel_topic = GetParam_with_shutdown<std::string>
                         (ctrl_nh, "/controller/cmd_angular_vel_topic",__LINE__);
 
+    asl_gremlin_pkg::SubscribeTopic<std_msgs::Bool> sim(ctrl_nh, ros::this_node::getNamespace()+"/start_sim"); 
+
     ros::Publisher ang_vel_cmd = ctrl_nh.advertise<MotorAngVel>
                                                     (ang_vel_topic, 20);
     ros::Rate loop_rate(10);
@@ -41,9 +44,11 @@ int main(int argc, char** argv)
 
     while(ros::ok())
     {
-       controller->calculate_control_action(*(ref_traj.get_data()),
-                                            *(act_state.get_data()));
-
+        if ( (sim.get_data())->data )
+        {
+            controller->calculate_control_action(*(ref_traj.get_data()),
+                                                *(act_state.get_data()));
+        }
        ang_vel_cmd.publish(*(controller->get_control_action()));
 
        ros::spinOnce();

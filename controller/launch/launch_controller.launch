@@ -1,0 +1,18 @@
+<launch>
+<arg name="robot_name" />
+
+<node   ns="$(arg robot_name)"
+        pkg="controller"
+        name="backstepping_controller"
+        type="backstepping_controller_node"
+        respawn="true"
+        output="screen" />
+
+<node   ns="$(arg robot_name)"
+        pkg="controller"
+        name="angular_vel_to_pwm"
+        type="angular_vel_to_pwm_node"
+        respawn="true"
+        output="screen" />
+
+</launch>

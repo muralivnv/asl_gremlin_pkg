@@ -1,5 +1,5 @@
-#ifndef STATE_FEEDBACK__VECTOR_ARITHMETIC_H
-#define STATE_FEEDBACK__VECTOR_ARITHMETIC_H
+#ifndef _utility_pkg_VECTORARITHMETIC_H_
+#define _utility_pkg_VECTORARITHMETIC_H_
 
 #include "custom_type_traits.h"
 #include <cassert>

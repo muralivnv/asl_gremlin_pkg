@@ -1,5 +1,5 @@
-#ifndef STATE_FEEDBACK__CUSTOM_TYPE_TRAITS_H
-#define STATE_FEEDBACK__CUSTOM_TYPE_TRAITS_H
+#ifndef _utility_pkg_CUSTOMTYPETRAITS_H_
+#define _utility_pkg_CUSTOMTYPETRAITS_H_
 
 #include <vector>
 #include <array>

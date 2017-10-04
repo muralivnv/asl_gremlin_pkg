@@ -19,8 +19,8 @@ int main(int argc, char** argv)
     dynamic_reconfigure::Config conf;
 
     std::string waypoint_server_topic_name;
-    waypoint_server_topic_name = asl_gremlin_pkg::GetParam_with_shutdown<std::string>(wp_nh,"/trajectory/waypoint_server_topic",
-                                                                                __LINE__);
+    waypoint_server_topic_name = "/asl_gremlin1/trajectory_generator/set_parameters";
+
 	try{
 	    if (argc > 2)
 	    {
