@@ -11,8 +11,9 @@
 
 class WaypointSubscribe{
         
-        static std::vector<double> x_waypoints_, y_waypoints_;
+        std::vector<double> x_waypoints_, y_waypoints_;
         int current_waypoint_ptr_ = 0;
+        bool received_wp_ = false;
 
         dynamic_reconfigure::Server<trajectory_generation::waypointSetConfig> dr_wp_srv_;
         dynamic_reconfigure::Server<trajectory_generation::waypointSetConfig>::CallbackType fun_;
@@ -20,10 +21,14 @@ class WaypointSubscribe{
     public:
        
         WaypointSubscribe(ros::NodeHandle& );
-        static void dynamic_reconfigure_waypointSet_callback(trajectory_generation::waypointSetConfig&, uint32_t);
+        void dynamic_reconfigure_waypointSet_callback(trajectory_generation::waypointSetConfig&, uint32_t);
        
         std::vector<double> get_current_waypoint();
         std::vector<double> get_next_waypoint();
+
+        bool received_waypoints(){
+            return received_wp_;
+        }
 };
 
 

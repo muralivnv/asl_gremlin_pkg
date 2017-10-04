@@ -42,10 +42,12 @@ int main(int argc, char** argv)
     ros::Rate loop_rate(10);
     ros::spinOnce();
 
+    ROS_INFO("Initialized /backstepping_controller_node");
     while(ros::ok())
     {
         if ( (sim.get_data())->data )
         {
+            ROS_INFO_ONCE("Started generating control commands");
             controller->calculate_control_action(*(ref_traj.get_data()),
                                                 *(act_state.get_data()));
         }
@@ -54,6 +56,5 @@ int main(int argc, char** argv)
        ros::spinOnce();
        loop_rate.sleep();
     }
-
     return EXIT_SUCCESS;
 }

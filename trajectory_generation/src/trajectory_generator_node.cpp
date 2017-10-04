@@ -41,35 +41,47 @@ int main(int argc, char** argv)
     bool updated_ini_params = false;
     std::vector<double> waypoint(2,0);
     
+    ROS_INFO("Initialized /trajectory_generator");
     while(ros::ok())
     {
         if ( (sim.get_data())->data )
         {
-            if ( updated_ini_params == false )
-            {
-                min_jerk_traj->set_ini_pose(0.0, 0.0);
-
-                waypoint = waypoint_stack.get_current_waypoint();
-                dist_to_wp->set_waypoint(waypoint[0], waypoint[1]);
-                
-                min_jerk_traj->set_final_pose(waypoint[0], waypoint[1]);
-                min_jerk_traj->calc_coeff();
-
-                updated_ini_params = true;
+            if (!waypoint_stack.received_waypoints())
+            { 
+                ROS_ERROR("waypoint stack is empty: USE COMMAND\n" 
+                            "\t\t\t\t rosrun trajectory_generation waypointSet_client -x \"x1,x2...\""
+                            " -y \"y1,y2,...\" \n"
+                            "in new terminal");
             }
-
-            if ( dist_to_wp->is_reached_waypoint() )
+            else
             {
-                min_jerk_traj->set_current_traj_value_to_ini();
-                
-                waypoint = waypoint_stack.get_next_waypoint();
-                dist_to_wp->set_waypoint(waypoint[0], waypoint[1]);
-                
-                min_jerk_traj->set_final_pose(waypoint[0], waypoint[1]);
-                min_jerk_traj->calc_coeff();
-            }
+                if ( updated_ini_params == false )
+                {
+                    ROS_INFO_ONCE("Started creating trajectory for given waypoints");
+                    min_jerk_traj->set_ini_pose(0.0, 0.0);
 
-            min_jerk_traj->generate_traj(ros::Time::now().toSec());
+                    waypoint = waypoint_stack.get_current_waypoint();
+                    dist_to_wp->set_waypoint(waypoint[0], waypoint[1]);
+
+                    min_jerk_traj->set_final_pose(waypoint[0], waypoint[1]);
+                    min_jerk_traj->calc_coeff();
+
+                    updated_ini_params = true;
+                }
+
+                if ( dist_to_wp->is_reached_waypoint() )
+                {
+                    min_jerk_traj->set_current_traj_value_to_ini();
+
+                    waypoint = waypoint_stack.get_next_waypoint();
+                    dist_to_wp->set_waypoint(waypoint[0], waypoint[1]);
+
+                    min_jerk_traj->set_final_pose(waypoint[0], waypoint[1]);
+                    min_jerk_traj->calc_coeff();
+                }
+
+                min_jerk_traj->generate_traj(ros::Time::now().toSec());
+            }
         }
 
         trajectory_generation::publish_trajectory(traj_pub, min_jerk_traj);

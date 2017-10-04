@@ -1,15 +1,13 @@
 #include <trajectory_generation/WaypointSubscribe.h>
 
-std::vector<double> WaypointSubscribe::x_waypoints_ = {0};
-std::vector<double> WaypointSubscribe::y_waypoints_ = {0};
-
-
 WaypointSubscribe::WaypointSubscribe(ros::NodeHandle& nh)
 {
-    fun_ = boost::bind(&WaypointSubscribe::dynamic_reconfigure_waypointSet_callback,
+    fun_ = boost::bind(&WaypointSubscribe::dynamic_reconfigure_waypointSet_callback,this,
                        _1, _2);
 
     dr_wp_srv_.setCallback(fun_);
+    x_waypoints_ = {0};
+    y_waypoints_ = {0};
 }
 
 void WaypointSubscribe::dynamic_reconfigure_waypointSet_callback(trajectory_generation::waypointSetConfig & config,  uint32_t level)
@@ -33,8 +31,15 @@ void WaypointSubscribe::dynamic_reconfigure_waypointSet_callback(trajectory_gene
     }
     else
     {
+        received_wp_ = true;
         ROS_INFO(" trajectory_generation: waypoints received ...");
-        
+       
+        if (x_waypoints_[0] < 2 && y_waypoints_[0] < 2)
+        { 
+            x_waypoints_.erase(begin(x_waypoints_));
+            y_waypoints_.erase(begin(y_waypoints_));
+        }
+
         std::cout << "X_waypoints:  ";
         utility_pkg::print_stl_container(x_waypoints_);
         
