@@ -11,7 +11,7 @@ int main(int argc, char** argv)
     ros::NodeHandle w2pwm_nh;
     
     OmegaToPWM omega_to_pwm(w2pwm_nh);
-    ros::Rate loop_rate(10);
+
     ros::spinOnce();
 
     std::string pwm_pub_topic;
@@ -21,7 +21,13 @@ int main(int argc, char** argv)
 
     ros::Publisher pwm_pub = w2pwm_nh.advertise<asl_gremlin_msgs::MotorPwm>
                                                         (pwm_pub_topic,20);
-
+    int rate = 10;
+    if (!w2pwm_nh.getParam(ros::this_node::getNamespace()+"/sim/rate", rate))
+    {
+        ROS_WARN("Unable access parameter $robot_name/sim/rate, setting rate as 10Hz");
+    }
+    ros::Rate loop_rate(rate);
+    
     while(ros::ok())
     {
         pwm_pub.publish(*(omega_to_pwm.convert_omega_to_pwm()));

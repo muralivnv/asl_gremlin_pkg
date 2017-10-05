@@ -8,7 +8,13 @@ int main(int argc, char** argv)
 
     state_feedback::FeedbackSelected<3> feedback_method(feedback_nh);
 
-    ros::Rate loop_rate(10);
+    int rate = 10;
+    if (!feedback_nh.getParam(ros::this_node::getNamespace()+"/sim/rate", rate))
+    {
+        ROS_WARN("Unable access parameter $robot_name/sim/rate, setting rate as 10Hz");
+    }
+    ros::Rate loop_rate(rate);
+    
     while(ros::ok())
     {
         feedback_method.get_gps_data();

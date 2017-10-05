@@ -16,6 +16,7 @@ class ControllerBase{
         virtual void calculate_control_action(const ref_state_type&, const act_state_type&) = 0;
 
         virtual asl_gremlin_msgs::MotorAngVel* get_control_action() = 0;
+        virtual void reset() = 0;
 };
 
 } // end namespace {controller}

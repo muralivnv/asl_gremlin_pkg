@@ -36,7 +36,13 @@ int main(int argc, char** argv)
     traj_pub_name = asl_gremlin_pkg::GetParam_with_shutdown<std::string>(traj_nh, "/trajectory/publisher_topic", __LINE__);
 
     ros::Publisher traj_pub = traj_nh.advertise<asl_gremlin_msgs::RefTraj>(traj_pub_name, 10);
-    ros::Rate loop_rate(10);
+
+    int rate = 10;
+    if (!traj_nh.getParam(ros::this_node::getNamespace()+"/sim/rate", rate))
+    {
+        ROS_WARN("Unable access parameter $robot_name/sim/rate, setting rate as 10Hz");
+    }
+    ros::Rate loop_rate(rate);
 
     bool updated_ini_params = false;
     std::vector<double> waypoint(2,0);
@@ -51,7 +57,7 @@ int main(int argc, char** argv)
                 ROS_ERROR("waypoint stack is empty: USE COMMAND\n" 
                             "\t\t\t\t rosrun trajectory_generation waypointSet_client -x \"x1,x2...\""
                             " -y \"y1,y2,...\" \n"
-                            "in new terminal");
+                            "\t\t\t in new terminal");
             }
             else
             {

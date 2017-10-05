@@ -66,19 +66,14 @@ void Gps2xy::gps_callback(const sensor_msgs::NavSatFix::ConstPtr& data)
     alt = data->altitude;
 }
 
-
-void Gps2xy::init_callback(const std_msgs::Bool::ConstPtr& data)
+void Gps2xy::reset()
 {
-    // if (flag == true) then re-initialises the starting position as initial "latitude" and "longitude"
-    if (data->data == true)
-    {
-        lat_ini = lat;
-        lon_ini = lon;
-        alt_ini = alt;
+    lat_ini = lat;
+    lon_ini = lon;
+    alt_ini = alt;
 
-        // Update initial starting pos in ECEF frame and store those values in pos_ECEF_ini
-        update_ecef_ini();
-    }
+    // Update initial starting pos in ECEF frame and store those values in pos_ECEF_ini
+    update_ecef_ini();
 }
 
 void Gps2xy::ini_cond_callback(const std_msgs::Float32MultiArray::ConstPtr& ini_cond)

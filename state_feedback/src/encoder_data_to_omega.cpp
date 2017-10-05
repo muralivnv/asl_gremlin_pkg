@@ -1,7 +1,9 @@
 #include <ros/ros.h>
+#include <std_msgs/Bool.h>
 #include <state_feedback/EncoderDataToOmega.h>
 #include <asl_gremlin_msgs/MotorAngVel.h>
 #include <asl_gremlin_pkg/GetParam.h>
+#include <asl_gremlin_pkg/SubscribeTopic.h>
 
 #include <cmath>
 #include <string>
@@ -20,18 +22,34 @@ int main(int argc, char** argv)
 
     ros::Publisher enco2w_pub = enco2w_nh.advertise<asl_gremlin_msgs::MotorAngVel>(actual_w_topic,
                                                                                     100);
+    asl_gremlin_pkg::SubscribeTopic < std_msgs::Bool > sim(enco2w_nh, ros::this_node::getNamespace()+"/start_sim");
 
     EncoderDataToOmega encoder_data_to_omega(enco2w_nh);
 
     asl_gremlin_msgs::MotorAngVel motor_ang_vel;
     motor_ang_vel.header.frame_id = "none";
 
-    ros::Rate loop_rate(10);
+    int rate = 10;
+    if (!enco2w_nh.getParam(ros::this_node::getNamespace()+"/sim/rate", rate))
+    {
+        ROS_WARN("Unable access parameter $robot_name/sim/rate, setting rate as 10Hz");
+    }
+    ros::Rate loop_rate(rate);
 
     int msg_count = 0;
-    
+    bool initiated = false;
+
     while(ros::ok())
     {
+        if ( !initiated && (sim.get_data())->data )
+        {
+            encoder_data_to_omega.update_encoder_starting_values();
+            initiated = true;
+        }
+        if ( !(sim.get_data())->data && initiated)
+        {
+            initiated = false;
+        }
         encoder_data_to_omega.calculate_angular_velocities();
         motor_ang_vel.wl = encoder_data_to_omega.get_left_wheel_angular_vel();
         motor_ang_vel.wr = encoder_data_to_omega.get_right_wheel_angular_vel();

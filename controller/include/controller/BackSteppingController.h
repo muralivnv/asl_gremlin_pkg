@@ -30,6 +30,11 @@ class BackSteppingController :
         void calculate_control_action(const ref_state_type&, const act_state_type&) override;
         asl_gremlin_msgs::MotorAngVel* get_control_action() override;
 
+        void reset(){
+            wheel_angular_vel_->wl = 0.0;
+            wheel_angular_vel_->wr = 0.0;
+        }
+
     private:
         int msg_count_ = 0;
         std::array<double,3> lambda_gains_{{0.2, 0.2, 5.0}};

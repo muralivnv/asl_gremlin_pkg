@@ -4,6 +4,7 @@
 #include <asl_gremlin_pkg/SubscribeTopic.h>
 #include <asl_gremlin_msgs/MotorAngVel.h>
 #include <std_msgs/Float64.h>
+#include <std_msgs/Bool.h>
 #include <asl_gremlin_pkg/GetParam.h>
 #include <utility_pkg/utilities.h>
 
@@ -18,7 +19,7 @@ using namespace state_feedback;
 
 struct roverParam{
     double wl = 0.0, wr = 0.0;
-    double r  = 0.6858, b = 0.3353;
+    double r  = 0.06858, b = 0.3353;
 };
 
 std::array<double, 3> rover_kinematics(double time,
@@ -28,7 +29,6 @@ std::array<double, 3> rover_kinematics(double time,
     double x_dot = (params->wl + params->wr)*0.5*params->r*std::cos(states[2]);
     double y_dot = (params->wl + params->wr)*0.5*params->r*std::sin(states[2]);
     double theta_dot = (params->r/params->b)*(params->wr - params->wl);
-
 
     return {x_dot, y_dot, theta_dot};
 }
@@ -50,12 +50,20 @@ int main(int argc, char** argv)
 
     asl_gremlin_pkg::SubscribeTopic<asl_gremlin_msgs::MotorAngVel> actual_angular_vel(enco2w_nh, ang_vel_topic);
     asl_gremlin_pkg::SubscribeTopic<std_msgs::Float64> compass_hdg(enco2w_nh, "/mavros/global_position/compass_hdg");
+    asl_gremlin_pkg::SubscribeTopic<std_msgs::Bool> sim(enco2w_nh, ros::this_node::getNamespace()+"/start_sim");
 
     roverParam params;
     geometry_msgs::PointStamped encoder_pose;
 
-    ros::Rate loop_rate(10);
-
+    int rate = 10;
+    if (!enco2w_nh.getParam(ros::this_node::getNamespace()+"/sim/rate", rate))
+    {
+        ROS_WARN("Unable access parameter $robot_name/sim/rate, setting rate as 10Hz");
+    }
+    ros::Rate loop_rate(rate);
+    
+    forward_euler_step_size = 1/rate;
+    
     std::array<double ,3> integrated_states;
     std::array<double, 3> initial_states{0,0,0};
 
@@ -75,8 +83,20 @@ int main(int argc, char** argv)
     encoder_data_pub.publish(encoder_pose);
     asl_gremlin_msgs::MotorAngVel* actual_omega;
 
+    bool initiated = false;
+
     while(ros::ok())
     {
+        if ( (sim.get_data())->data && !initiated)
+        {
+            initial_states[0] = 0.0; initial_states[1] = 0.0;
+            initiated = true;
+        }
+        if (initiated && !(sim.get_data())->data)
+        {
+            initiated = false;
+        }
+
         actual_omega = actual_angular_vel.get_data();
         params.wl = actual_omega->wl;
         params.wr = actual_omega->wr;

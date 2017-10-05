@@ -33,7 +33,7 @@ public:
 
     // subscriber callback functions
     void gps_callback(const sensor_msgs::NavSatFix::ConstPtr&);
-    void init_callback(const std_msgs::Bool::ConstPtr&);
+    void reset();
     void ini_cond_callback(const std_msgs::Float32MultiArray::ConstPtr&);
 };
 

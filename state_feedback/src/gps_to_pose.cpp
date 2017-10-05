@@ -7,6 +7,7 @@
 #include <state_feedback/Gps2xy.h>
 #include <string>
 #include <asl_gremlin_pkg/GetParam.h>
+#include <asl_gremlin_pkg/SubscribeTopic.h>
 
 using namespace state_feedback;
 
@@ -25,25 +26,33 @@ int main(int argc, char **argv)
 	ros::Subscriber gps_sub = nh.subscribe("/mavros/global_position/global", 1000, 
                                             &Gps2xy::gps_callback, &gps2xy); //subscribing to "GPS" topic
 
-	ros::Subscriber enco_reset_sub = nh.subscribe("/enco_reset", 150, 
-                                            &Gps2xy::init_callback, &gps2xy); // subscribing to "/enco_reset" topic
-
     ros::Subscriber ini_cond_set_pub = nh.subscribe(gps_pub_topic+"/set_ini_cond",10, 
                                             &Gps2xy::ini_cond_callback, &gps2xy);
 
     // creating publisher objects
 	ros::Publisher local_pose_pub = nh.advertise< geometry_msgs::PointStamped >(gps_pub_topic, 100); //publishing the topic with topic name "/asl_gremlin1/gps2xy"
+    asl_gremlin_pkg::SubscribeTopic <std_msgs::Bool> sim(nh, ros::this_node::getNamespace() + "/start_sim");
 
 	ros::Rate loop_rate(5); // running at 5Hz
 	int count = 0;
 
     geometry_msgs::PointStamped local_pose; // Initialising global variables
+    bool initiated = false;
 
-	// while ros is running
+    ros::spinOnce();
+
 	while(ros::ok())
 	{
-        ros::spinOnce();
-
+        if ( (sim.get_data())->data && !initiated)
+        {
+            gps2xy.reset();
+            count = 0;
+            initiated = true;
+        }
+        if ( initiated && !(sim.get_data())->data)
+        {
+            initiated = true;
+        }
         // first convert the current global to ecef co-ordinates
         gps2xy.geod2ecef();
 

@@ -39,7 +39,13 @@ int main(int argc, char** argv)
 
     ros::Publisher ang_vel_cmd = ctrl_nh.advertise<MotorAngVel>
                                                     (ang_vel_topic, 20);
-    ros::Rate loop_rate(10);
+ 
+    int rate = 10;
+    if (!ctrl_nh.getParam(ros::this_node::getNamespace()+"/sim/rate", rate))
+    {
+        ROS_WARN("Unable access parameter $robot_name/sim/rate, setting rate as 10Hz");
+    }
+    ros::Rate loop_rate(rate);
     ros::spinOnce();
 
     ROS_INFO("Initialized /backstepping_controller_node");
@@ -51,6 +57,9 @@ int main(int argc, char** argv)
             controller->calculate_control_action(*(ref_traj.get_data()),
                                                 *(act_state.get_data()));
         }
+        else
+        { controller->reset(); }
+
        ang_vel_cmd.publish(*(controller->get_control_action()));
 
        ros::spinOnce();
