@@ -14,5 +14,12 @@
         type="angular_vel_to_pwm_node"
         respawn="true"
         output="screen" />
+        
+ <node   ns="$(arg robot_name)"
+        pkg="controller"
+        name="cmd_pwm_to_arduino_pwm"
+        type="cmd_pwm_to_arduino_pwm"
+        respawn="true"
+        output="screen" />      
 
 </launch>

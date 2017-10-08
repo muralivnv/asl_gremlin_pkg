@@ -10,14 +10,14 @@
 
 using namespace custom_type_traits;
 
-template<typename T, long unsigned int array_size>
-auto create_container(std::array<T,array_size>& arr)
+template<typename T, std::size_t array_size>
+std::array<T, array_size> create_container(std::array<T,array_size>& arr)
 {
     return std::array<T,array_size>();
 }
 
 template<typename T>
-auto create_container(std::vector<T>& vec)
+std::vector<T> create_container(std::vector<T>& vec)
 {
     return std::vector<T>(vec.size());
 }

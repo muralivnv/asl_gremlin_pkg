@@ -9,10 +9,11 @@ int main(int argc, char** argv)
 {
 	ros::init(argc,argv,"encoder_stamped_node");
 	ros::NodeHandle nh;
+	std::string node_ns = ros::this_node::getNamespace();
 
-    asl_gremlin_pkg::SubscribeTopic<std_msgs::Int32>    left_encoder_data(nh, "/enco_L", 100),
-                                                        right_encoder_data(nh, "/enco_R", 100),
-                                                        reset_encoder(nh, "/enco_reset", 10);
+    asl_gremlin_pkg::SubscribeTopic<std_msgs::Int32>    left_encoder_data(nh,  node_ns+"/arduino/left_encoder", 100),
+                                                        right_encoder_data(nh, node_ns+"arduino/right_encoder", 100),
+                                                        reset_encoder(nh,      node_ns+"/reset_encoders", 10);
 
     std::string left_encoder_stamped_topic, right_encoder_stamped_topic;
     left_encoder_stamped_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>(nh, 

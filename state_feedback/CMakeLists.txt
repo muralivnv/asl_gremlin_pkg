@@ -148,6 +148,7 @@ add_executable(encoder_data_stamped     src/encoder_data_stamped.cpp)
 add_executable(gps_to_pose              src/gps_to_pose.cpp)
 add_executable(feedback_selected        src/feedback_selected.cpp)
 add_executable(encoder_data_to_omega    src/encoder_data_to_omega.cpp)
+add_executable(feedbackSelect_client    src/feedbackSelect_client.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -162,6 +163,7 @@ add_dependencies(encoder_data_stamped   ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(gps_to_pose            ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(feedback_selected      ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(encoder_data_to_omega  ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(feedbackSelect_client  ${PROJECT_NAME}_generate_messages_cpp)
 
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
@@ -171,6 +173,7 @@ target_link_libraries(encoder_data_stamped      ${PROJECT_NAME} ${catkin_LIBRARI
 target_link_libraries(gps_to_pose               ${PROJECT_NAME} ${catkin_LIBRARIES})
 target_link_libraries(feedback_selected         ${PROJECT_NAME} ${catkin_LIBRARIES})
 target_link_libraries(encoder_data_to_omega     ${PROJECT_NAME} ${catkin_LIBRARIES})
+target_link_libraries(feedbackSelect_client     ${PROJECT_NAME} ${catkin_LIBRARIES})
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )

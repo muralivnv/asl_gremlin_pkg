@@ -89,6 +89,18 @@ template<int N>
 void FeedbackSelected<N>::dynamic_reconfigure_feedback_callback(feedbackSelectConfig& config, uint32_t level)
 {
     feedback = config.feedback;
+    switch(feedback)
+    {
+        case(0):
+            ROS_INFO("Feedback is set to 'GPS+Compass'");
+            break;
+        case(1):
+            ROS_INFO("Feedback is set to 'Encoder+Compass'");
+            break;
+        case(2):
+            ROS_INFO("Feedback is set to 'Pure GPS'");
+            break;
+    }
 }
 
 template<int N>
