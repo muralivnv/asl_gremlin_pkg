@@ -12,6 +12,7 @@ namespace trajectory_generation{
 
 class DistanceToWaypoint{
     double x_wp_, y_wp_;
+    double waypoint_proximity_;
 
     asl_gremlin_pkg::SubscribeTopic<asl_gremlin_msgs::VehicleState>* vehicle_state_;
 

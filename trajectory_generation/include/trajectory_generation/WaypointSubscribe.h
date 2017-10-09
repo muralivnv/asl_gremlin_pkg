@@ -25,6 +25,7 @@ class WaypointSubscribe{
        
         std::vector<double> get_current_waypoint();
         std::vector<double> get_next_waypoint();
+        void reset_counter();
 
         bool received_waypoints(){
             return received_wp_;

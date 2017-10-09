@@ -34,19 +34,18 @@ void WaypointSubscribe::dynamic_reconfigure_waypointSet_callback(trajectory_gene
         received_wp_ = true;
         ROS_INFO(" trajectory_generation: waypoints received ...");
        
-        if (x_waypoints_[0] < 2 && y_waypoints_[0] < 2)
+        if (std::fabs(x_waypoints_[0]) < 2 && std::fabs(y_waypoints_[0]) < 2)
         { 
             x_waypoints_.erase(begin(x_waypoints_));
             y_waypoints_.erase(begin(y_waypoints_));
         }
 
-        std::cout << "X_waypoints:  ";
+        std::cout << "x_waypoints: ";
         utility_pkg::print_stl_container(x_waypoints_);
         
-        std::cout << "\nY_waypoints:  ";
+        std::cout << "\ny_waypoints: ";
         utility_pkg::print_stl_container(y_waypoints_);
     }
-
 }
 
 std::vector<double> WaypointSubscribe::get_current_waypoint()
@@ -62,4 +61,7 @@ std::vector<double> WaypointSubscribe::get_next_waypoint()
     return {x_waypoints_[current_waypoint_ptr_],
                 y_waypoints_[current_waypoint_ptr_] };
 }
+
+void WaypointSubscribe::reset_counter()
+{ current_waypoint_ptr_ = 0; }
 

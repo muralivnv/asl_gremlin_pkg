@@ -19,3 +19,4 @@ motor:
 
 sim:
     rate: 10
+    waypoint_proximity: 0.8

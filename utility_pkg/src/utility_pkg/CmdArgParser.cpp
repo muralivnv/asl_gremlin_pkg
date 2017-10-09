@@ -50,7 +50,7 @@ void utility_pkg::CmdArgParser::print_args() const
 {
     for (auto i : _Options)
     {
-        std::cout<<"[ "<<i.first<<" = "<<i.second<<" ]\n";
+        std::cout<<"{"<<i.first<<" = "<<i.second<<"}\n";
     }
 }
 

@@ -21,25 +21,27 @@ y_ddot_ref  = [i[5] for i in ref_traj]
 
 theta_ref   = [i[6] for i in ref_traj]
 t_ref       = [i[7] for i in ref_traj] 
-t_ref       = [ (t-t_ref[0]).to_sec() for t in t_ref]
+t_ref       = [(t-t_ref[0]).to_sec() for t in t_ref]
 
 ## extract actual rover pose
-#actual_state = [[msg.pose.point.x, msg.pose.point.y, msg.heading,t] for (topic, msg, t) in 
-#                        bag.read_messages(topics=["/asl_gremlin1/state_feedback/selected_feedback"])
+actual_state = [[msg.pose.point.x, msg.pose.point.y, msg.heading,t] for (topic, msg, t) in 
 
-#x_act       = [i[0] for i in actual_state]
-#y_act       = [i[1] for i in actual_state]
-#theta_act   = [i[2] for i in actual_state]
-#t_act       = [i[3] for i in actual_state]
-#
+                        bag.read_messages(topics=["/asl_gremlin1/state_feedback/selected_feedback"])]
+x_act       = [i[0] for i in actual_state]
+y_act       = [i[1] for i in actual_state]
+theta_act   = [i[2] for i in actual_state]
+t_act       = [i[3] for i in actual_state]
+t_act       = [(t-t_act[0]).to_sec() for t in t_act]
+
 ### extract actual angular velocities
-#
-#actual_ang_vel = [[msg.wl, msg.wr] for (topic, msg, t) in
-#                    bag.read_messages(topics=["/asl_gremlin1/state_feedback/encoder/actual_ang_vel"])
-#
-#wl_act      = [i[0] for i in actual_ang_vel]
-#wr_act      = [i[1] for i in actual_ang_vel]
-#t_omega     = [i[2] for i in actual_ang_vel]
+
+actual_ang_vel = [[msg.wl, msg.wr,t] for (topic, msg, t) in
+                    bag.read_messages(topics=["/asl_gremlin1/state_feedback/encoder/actual_ang_vel"])]
+
+wl_act      = [i[0] for i in actual_ang_vel]
+wr_act      = [i[1] for i in actual_ang_vel]
+t_omega     = [i[2] for i in actual_ang_vel]
+t_omega     = [(t-t_omega[0]).to_sec() for t in t_omega]
 
 ### Close rosbag
 bag.close()
@@ -47,8 +49,12 @@ bag.close()
 ## Plotting
 # plot (X-ref, Y-ref, X-actual, Y-actual)
 plt.figure(1)
-plt.plot(x_ref,y_ref,"r-.",linewidth=1.5)
-plt.grid()
+plt.hold(True)
+plt.grid(True)
+ref_path,=plt.plot(x_ref,y_ref,"r-.",linewidth=1.5, label="Reference Path")
+act_path,=plt.plot(x_act,y_act,"b",linewidth=1,label="Actual Path")
+plt.legend(handles=[ref_path,act_path])
+plt.title("Desired and Actual path of the Rover")
 plt.xlabel("x(m)")
 plt.ylabel("y(m)")
 

@@ -35,7 +35,7 @@ int main(int argc, char** argv)
                 else
                 {
                     lam_x.name = "lambda_x";
-                    lam_x.value = utility_pkg::str2double(opt->second,0,opt->second.size());
+                    lam_x.value = std::stod(opt->second);
                     conf.doubles.push_back(lam_x);
                 }
             }
@@ -50,7 +50,7 @@ int main(int argc, char** argv)
                 else
                 {
                     lam_y.name = "lambda_y";
-                    lam_y.value = utility_pkg::str2double(opt->second,0,opt->second.size());
+                    lam_y.value = std::stod(opt->second);
                     conf.doubles.push_back(lam_y);
                 }
             }
@@ -65,7 +65,7 @@ int main(int argc, char** argv)
                 else
                 {
                     lam_theta.name = "lambda_theta";
-                    lam_theta.value = utility_pkg::str2double(opt->second,0,opt->second.size());
+                    lam_theta.value = std::stod(opt->second);
                     conf.doubles.push_back(lam_theta);
                 }
             }
@@ -80,7 +80,7 @@ int main(int argc, char** argv)
                 else
                 {
                     lam_theta.name = "lambda_thetaDot";
-                    lam_theta.value = utility_pkg::str2double(opt->second,0,opt->second.size());
+                    lam_theta.value = std::stod(opt->second);
                     conf.doubles.push_back(lam_thetaDot);
                 }
             }

@@ -1,101 +1,47 @@
-#ifndef UTILITY_PKG_STRMANIP_H
-#define UTILITY_PKG_STRMANIP_H
+#ifndef _utility_pkg_STRMANIP_H_
+#define _utility_pkg_STRMANIP_H_
 
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <vector>
-#include <iomanip>
-#include <map> 
+#include <algorithm>
 
 namespace utility_pkg {
 
-double str2double(const std::string& s, int begin, int end)
+std::vector<std::string> split(const std::string& S, char delim)
 {
-    int sign = 1;
-     double value = 0;
-     int dec_count = 0;
-     bool is_decimal = false;
- 
-     for (int i = begin; i <= end; i++)
-     {
-         if (s[i] == '-')
-         { sign = -1; }
+    std::stringstream str_stream(S);
+    std::string str_item;
+    std::vector<std::string> splitted_strs;
 
-         else if (s[i] == '.')
-         {
-             if (is_decimal == false)
-             { is_decimal = true;}
-             continue;
-         }
-         
-         else if ((s[i] >= '0') && (s[i] <= '9'))
-         {
-             int tmp = s[i] - '0';
-             value = (value == 0) ? tmp : value*10 + tmp;
-             if (is_decimal == true)
-             {
-                 dec_count++;
-             }
-         }
-     }
-     
-     for(int i = 0; i <dec_count ; ++i)
-     {
-         value = value/10;
-     }
+    while ( std::getline(str_stream, str_item, delim) )
+    { splitted_strs.push_back(str_item); }
 
-     return sign*value;
+    return splitted_strs;
 }
 
 template <typename T>
 std::vector<T> string_to_vector(std::string& S)
 {
-    std::vector<T> Vec;
-    int begin = 0, current = 0, end = S.size() - 1;
+    auto splitted_strs = split(S, ',');
     
-    // strip leading characters which do not represent number
-    while (S[begin] < '0')
-    {
-        ++begin;
-    }
-    current = begin;
+    std::vector<T> Vec;
+    std::transform(splitted_strs.begin(), splitted_strs.end(), std::back_inserter(Vec),
+                    [](auto item){ return std::stod(item); });
 
-    if (begin == S.size())
-    {
-        return {};
-    }
-    // strip trailing characters which do not represent number
-    while (S[end] < '0')
-    {
-        --end;
-    }
-
-    while ( current <= end )
-    {
-        if (S[current] == ',')
-        {
-            Vec.push_back(str2double(S, begin, current));
-            begin = current + 1;
-        }
-        ++current;
-    }
-
-    Vec.push_back(str2double(S, begin, current));
-
-    return Vec; // Vec is implicitly treated as an rvalue in return statement.
-    // it will be returned via return-value-optimization.
+    return Vec;
 }
 
 template<typename type, typename ... Args, template <typename, typename ...> class STL_Container>
 void print_stl_container(const STL_Container<type, Args...>& stl_container)
 {
-    std::cout << "[ ";
-	for (auto i  :  stl_container)
-	{
-		std::cout <<  i << ' ';
-	}
-	std::cout << " ]\n";
+    std::cout << "{";
+	for (auto elem  :  stl_container)
+	{ std::cout <<  elem << ", "; }
+	std::cout << "}\n";
 }
+
 }; // end namespace {utility_pkg}
 
 template <typename T, typename S>

@@ -53,10 +53,7 @@ int main(int argc, char** argv)
         {
             if (!waypoint_stack.received_waypoints())
             { 
-                ROS_ERROR("waypoint stack is empty: USE COMMAND\n" 
-                            "\t\t\t\t rosrun trajectory_generation waypointSet_client -x \"x1,x2...\""
-                            " -y \"y1,y2,...\" \n"
-                            "\t\t\t in new terminal");
+                ROS_ERROR("cannot create trajectory, waypoint stack is empty");
             }
             else
             {
@@ -86,6 +83,11 @@ int main(int argc, char** argv)
                 }
                 min_jerk_traj->generate_traj(ros::Time::now().toSec());
             }
+        }
+        else if (!(sim.get_data())->data && updated_ini_params)
+        {
+            updated_ini_params = false;
+            waypoint_stack.reset_counter();
         }
 
         trajectory_generation::publish_trajectory(traj_pub, min_jerk_traj);

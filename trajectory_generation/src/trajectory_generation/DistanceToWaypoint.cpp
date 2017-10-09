@@ -4,24 +4,24 @@ using namespace trajectory_generation;
 
 DistanceToWaypoint::DistanceToWaypoint(ros::NodeHandle& nh)
 {
-    std::string feedback_selected_topic = 
-                                    asl_gremlin_pkg::GetParam_with_shutdown<std::string>(nh, 
-                                                                                        "/state_feedback/feedback_selected",
-                                                                                        __LINE__);
+    std::string feedback_selected_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>
+                                            (nh, "/state_feedback/feedback_selected", __LINE__);
 
     vehicle_state_ = new asl_gremlin_pkg::SubscribeTopic<asl_gremlin_msgs::VehicleState>
                                                         (nh, feedback_selected_topic);
+
+    if (!nh.getParam(ros::this_node::getNamespace()+"/sim/waypoint_proximity",waypoint_proximity_))
+    { ROS_WARN("couldn't access parameter ${robot_name}/sim/waypoint_proximity, default value of 0.8m is set"); }
 
     ros::spinOnce();
 }
 
 DistanceToWaypoint::~DistanceToWaypoint()
-{
-    delete vehicle_state_;
-}
+{ delete vehicle_state_; }
 
 void DistanceToWaypoint::set_waypoint(double x, double y)
 {
+    ROS_INFO("Reached waypoint(x,y):= (%f,%f)",x_wp_,y_wp_);
     x_wp_ = x; y_wp_ = y;
 }
 
@@ -32,5 +32,5 @@ bool DistanceToWaypoint::is_reached_waypoint()
 
     return std::sqrt( std::pow(x_current - x_wp_,2) + 
                         (std::pow(y_current - y_wp_, 2))) < 
-            0.8 ? true : false;
+            waypoint_proximity_ ? true : false;
 }
