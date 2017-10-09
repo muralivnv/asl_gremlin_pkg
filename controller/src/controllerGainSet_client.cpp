@@ -91,7 +91,7 @@ int main(int argc, char** argv)
                 throw "incorrect flags specified, gains didn't updated";
             }
 
-            if(ros::service::call("/controller/set_parameters",srv_req, srv_resp) )
+            if(ros::service::call("/asl_gremlin1/backstepping_controller/set_parameters",srv_req, srv_resp) )
             {
                 ROS_INFO("controllerGainSet_client: controller gains updated successfully");
             }
