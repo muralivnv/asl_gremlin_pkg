@@ -127,6 +127,7 @@ add_library(${PROJECT_NAME}
             src/${PROJECT_NAME}/str_manip.cpp
             src/${PROJECT_NAME}/utilities.cpp
             src/${PROJECT_NAME}/custom_algorithms.cpp
+            src/${PROJECT_NAME}/tinyexpr.c
 )
 
 ## Add cmake target dependencies of the library

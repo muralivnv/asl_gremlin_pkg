@@ -6,6 +6,7 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
+#include "tinyexpr.h"
 
 namespace utility_pkg {
 
@@ -28,8 +29,7 @@ std::vector<T> string_to_vector(std::string& S)
     
     std::vector<T> Vec;
     std::transform(splitted_strs.begin(), splitted_strs.end(), std::back_inserter(Vec),
-                    [](auto item){ return std::stod(item); });
-
+                    [](auto item){ return te_interp(item.c_str(),0); });
     return Vec;
 }
 
