@@ -23,7 +23,7 @@ int main(int argc, char **argv)
                                 (nh,"/state_feedback/gps/pose_topic", __LINE__);
 
     // creating subscriber objects
-	ros::Subscriber gps_sub = nh.subscribe("/mavros/global_position/global", 1000, 
+	ros::Subscriber gps_sub = nh.subscribe(ros::this_node::getNamespace()+"/mavros/global_position/global", 1000, 
                                             &Gps2xy::gps_callback, &gps2xy); //subscribing to "GPS" topic
 
     ros::Subscriber ini_cond_set_pub = nh.subscribe(gps_pub_topic+"/set_ini_cond",10, 

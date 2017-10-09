@@ -24,7 +24,7 @@ int main(int argc, char** argv)
     ros::Publisher pwm_pub = pwm2ard_nh.advertise<std_msgs::Int16MultiArray>
                                                         (ros::this_node::getNamespace()+"/arduino/cmd_pwm",20);
 
-    int rate = 10;
+    double rate = 10.0;
     if (!pwm2ard_nh.getParam(ros::this_node::getNamespace()+"/sim/rate", rate))
     {
         ROS_WARN("Unable access parameter $robot_name/sim/rate, setting rate as 10Hz");

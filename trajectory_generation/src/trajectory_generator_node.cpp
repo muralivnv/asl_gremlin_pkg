@@ -36,7 +36,7 @@ int main(int argc, char** argv)
     traj_pub_name = asl_gremlin_pkg::GetParam_with_shutdown<std::string>(traj_nh, "/trajectory/publisher_topic", __LINE__);
     ros::Publisher traj_pub = traj_nh.advertise<asl_gremlin_msgs::RefTraj>(traj_pub_name, 10);
 
-    int rate = 10;
+    double rate = 10.0;
     if (!traj_nh.getParam(ros::this_node::getNamespace()+"/sim/rate", rate))
     {
         ROS_WARN("Unable access parameter $robot_name/sim/rate, setting rate as 10Hz");

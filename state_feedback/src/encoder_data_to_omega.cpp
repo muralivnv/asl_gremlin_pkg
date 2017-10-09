@@ -29,7 +29,7 @@ int main(int argc, char** argv)
     asl_gremlin_msgs::MotorAngVel motor_ang_vel;
     motor_ang_vel.header.frame_id = "none";
 
-    int rate = 10;
+    double rate = 10.0;
     if (!enco2w_nh.getParam(ros::this_node::getNamespace()+"/sim/rate", rate))
     {
         ROS_WARN("Unable access parameter $robot_name/sim/rate, setting rate as 10Hz");

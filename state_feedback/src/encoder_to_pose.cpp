@@ -49,13 +49,13 @@ int main(int argc, char** argv)
     ros::Publisher encoder_data_pub = enco2w_nh.advertise<geometry_msgs::PointStamped>(encoder_pub_name,10);
 
     asl_gremlin_pkg::SubscribeTopic<asl_gremlin_msgs::MotorAngVel> actual_angular_vel(enco2w_nh, ang_vel_topic);
-    asl_gremlin_pkg::SubscribeTopic<std_msgs::Float64> compass_hdg(enco2w_nh, "/mavros/global_position/compass_hdg");
+    asl_gremlin_pkg::SubscribeTopic<std_msgs::Float64> compass_hdg(enco2w_nh, ros::this_node::getNamespace()+"/mavros/global_position/compass_hdg");
     asl_gremlin_pkg::SubscribeTopic<std_msgs::Bool> sim(enco2w_nh, ros::this_node::getNamespace()+"/start_sim");
 
     roverParam params;
     geometry_msgs::PointStamped encoder_pose;
 
-    int rate = 10;
+    double rate = 10.0;
     if (!enco2w_nh.getParam(ros::this_node::getNamespace()+"/sim/rate", rate))
     {
         ROS_WARN("Unable access parameter $robot_name/sim/rate, setting rate as 10Hz");
@@ -70,7 +70,8 @@ int main(int argc, char** argv)
     ros::spinOnce();
 
     initial_states[2] = utility_pkg::compass_angle_to_polar_angle((compass_hdg.get_data())->data) * deg2rad;
-    double t_initial = 0.0, t_final = t_initial + forward_euler_step_size;
+    double t_initial = 0.0;
+    double t_final = t_initial + forward_euler_step_size;
 
     int msg_count = 0;
     encoder_pose.point.x = initial_states[0];
@@ -103,9 +104,10 @@ int main(int argc, char** argv)
 
         initial_states[2] = utility_pkg::compass_angle_to_polar_angle((compass_hdg.get_data())->data) * deg2rad;
 
-        integrated_states = forwardEuler_integration(rover_kinematics,
-                                                    initial_states,
-                                                    t_initial, t_final, &params);
+        integrated_states = forwardEuler_integration(   rover_kinematics,
+                                                        initial_states,
+                                                        t_initial, t_final, 
+                                                        &params);
         ++msg_count;
         encoder_pose.point.x = integrated_states[0];
         encoder_pose.point.y = integrated_states[1];

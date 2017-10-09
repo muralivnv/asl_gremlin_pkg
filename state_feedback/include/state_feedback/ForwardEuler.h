@@ -15,7 +15,7 @@ template<   typename System,
             typename time_type,
             typename parameter_type = void >
 State_type forwardEuler_integration(System system, State_type& initial_state, time_type start_time,
-                              time_type end_time, parameter_type* param = nullptr)
+                                      time_type end_time, parameter_type* param = nullptr)
 {
     State_type x_current = initial_state;
 
