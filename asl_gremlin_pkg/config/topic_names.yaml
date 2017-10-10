@@ -1,0 +1,18 @@
+trajectory:
+    publisher_topic: /trajectory_generation/reference_trajectory
+    waypoint_server_topic: /trajectory_generation/set_parameters
+
+controller:
+    cmd_angular_vel_topic: /controller/cmd_angular_vel
+    cmd_pwm_topic: /controller/cmd_motor_pwm
+
+state_feedback:
+    encoder:
+        pose_topic: /state_feedback/position_from_encoder
+        ang_vel_topic: /state_feedback/encoder/actual_ang_vel
+        left_timeStamped_topic: /state_feedback/encoder_left_timeStamped
+        right_timeStamped_topic: /state_feedback/encoder_right_timeStamped
+    gps:
+        pose_topic: /state_feedback/position_from_gps
+
+    feedback_selected: /state_feedback/selected_feedback

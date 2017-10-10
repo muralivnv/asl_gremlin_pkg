@@ -1,7 +1,7 @@
 <launch>
 
 	<arg name="encoder_port" default="/dev/ttyACM0" />
-	<arg name="robot_name" default="asl_gremlin1" />
+	<arg name="robot_name" default="asl_gremlin" />
 
 <!--
 	<include 	file="/home/odroid/mavros/catkin_ws/src/mavros/mavros/launch/apm2.launch" 
@@ -11,7 +11,7 @@
 	<param name="port" value="$(arg encoder_port)" />
 	</node>
 -->
-	<include file="$(find asl_gremlin_pkg)/launch/load_parameters.launch" >
+	<include file="$(find asl_gremlin_pkg)/launch/load_params.launch" >
 		<arg name="robot_name" value="$(arg robot_name)" />
 	</include>
 
