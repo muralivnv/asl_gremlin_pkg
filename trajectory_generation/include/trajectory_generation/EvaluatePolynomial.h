@@ -15,7 +15,6 @@ enum orderOfDiff{
     snap
 };
 
-
 double expand_Nth_differentiation_coeff(int N, int order)
 {
     if ( N < 0)
@@ -34,20 +33,15 @@ struct evaluate_Nth_order_polynomial{
     {
         double differentiation_coeff = expand_Nth_differentiation_coeff(N, order);
 
-        evaluate_Nth_order_polynomial <N - 1, array_size> polynomial_obj;
-
-        return differentiation_coeff * arr[N] * std::pow(t, N - order) + 
-                polynomial_obj(t,arr,order);
+        return differentiation_coeff * arr[N] * std::pow(t, N - order)+
+                evaluate_Nth_order_polynomial < N-1, array_size >()(t,arr,order);
     }
 };
-
 
 template <std::size_t array_size>
 struct evaluate_Nth_order_polynomial <0, array_size> {
     double operator()(double t, std::array<double, array_size>& arr, orderOfDiff order)
-    {
-        return order > 0 ? 0 : arr[0];
-    }
+    { return order > 0 ? 0 : arr[0]; }
 };
 
 template<int N, std::size_t coeff_size>

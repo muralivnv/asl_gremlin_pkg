@@ -37,9 +37,19 @@ template<typename type, typename ... Args, template <typename, typename ...> cla
 void print_stl_container(const STL_Container<type, Args...>& stl_container)
 {
     std::cout << "{";
-	for (auto elem  :  stl_container)
-	{ std::cout <<  elem << ", "; }
-	std::cout << "}\n";
+    for (typename STL_Container<type, Args...>::const_iterator c_it = begin(stl_container);
+            c_it != end(stl_container); ++c_it)
+    {
+        std::cout << *c_it;
+        if ( c_it < end(stl_container)-1)
+        { std::cout << ", "; }
+    }
+    std::cout << "}\n";
+
+    //std::cout << "{";
+	//for (auto elem  :  stl_container)
+	//{ std::cout <<  elem << ", "; }
+	//std::cout << "}\n";
 }
 
 }; // end namespace {utility_pkg}

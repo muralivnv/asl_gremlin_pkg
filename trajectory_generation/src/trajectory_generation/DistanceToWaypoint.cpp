@@ -21,8 +21,11 @@ DistanceToWaypoint::~DistanceToWaypoint()
 
 void DistanceToWaypoint::set_waypoint(double x, double y)
 {
-    ROS_INFO("Reached waypoint(x,y):= (%f,%f)",x_wp_,y_wp_);
+    if ( std::fabs(x_wp_) >= 1.0 && std::fabs(y_wp_) >= 1.0 )
+    { ROS_INFO("Reached waypoint(x,y):= (%f,%f)",x_wp_,y_wp_); }
+
     x_wp_ = x; y_wp_ = y;
+    ++local_counter_;
 }
 
 bool DistanceToWaypoint::is_reached_waypoint()

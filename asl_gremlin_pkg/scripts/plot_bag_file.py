@@ -55,7 +55,7 @@ ref_path,=plt.plot(x_ref,y_ref,"r-.",linewidth=1.5, label="Reference Path")
 act_path,=plt.plot(x_act,y_act,"b",linewidth=1,label="Actual Path")
 plt.legend(handles=[ref_path,act_path])
 plt.title("Desired and Actual path of the Rover")
-plt.xlabel("x(m)")
+plt.xlabel("x(m)",fontweight='bold',fontsize=12)
 plt.ylabel("y(m)")
 
 # plot (t, X-ref, t, X-actual)

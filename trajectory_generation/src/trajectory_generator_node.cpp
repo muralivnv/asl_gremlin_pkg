@@ -33,7 +33,8 @@ int main(int argc, char** argv)
     
     std::string traj_pub_name;
     
-    traj_pub_name = asl_gremlin_pkg::GetParam_with_shutdown<std::string>(traj_nh, "/trajectory/publisher_topic", __LINE__);
+    traj_pub_name = asl_gremlin_pkg::GetParam_with_shutdown<std::string>
+                    (traj_nh, "/trajectory/publisher_topic", __LINE__);
     ros::Publisher traj_pub = traj_nh.advertise<asl_gremlin_msgs::RefTraj>(traj_pub_name, 10);
 
     double rate = 10.0;
@@ -57,7 +58,7 @@ int main(int argc, char** argv)
             }
             else
             {
-                if ( updated_ini_params == false )
+                if ( !updated_ini_params )
                 {
                     ROS_INFO_ONCE("Started creating trajectory for given waypoints");
                     min_jerk_traj->set_ini_pose(0.0, 0.0);

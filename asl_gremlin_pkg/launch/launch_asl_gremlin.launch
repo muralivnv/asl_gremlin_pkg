@@ -1,28 +1,30 @@
 <launch>
 
-	<arg name="encoder_port" default="/dev/ttyACM0" />
+	<arg name="arduino_port" default="/dev/ttyACM0" />
 	<arg name="robot_name" default="asl_gremlin" />
 
-<!--
-	<include 	file="/home/odroid/mavros/catkin_ws/src/mavros/mavros/launch/apm2.launch" 
-		  		ns="$(arg robot_name)" />
-
-	<node ns="$(arg robot_name)" name="rosserial" pkg="rosserial_python" type="serial_node.py" respawn="true">
-	<param name="port" value="$(arg encoder_port)" />
-	</node>
--->
+                        <!-- Load Parameters -->
 	<include file="$(find asl_gremlin_pkg)/launch/load_params.launch" >
 		<arg name="robot_name" value="$(arg robot_name)" />
 	</include>
+    <!--
+    <include 	file="$(find mavros)/launch/apm2.launch" 
+        ns="$(arg robot_name)" />
 
+	<node ns="$(arg robot_name)" name="rosserial" pkg="rosserial_python" type="serial_node.py" respawn="true">
+	<param name="port" value="$(arg arduino_port)" />
+	</node>
+-->
+                        <!-- Launch TrajectoryGenerator -->
 	<include file="$(find trajectory_generation)/launch/launch_trajectory_generation.launch" >
 		<arg name="robot_name" value="$(arg robot_name)" />
 	</include>
 
+                        <!-- Launch Controller -->
 	<include file="$(find controller)/launch/launch_controller.launch" >
 		<arg name="robot_name" value="$(arg robot_name)" />
 	</include>
-
+                        <!-- Launch Feedback -->
 	<include file="$(find state_feedback)/launch/launch_state_feedback.launch" >
 		<arg name="robot_name" value="$(arg robot_name)" />
 	</include>
