@@ -23,7 +23,7 @@ struct roverParam{
 };
 
 std::array<double, 3> rover_kinematics(double time,
-                                       std::array<double, 3> states,
+                                       const std::array<double, 3>& states,
                                         roverParam* params)
 {
     double x_dot = (params->wl + params->wr)*0.5*params->r*std::cos(states[2]);
@@ -94,9 +94,7 @@ int main(int argc, char** argv)
             initiated = true;
         }
         if (initiated && !(sim.get_data())->data)
-        {
-            initiated = false;
-        }
+        { initiated = false; }
 
         actual_omega = actual_angular_vel.get_data();
         params.wl = actual_omega->wl;
@@ -121,6 +119,6 @@ int main(int argc, char** argv)
 
         initial_states = integrated_states;
         t_initial = t_final;
-        t_final = t_final + forward_euler_step_size;
+        t_final += forward_euler_step_size;
     }
 }

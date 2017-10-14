@@ -11,6 +11,12 @@ OmegaToPWM::OmegaToPWM(ros::NodeHandle& nh)
     pwm_lookup_ = asl_gremlin_pkg::GetParam_with_shutdown<std::vector<double>>
                     (nh, "/motor/omega_to_pwm/pwm", __LINE__);
 
+    if (omega_lookup_.size() != pwm_lookup_.size())
+    {
+        ROS_ERROR("Mismatch sizes, /motor/omega_to_pwm/pwm.size() != /motor/omega_to_pwm/omega.size()");
+        ros::shutdown();
+    }
+
     std::string ang_vel_topic;
     ang_vel_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>
                     (nh, "/controller/cmd_angular_vel_topic",__LINE__);

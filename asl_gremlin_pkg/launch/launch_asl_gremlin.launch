@@ -1,7 +1,7 @@
 <launch>
 
 	<arg name="arduino_port" default="/dev/ttyACM0" />
-	<arg name="robot_name" default="asl_gremlin" />
+	<arg name="robot_name" default="asl_gremlin1" />
 
                         <!-- Load Parameters -->
 	<include file="$(find asl_gremlin_pkg)/launch/load_params.launch" >

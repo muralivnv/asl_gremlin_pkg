@@ -58,19 +58,24 @@ BackSteppingController<ref_state_type, act_state_type>::BackSteppingController(r
                         this, _1, _2);
     dr_gain_srv_.setCallback(fun_);
 
-    if (!nh.getParam(ros::this_node::getNamespace()+"/wheel/radius",radius_of_wheel_))
+    auto nh_namespace = ros::this_node::getNamespace();
+
+    if (!nh.getParam(nh_namespace+"/wheel/radius",radius_of_wheel_))
     {
-        ROS_WARN("Can't access parameter: /wheel/radius, setting to 0.06858m");
+        ROS_WARN("Can't access parameter: /%s/wheel/radius, setting to 0.06858m",
+                    nh_namespace.c_str());
     }
 
-    if (!nh.getParam(ros::this_node::getNamespace()+"/chassis/base_length",vehicle_base_length_))
+    if (!nh.getParam(nh_namespace+"/chassis/base_length",vehicle_base_length_))
     {
-        ROS_WARN("Can't access parameter: /asl_gremlin/chassis/base_length, setting to 0.3353m");
+        ROS_WARN("Can't access parameter: /%s/chassis/base_length, setting to 0.3353m",
+                    nh_namespace.c_str());
     }
 
-    if (!nh.getParam(ros::this_node::getNamespace()+"/wheel/max_angular_vel",max_wheel_angular_vel_))
+    if (!nh.getParam(nh_namespace+"/wheel/max_angular_vel",max_wheel_angular_vel_))
     {
-        ROS_WARN("Can't access parameter: /asl_gremlin/wheel/max_angular_vel, setting to 12.5(rad/sec)");
+        ROS_WARN("Can't access parameter: /%s/wheel/max_angular_vel, setting to 12.5(rad/sec)",
+                    nh_namespace.c_str());
     }
 
     wheel_angular_vel_ = new asl_gremlin_msgs::MotorAngVel();
@@ -93,7 +98,6 @@ void BackSteppingController<ref_state_type, act_state_type>::calculate_control_a
     double x_act_dot_req = ref.x_dot  - lambda_x_*error_x;
     double y_act_dot_req = ref.y_dot  - lambda_y_*error_y;
 
-
     double theta_cmd = std::atan2(y_act_dot_req, x_act_dot_req);
 
     double error_theta = controller::delta_theta(actual_hdg, theta_cmd);
@@ -108,9 +112,8 @@ void BackSteppingController<ref_state_type, act_state_type>::calculate_control_a
            angular_vel_diff = 0.0;
 
     if ( vel_cmd <= 0.2 )
-    {
-        angular_vel_diff = -lambda_theta_ * controller::delta_theta(actual_hdg, ref.theta);
-    }
+    { angular_vel_diff = -lambda_theta_ * controller::delta_theta(actual_hdg, ref.theta); }
+
     else
     {
         double theta_dot_req = (1/vel_cmd)*(std::cos(theta_cmd)*(ref.y_ddot - lambda_y_*(vel_cmd*std::sin(actual_hdg) - ref.y_dot)) - 
@@ -120,11 +123,9 @@ void BackSteppingController<ref_state_type, act_state_type>::calculate_control_a
     }
 
     if ( std::fabs(angular_vel_diff) > 40.0 )
-    {
-        angular_vel_diff = SIGN(angular_vel_diff)*40.0;
-    }
+    { angular_vel_diff = SIGN(angular_vel_diff)*40.0; }
 
-    angular_vel_sum = std::min(angular_vel_sum, 40.0);
+    angular_vel_sum = std::min<double>(angular_vel_sum, 40.0);
 
     wheel_angular_vel_->wl = 0.5*(angular_vel_sum - angular_vel_diff);
     wheel_angular_vel_->wr = 0.5*(angular_vel_sum + angular_vel_diff);

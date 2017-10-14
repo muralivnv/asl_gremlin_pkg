@@ -1,6 +1,6 @@
 <launch>
 
-<include file="$(find asl_gremlin_pkg)/launch/asl_gremlin_launch.launch" />
+<include file="$(find asl_gremlin_pkg)/launch/load_params.launch" />
 
 <node ns="asl_gremlin1" name="test_publish_encoder_ticks" pkg="test_asl_gremlin" type="test_publish_encoder_ticks" output="screen" />
 

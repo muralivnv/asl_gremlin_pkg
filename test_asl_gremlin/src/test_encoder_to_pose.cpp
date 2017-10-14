@@ -68,7 +68,7 @@ int main(int argc, char** argv)
     ros::spinOnce();
 
     initial_states[2] = (compass_hdg.get_data())->data * deg2rad;
-    double t_initial = 0.0, t_final = t_initial + 0.2;
+    double t_initial = 0.0, t_final = t_initial + 0.1;
 
     int msg_count = 0;
     encoder_pose.point.x = initial_states[0];
@@ -110,7 +110,7 @@ int main(int argc, char** argv)
 
         initial_states = integrated_states;
         t_initial = t_final;
-        t_final = t_final + 0.2;
+        t_final = t_final + 0.1;
     }
     out_file.close();
 }
