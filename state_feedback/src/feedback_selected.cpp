@@ -14,6 +14,8 @@ int main(int argc, char** argv)
     { ROS_WARN("Unable access parameter $robot_name/sim/rate, setting rate as 10Hz"); }
 
     ros::Rate loop_rate(rate);
+
+    ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
     
     while(ros::ok())
     {

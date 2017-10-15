@@ -47,7 +47,7 @@ int main(int argc, char** argv)
     bool updated_ini_params = false;
     std::vector<double> waypoint(2,0);
     
-    ROS_INFO("Initialized /trajectory_generator");
+    ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
     while(ros::ok())
     {
         if ( (sim.get_data())->data )

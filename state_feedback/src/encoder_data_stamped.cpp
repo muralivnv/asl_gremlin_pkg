@@ -35,6 +35,8 @@ int main(int argc, char** argv)
 	msg_left.data.clear();
 
 	ros::Rate loop_rate(250);
+	
+	ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
 
 	while(ros::ok())
 	{

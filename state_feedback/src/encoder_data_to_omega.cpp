@@ -39,6 +39,8 @@ int main(int argc, char** argv)
     int msg_count = 0;
     bool initiated = false;
 
+    ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
+
     while(ros::ok())
     {
         if ( !initiated && (sim.get_data())->data )

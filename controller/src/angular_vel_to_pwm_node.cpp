@@ -28,6 +28,7 @@ int main(int argc, char** argv)
     }
     ros::Rate loop_rate(rate);
     
+    ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
     while(ros::ok())
     {
         pwm_pub.publish(*(omega_to_pwm.convert_omega_to_pwm()));

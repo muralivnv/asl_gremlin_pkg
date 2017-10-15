@@ -41,6 +41,8 @@ int main(int argc, char **argv)
 
     ros::spinOnce();
 
+	ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
+
 	while(ros::ok())
 	{
         if ( (sim.get_data())->data && !initiated)
