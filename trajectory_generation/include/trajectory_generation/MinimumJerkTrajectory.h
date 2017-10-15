@@ -9,8 +9,6 @@
 #include <ros/time.h>
 #include "EvaluatePolynomial.h"
 
-#define arr_size(x) std::tuple_size<decltype(x)>::value
-
 template<typename T>
 class MinimumJerkTrajectory : 
                     public TrajectoryBase {
@@ -103,13 +101,13 @@ void MinimumJerkTrajectory<T>::generate_traj(double time)
 {
     double t_rel = (time - t_initial_);
 
-    ref_traj_obj_.x         = get_Nth_order_polynomial<5, arr_size(x_coeff_)>(t_rel, x_coeff_, orderOfDiff::position);
-    ref_traj_obj_.x_dot     = get_Nth_order_polynomial<5, arr_size(x_coeff_)>(t_rel, x_coeff_, orderOfDiff::velocity);
-    ref_traj_obj_.x_ddot    = get_Nth_order_polynomial<5, arr_size(x_coeff_)>(t_rel, x_coeff_, orderOfDiff::acceleration);
+    ref_traj_obj_.x         = eval_poly< 5 >(t_rel, x_coeff_, orderOfDiff::position);
+    ref_traj_obj_.x_dot     = eval_poly< 5 >(t_rel, x_coeff_, orderOfDiff::velocity);
+    ref_traj_obj_.x_ddot    = eval_poly< 5 >(t_rel, x_coeff_, orderOfDiff::acceleration);
 
-    ref_traj_obj_.y         = get_Nth_order_polynomial<5, arr_size(y_coeff_)>(t_rel, y_coeff_, orderOfDiff::position);
-    ref_traj_obj_.y_dot     = get_Nth_order_polynomial<5, arr_size(y_coeff_)>(t_rel, y_coeff_, orderOfDiff::velocity);
-    ref_traj_obj_.y_ddot    = get_Nth_order_polynomial<5, arr_size(y_coeff_)>(t_rel, y_coeff_, orderOfDiff::acceleration);
+    ref_traj_obj_.y         = eval_poly< 5 >(t_rel, y_coeff_, orderOfDiff::position);
+    ref_traj_obj_.y_dot     = eval_poly< 5 >(t_rel, y_coeff_, orderOfDiff::velocity);
+    ref_traj_obj_.y_ddot    = eval_poly< 5 >(t_rel, y_coeff_, orderOfDiff::acceleration);
 
     ref_traj_obj_.theta      =   std::atan2(ref_traj_obj_.y_dot, ref_traj_obj_.x_dot);
     ref_traj_obj_.theta_dot  =   0;
