@@ -154,7 +154,7 @@ add_executable(test_publish_feedback_selected src/test_publish_feedback_selected
 add_executable(test_publish_ref_traj src/test_publish_ref_traj.cpp)
 add_executable(test_ang_vel_to_pwm src/test_ang_vel_to_pwm.cpp)
 add_executable(test_controller src/test_controller.cpp)
-#add_executable(test_encoder_to_pose_boost_ode src/test_encoder_to_pose_boost_ode.cpp)
+add_executable(test_ptr_assign src/test_ptr_assign.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -175,7 +175,7 @@ add_dependencies(test_publish_feedback_selected ${PROJECT_NAME}_generate_message
 add_dependencies(test_publish_ref_traj ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(test_ang_vel_to_pwm ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(test_controller ${PROJECT_NAME}_generate_messages_cpp)
-#add_dependencies(test_encoder_to_pose_boost_ode ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(test_ptr_assign ${PROJECT_NAME}_generate_messages_cpp)
 
 
 ## Specify libraries to link a library or executable target against
@@ -190,7 +190,7 @@ target_link_libraries(test_publish_feedback_selected ${catkin_LIBRARIES} )
 target_link_libraries(test_publish_ref_traj ${catkin_LIBRARIES} )
 target_link_libraries(test_ang_vel_to_pwm ${catkin_LIBRARIES} )
 target_link_libraries(test_controller ${catkin_LIBRARIES} )
-#target_link_libraries(test_encoder_to_pose_boost_ode ${catkin_LIBRARIES} )
+target_link_libraries(test_ptr_assign ${catkin_LIBRARIES} )
 
 #############
 ## Install ##

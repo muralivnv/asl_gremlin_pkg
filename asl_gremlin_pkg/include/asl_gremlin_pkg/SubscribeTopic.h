@@ -4,12 +4,13 @@
 #include <ros/ros.h>
 #include <iostream>
 #include <string>
+#include <memory>
 
 namespace asl_gremlin_pkg{
 
 template<typename T>
 class SubscribeTopic{
-    T* data_;
+    std::unique_ptr<T> data_;
     ros::Subscriber topic_sub_;
 
     public:
@@ -30,15 +31,13 @@ SubscribeTopic<T>::SubscribeTopic(ros::NodeHandle& nh,
                                 queue_size,
                                 &SubscribeTopic<T>::topic_callback,
                                 this);
-   data_ = new T();
+   data_.reset(new T());
 }
 
 
 template<typename T>
 SubscribeTopic<T>::~SubscribeTopic()
-{
-    delete data_;
-}
+{ data_.reset(); }
 
 template<typename T>
 void SubscribeTopic<T>::topic_callback(const typename T::ConstPtr& topic_data)
@@ -46,14 +45,12 @@ void SubscribeTopic<T>::topic_callback(const typename T::ConstPtr& topic_data)
     /* Can't use topic_data.get() as passed is const ptr 
      *  Don't ever use "CONST_CAST" to remove the pointer constness
     */
-    *data_ = *(topic_data);
+    data_.reset(new T(*topic_data) ) ;
 }
 
 template<typename T>
 T* SubscribeTopic<T>::get_data()
-{
-    return data_;
-}
+{ return data_.get(); }
 
 } //end namespace {asl_gremlin_pkg}
 
