@@ -13,6 +13,10 @@ int main(int argc, char** argv)
     dynamic_reconfigure::IntParameter feedback_select;
     dynamic_reconfigure::Config conf;
 
+    std::string nh_namespace(ros::this_node::getNamespace());
+    if ( nh_namespace == "/" || nh_namespace == "//")
+    { nh_namespace = "/asl_gremlin1"; }
+
     if (argc == 2)
     {
         try 
@@ -22,7 +26,7 @@ int main(int argc, char** argv)
             conf.ints.push_back(feedback_select);
 
             srv_req.config = conf;
-            if(ros::service::call("/asl_gremlin1/feedback_selected/set_parameters",srv_req, srv_resp) )
+            if(ros::service::call(nh_namespace+"/feedback_selected/set_parameters",srv_req, srv_resp) )
             { ROS_INFO("Selected feedback is set"); }
             else
             { ROS_ERROR("Can't access topic '/asl_gremlin1/feedback_selected/set_parameters' "); }

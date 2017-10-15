@@ -13,7 +13,7 @@
 
 namespace controller{
 
-int get_angle_quadrant(double angle)
+inline int get_angle_quadrant(double angle)
 {
     double sin_of_angle = std::sin(angle);
     double cos_of_angle = std::cos(angle);

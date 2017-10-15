@@ -18,8 +18,11 @@ int main(int argc, char** argv)
     dynamic_reconfigure::StrParameter Y_wp;
     dynamic_reconfigure::Config conf;
 
-    std::string waypoint_server_topic_name;
-    waypoint_server_topic_name = "/asl_gremlin1/trajectory_generator/set_parameters";
+    std::string nh_namespace(ros::this_node::getNamespace());
+    if ( nh_namespace == "/" || nh_namespace == "//")
+    { nh_namespace = "/asl_gremlin1"; }
+    
+    std::string waypoint_server_topic_name(nh_namespace+"/trajectory_generator/set_parameters");
 
 	try{
 	    if (argc > 2)
@@ -30,9 +33,7 @@ int main(int argc, char** argv)
 	        if (opt != nullptr)
 	        {
 	            if (opt->second == "")
-	            {
-	                throw "X_component of waypoints not specified";
-	            }
+	            { throw "X_component of waypoints not specified"; }
 	            else
 	            {
 	                X_wp.name = "X_waypoint";
@@ -44,9 +45,7 @@ int main(int argc, char** argv)
 	        if (opt != nullptr)
 	        {
 	            if (opt->second == "")
-	            {
-	                throw "Y_component of waypoints not specified";
-	            }
+	            { throw "Y_component of waypoints not specified"; }
 	            else
 	            {
 	                Y_wp.name = "Y_waypoint";
@@ -57,14 +56,10 @@ int main(int argc, char** argv)
 
 	        srv_req.config = conf;
 	        if (conf.strs.size() != 2)
-	        {
-	            throw "incorrect flags or one waypoint component(X/Y) didn't specified";
-	        }
+	        { throw "incorrect flags or one waypoint component(X/Y) didn't specified"; }
 	        
 	        if(ros::service::call(waypoint_server_topic_name, srv_req, srv_resp) )
-	        {
-	            ROS_INFO("waypoint_set_client: waypoints have been sent successfully");
-	        }
+	        { ROS_INFO("waypoint_set_client: waypoints have been sent successfully"); }
 	        else
 	        {
 	            ROS_ERROR("waypoint_set_client: waypoints didn't reached the server, try again! "
@@ -72,15 +67,12 @@ int main(int argc, char** argv)
 	        }
 	    }
 	    else
-	    {
-	        throw "insufficient command line arguments";
-	    }
+	    { throw "insufficient command line arguments"; }
 	}
 	catch (const char* msg)
 	{
 	    ROS_ERROR("waypoint_set_client: %s\n"
 	                "\t\t\t\tuse syntax: -x string -y string", msg);
 	}   
-
 	return EXIT_SUCCESS;
 }

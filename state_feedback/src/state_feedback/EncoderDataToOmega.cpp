@@ -98,12 +98,8 @@ void EncoderDataToOmega::calculate_angular_velocities()
 
 
 double EncoderDataToOmega::get_left_wheel_angular_vel()
-{
-    return left_wheel_angular_velocity_;
-}
+{ return left_wheel_angular_velocity_; }
 
 double EncoderDataToOmega::get_right_wheel_angular_vel()
-{
-    return right_wheel_angular_velocity_;
-}
+{ return right_wheel_angular_velocity_; }
 

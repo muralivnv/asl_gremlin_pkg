@@ -14,9 +14,9 @@
 #include <utility_pkg/utilities.h>
 
 enum Feedback{
-    gps_compass = 0,
-    encoder_compass = 1,
-    pure_gps = 2
+    gps_compass,
+    encoder_compass,
+    pure_gps
 };
 
 
@@ -70,10 +70,10 @@ FeedbackSelected<N>::FeedbackSelected(ros::NodeHandle& nh) : pose_(new pose_type
 
     gps_pose_data_  = new asl_gremlin_pkg::SubscribeTopic<geometry_msgs::PointStamped>(nh, gps_pose_topic,10);
     enco_pose_data_ = new asl_gremlin_pkg::SubscribeTopic<geometry_msgs::PointStamped>(nh, enco_pose_topic,10);
-    compass_data_   = new asl_gremlin_pkg::SubscribeTopic<std_msgs::Float64>(nh,ros::this_node::getNamespace()+"/mavros/global_position/compass_hdg" ,10);
+    compass_data_   = new asl_gremlin_pkg::SubscribeTopic<std_msgs::Float64>
+                      (nh,ros::this_node::getNamespace()+"/mavros/global_position/compass_hdg" ,10);
 
     ros::spinOnce();
-
 }
 
 template<int N>
