@@ -4,18 +4,20 @@
 int main(int argc, char** argv)
 {
     ros::init(argc, argv, "feedback_selected");
+    ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
+
     ros::NodeHandle feedback_nh;
 
     state_feedback::FeedbackSelected<3> feedback_method(feedback_nh);
 
     double rate = 10.0;
 
-    if (!feedback_nh.getParam(ros::this_node::getNamespace()+"/sim/rate", rate))
-    { ROS_WARN("Unable access parameter $robot_name/sim/rate, setting rate as 10Hz"); }
+    if (!feedback_nh.getParam("sim/rate", rate))
+    { ROS_WARN("Unable access parameter /%s/sim/rate, setting rate as 10Hz",
+                ros::this_node::getNamespace().c_str()); }
 
     ros::Rate loop_rate(rate);
 
-    ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
     
     while(ros::ok())
     {

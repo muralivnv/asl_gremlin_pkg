@@ -59,20 +59,19 @@ BackSteppingController<ref_state_type, act_state_type>::BackSteppingController(r
     dr_gain_srv_.setCallback(fun_);
 
     auto nh_namespace = ros::this_node::getNamespace();
-
-    if (!nh.getParam(nh_namespace+"/wheel/radius",radius_of_wheel_))
+    if (!nh.getParam("wheel/radius",radius_of_wheel_))
     {
         ROS_WARN("Can't access parameter: /%s/wheel/radius, setting to 0.06858m",
                     nh_namespace.c_str());
     }
 
-    if (!nh.getParam(nh_namespace+"/chassis/base_length",vehicle_base_length_))
+    if (!nh.getParam("chassis/base_length",vehicle_base_length_))
     {
         ROS_WARN("Can't access parameter: /%s/chassis/base_length, setting to 0.3353m",
                     nh_namespace.c_str());
     }
 
-    if (!nh.getParam(nh_namespace+"/wheel/max_angular_vel",max_wheel_angular_vel_))
+    if (!nh.getParam("wheel/max_angular_vel",max_wheel_angular_vel_))
     {
         ROS_WARN("Can't access parameter: /%s/wheel/max_angular_vel, setting to 12.5(rad/sec)",
                     nh_namespace.c_str());

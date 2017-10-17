@@ -13,16 +13,17 @@ using namespace state_feedback;
 int main(int argc, char** argv)
 {
     ros::init(argc, argv, "encoder_data_to_omega");
+    ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
+
     ros::NodeHandle enco2w_nh;
 
     std::string actual_w_topic;
-    actual_w_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>(  enco2w_nh, 
-                                                                            "/state_feedback/encoder/ang_vel_topic",
-                                                                           __LINE__);
+    actual_w_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>
+                        (enco2w_nh, "state_feedback/encoder/ang_vel_topic", __LINE__);
 
-    ros::Publisher enco2w_pub = enco2w_nh.advertise<asl_gremlin_msgs::MotorAngVel>(actual_w_topic,
-                                                                                    100);
-    asl_gremlin_pkg::SubscribeTopic < std_msgs::Bool > sim(enco2w_nh, ros::this_node::getNamespace()+"/start_sim");
+    ros::Publisher enco2w_pub = enco2w_nh.advertise<asl_gremlin_msgs::MotorAngVel>(actual_w_topic, 100);
+
+    asl_gremlin_pkg::SubscribeTopic < std_msgs::Bool > sim(enco2w_nh, "start_sim");
 
     EncoderDataToOmega encoder_data_to_omega(enco2w_nh);
 
@@ -30,16 +31,16 @@ int main(int argc, char** argv)
     motor_ang_vel.header.frame_id = "none";
 
     double rate = 10.0;
-    if (!enco2w_nh.getParam(ros::this_node::getNamespace()+"/sim/rate", rate))
+    if (!enco2w_nh.getParam("sim/rate", rate))
     {
-        ROS_WARN("Unable access parameter $robot_name/sim/rate, setting rate as 10Hz");
+        ROS_WARN("Unable access parameter /%s/sim/rate, setting rate as 10Hz",
+                  ros::this_node::getNamespace().c_str());
     }
     ros::Rate loop_rate(rate);
 
     int msg_count = 0;
     bool initiated = false;
 
-    ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
 
     while(ros::ok())
     {

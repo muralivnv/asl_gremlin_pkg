@@ -17,13 +17,15 @@ int main(int argc, char **argv)
     Gps2xy gps2xy;
 
 	ros::init(argc, argv, "gps2xy"); //initialising the node with name "gps2xy"
+	ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
+
 	ros::NodeHandle nh; //creating nodehandle
 
     std::string gps_pub_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>
-                                (nh,"/state_feedback/gps/pose_topic", __LINE__);
+                                (nh,"state_feedback/gps/pose_topic", __LINE__);
 
     // creating subscriber objects
-	ros::Subscriber gps_sub = nh.subscribe(ros::this_node::getNamespace()+"/mavros/global_position/global", 1000, 
+	ros::Subscriber gps_sub = nh.subscribe("mavros/global_position/global", 1000, 
                                             &Gps2xy::gps_callback, &gps2xy); //subscribing to "GPS" topic
 
     ros::Subscriber ini_cond_set_pub = nh.subscribe(gps_pub_topic+"/set_ini_cond",10, 
@@ -31,7 +33,7 @@ int main(int argc, char **argv)
 
     // creating publisher objects
 	ros::Publisher local_pose_pub = nh.advertise< geometry_msgs::PointStamped >(gps_pub_topic, 100); //publishing the topic with topic name "/asl_gremlin1/gps2xy"
-    asl_gremlin_pkg::SubscribeTopic <std_msgs::Bool> sim(nh, ros::this_node::getNamespace() + "/start_sim");
+    asl_gremlin_pkg::SubscribeTopic <std_msgs::Bool> sim(nh, "start_sim");
 
 	ros::Rate loop_rate(5); // running at 5Hz
 	int count = 0;
@@ -41,7 +43,6 @@ int main(int argc, char **argv)
 
     ros::spinOnce();
 
-	ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
 
 	while(ros::ok())
 	{

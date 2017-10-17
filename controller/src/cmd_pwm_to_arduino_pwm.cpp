@@ -9,25 +9,28 @@
 int main(int argc, char** argv)
 {
     ros::init(argc, argv, "motor_pwm_to_arduino");
+    ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
+
     ros::NodeHandle pwm2ard_nh;
 
     std::string cmd_pwm_topic;
 
     cmd_pwm_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>
-                    (pwm2ard_nh,"/controller/cmd_pwm_topic", __LINE__);
+                    (pwm2ard_nh,"controller/cmd_pwm_topic", __LINE__);
 
     asl_gremlin_pkg::SubscribeTopic<asl_gremlin_msgs::MotorPwm> cmd_pwm(pwm2ard_nh, 
 																		cmd_pwm_topic);
 
-	asl_gremlin_pkg::SubscribeTopic<std_msgs::Bool> sim(pwm2ard_nh,ros::this_node::getNamespace()+"/start_sim");
+	asl_gremlin_pkg::SubscribeTopic<std_msgs::Bool> sim(pwm2ard_nh,"start_sim");
 
     ros::Publisher pwm_pub = pwm2ard_nh.advertise<std_msgs::Int16MultiArray>
-                                                        (ros::this_node::getNamespace()+"/arduino/cmd_pwm",20);
+                                                        ("arduino/cmd_pwm",20);
 
     double rate = 10.0;
-    if (!pwm2ard_nh.getParam(ros::this_node::getNamespace()+"/sim/rate", rate))
+    if (!pwm2ard_nh.getParam("sim/rate", rate))
     {
-        ROS_WARN("Unable access parameter $robot_name/sim/rate, setting rate as 10Hz");
+        ROS_WARN("Unable access parameter /%s/sim/rate, setting rate as 10Hz",
+                 ros::this_node::getNamespace().c_str());
     }
     ros::Rate loop_rate(rate);
     
@@ -40,7 +43,6 @@ int main(int argc, char** argv)
 	bool initiated = false;
 	int pwm_left = 0, pwm_right = 0;
     
-        ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
 	while(ros::ok())
     {
     	if ( (sim.get_data())->data && !initiated )

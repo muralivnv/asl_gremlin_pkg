@@ -8,21 +8,20 @@
 int main(int argc, char** argv)
 {
 	ros::init(argc,argv,"encoder_stamped_node");
-	ros::NodeHandle nh;
-	std::string node_ns = ros::this_node::getNamespace();
+	ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
 
-    asl_gremlin_pkg::SubscribeTopic<std_msgs::Int32>    left_encoder_data(nh,  node_ns+"/arduino/left_encoder", 100),
-                                                        right_encoder_data(nh, node_ns+"/arduino/right_encoder", 100),
-                                                        reset_encoder(nh,      node_ns+"/reset_encoders", 10);
+	ros::NodeHandle nh;
+
+    asl_gremlin_pkg::SubscribeTopic<std_msgs::Int32>    left_encoder_data(nh, "arduino/left_encoder", 100),
+                                                        right_encoder_data(nh, "arduino/right_encoder", 100),
+                                                        reset_encoder(nh, "reset_encoders", 10);
 
     std::string left_encoder_stamped_topic, right_encoder_stamped_topic;
-    left_encoder_stamped_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>(nh, 
-                                                                        "/state_feedback/encoder/left_timeStamped_topic",
-                                                                        __LINE__);
+    left_encoder_stamped_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>
+                                    (nh, "state_feedback/encoder/left_timeStamped_topic", __LINE__);
 
-    right_encoder_stamped_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>(nh, 
-                                                                        "/state_feedback/encoder/right_timeStamped_topic",
-                                                                        __LINE__);
+    right_encoder_stamped_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>
+                                    (nh, "state_feedback/encoder/right_timeStamped_topic", __LINE__);
 
 	ros::Publisher left_encoder_data_stamped  = nh.advertise < std_msgs::Float64MultiArray >(left_encoder_stamped_topic, 100);
 	ros::Publisher right_encoder_data_stamped = nh.advertise < std_msgs::Float64MultiArray >(right_encoder_stamped_topic,100);
@@ -36,7 +35,6 @@ int main(int argc, char** argv)
 
 	ros::Rate loop_rate(250);
 	
-	ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
 
 	while(ros::ok())
 	{

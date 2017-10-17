@@ -1,5 +1,18 @@
-#ifndef _asl_gremlin_pkg_SBSCRIBERTOPIC_H_
-#define _asl_gremlin_pkg_SBSCRIBERTOPIC_H_
+/**
+ * @brief SubscribeTopic header
+ * @file SubscribeTopic.h
+ * @author Murali VNV <muralivnv@gmail.com>
+ */
+/*
+ * Copyright 2017.
+ *
+ * This file is part of the asl_gremlin_package and subject to the license terms
+ * in the top-level LICENSE file of the asl_gremlin_pkg repository.
+ * https://github.com/muralivnv/asl_gremlin_pkg/blob/master/LICENSE
+ */
+
+#ifndef _asl_gremlin_pkg_SUBSCRIBERTOPIC_H_
+#define _asl_gremlin_pkg_SUBSCRIBERTOPIC_H_
 
 #include <ros/ros.h>
 #include <iostream>
@@ -42,9 +55,6 @@ SubscribeTopic<T>::~SubscribeTopic()
 template<typename T>
 void SubscribeTopic<T>::topic_callback(const typename T::ConstPtr& topic_data)
 {
-    /* Can't use topic_data.get() as passed is const ptr 
-     *  Don't ever use "CONST_CAST" to remove the pointer constness
-    */
     data_.reset(new T(*topic_data) ) ;
 }
 

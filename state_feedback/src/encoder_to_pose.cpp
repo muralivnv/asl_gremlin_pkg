@@ -37,28 +37,31 @@ std::array<double, 3> rover_kinematics(double time,
 int main(int argc, char** argv)
 {
     ros::init(argc, argv,"encoder_to_pose");
+    ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
+
     ros::NodeHandle enco2w_nh;
 
     std::string encoder_pub_name, ang_vel_topic;
-    encoder_pub_name = asl_gremlin_pkg::GetParam_with_shutdown<std::string>(enco2w_nh, "/state_feedback/encoder/pose_topic",
+    encoder_pub_name = asl_gremlin_pkg::GetParam_with_shutdown<std::string>(enco2w_nh, "state_feedback/encoder/pose_topic",
                                                                             __LINE__);
 
-    ang_vel_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>(enco2w_nh, "/state_feedback/encoder/ang_vel_topic",
+    ang_vel_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>(enco2w_nh, "state_feedback/encoder/ang_vel_topic",
                                                                             __LINE__);
 
     ros::Publisher encoder_data_pub = enco2w_nh.advertise<geometry_msgs::PointStamped>(encoder_pub_name,10);
 
     asl_gremlin_pkg::SubscribeTopic<asl_gremlin_msgs::MotorAngVel> actual_angular_vel(enco2w_nh, ang_vel_topic);
-    asl_gremlin_pkg::SubscribeTopic<std_msgs::Float64> compass_hdg(enco2w_nh, ros::this_node::getNamespace()+"/mavros/global_position/compass_hdg");
-    asl_gremlin_pkg::SubscribeTopic<std_msgs::Bool> sim(enco2w_nh, ros::this_node::getNamespace()+"/start_sim");
+    asl_gremlin_pkg::SubscribeTopic<std_msgs::Float64> compass_hdg(enco2w_nh, "mavros/global_position/compass_hdg");
+    asl_gremlin_pkg::SubscribeTopic<std_msgs::Bool> sim(enco2w_nh, "start_sim");
 
     roverParam params;
     geometry_msgs::PointStamped encoder_pose;
 
     double rate = 10.0;
-    if (!enco2w_nh.getParam(ros::this_node::getNamespace()+"/sim/rate", rate))
+    if (!enco2w_nh.getParam("sim/rate", rate))
     {
-        ROS_WARN("Unable access parameter $robot_name/sim/rate, setting rate as 10Hz");
+        ROS_WARN("Unable access parameter /%s/sim/rate, setting rate as 10Hz",
+                    ros::this_node::getNamespace().c_str());
     }
     ros::Rate loop_rate(rate);
     
@@ -86,7 +89,6 @@ int main(int argc, char** argv)
 
     bool initiated = false;
 
-    ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
 
     while(ros::ok())
     {

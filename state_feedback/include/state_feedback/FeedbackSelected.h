@@ -60,18 +60,18 @@ FeedbackSelected<N>::FeedbackSelected(ros::NodeHandle& nh) : pose_(new pose_type
 
     std::string feedback_topic, enco_pose_topic, gps_pose_topic;
 
-    feedback_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>(nh, "/state_feedback/feedback_selected",
+    feedback_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>(nh, "state_feedback/feedback_selected",
                                                                  __LINE__);
-    enco_pose_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>(nh, "/state_feedback/encoder/pose_topic",
+    enco_pose_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>(nh, "state_feedback/encoder/pose_topic",
                                                                                 __LINE__);
-    gps_pose_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>(nh, "/state_feedback/gps/pose_topic",
+    gps_pose_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>(nh, "state_feedback/gps/pose_topic",
                                                                                __LINE__);
     feedback_pub_ = nh.advertise<pose_type>(feedback_topic, 10);
 
     gps_pose_data_  = new asl_gremlin_pkg::SubscribeTopic<geometry_msgs::PointStamped>(nh, gps_pose_topic,10);
     enco_pose_data_ = new asl_gremlin_pkg::SubscribeTopic<geometry_msgs::PointStamped>(nh, enco_pose_topic,10);
     compass_data_   = new asl_gremlin_pkg::SubscribeTopic<std_msgs::Float64>
-                      (nh,ros::this_node::getNamespace()+"/mavros/global_position/compass_hdg" ,10);
+                      (nh,"mavros/global_position/compass_hdg" ,10);
 
     ros::spinOnce();
 }

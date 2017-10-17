@@ -45,11 +45,6 @@ void print_stl_container(const STL_Container<type, Args...>& stl_container)
         { std::cout << ", "; }
     }
     std::cout << "}\n";
-
-    //std::cout << "{";
-	//for (auto elem  :  stl_container)
-	//{ std::cout <<  elem << ", "; }
-	//std::cout << "}\n";
 }
 
 }; // end namespace {utility_pkg}

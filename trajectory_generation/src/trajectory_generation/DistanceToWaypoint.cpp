@@ -5,13 +5,14 @@ using namespace trajectory_generation;
 DistanceToWaypoint::DistanceToWaypoint(ros::NodeHandle& nh)
 {
     std::string feedback_selected_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>
-                                            (nh, "/state_feedback/feedback_selected", __LINE__);
+                                            (nh, "state_feedback/feedback_selected", __LINE__);
 
     vehicle_state_ = new asl_gremlin_pkg::SubscribeTopic<asl_gremlin_msgs::VehicleState>
                                                         (nh, feedback_selected_topic);
 
-    if (!nh.getParam(ros::this_node::getNamespace()+"/sim/waypoint_proximity",waypoint_proximity_))
-    { ROS_WARN("couldn't access parameter ${robot_name}/sim/waypoint_proximity, default value of 0.8m is set"); }
+    if (!nh.getParam("sim/waypoint_proximity",waypoint_proximity_))
+    { ROS_WARN("couldn't access parameter /%s/sim/waypoint_proximity, default value of 0.8m is set",
+                ros::this_node::getNamespace().c_str()); }
 
     ros::spinOnce();
 }

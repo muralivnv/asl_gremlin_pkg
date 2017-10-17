@@ -8,6 +8,8 @@ using namespace controller;
 int main(int argc, char** argv)
 {
     ros::init(argc, argv, "angular_vel_to_pwm");
+    ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
+
     ros::NodeHandle w2pwm_nh;
     
     OmegaToPWM omega_to_pwm(w2pwm_nh);
@@ -17,18 +19,18 @@ int main(int argc, char** argv)
     std::string pwm_pub_topic;
 
     pwm_pub_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>
-                    (w2pwm_nh,"/controller/cmd_pwm_topic", __LINE__); 
+                    (w2pwm_nh,"controller/cmd_pwm_topic", __LINE__); 
 
     ros::Publisher pwm_pub = w2pwm_nh.advertise<asl_gremlin_msgs::MotorPwm>
                                                         (pwm_pub_topic,20);
     double rate = 10.0;
-    if (!w2pwm_nh.getParam(ros::this_node::getNamespace()+"/sim/rate", rate))
+    if (!w2pwm_nh.getParam("sim/rate", rate))
     {
-        ROS_WARN("Unable access parameter $robot_name/sim/rate, setting rate as 10Hz");
+        ROS_WARN("Unable access parameter /%s/sim/rate, setting rate as 10Hz",
+                    ros::this_node::getNamespace().c_str());
     }
     ros::Rate loop_rate(rate);
     
-    ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
     while(ros::ok())
     {
         pwm_pub.publish(*(omega_to_pwm.convert_omega_to_pwm()));

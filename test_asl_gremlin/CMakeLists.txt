@@ -112,7 +112,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-  INCLUDE_DIRS include
+    #  INCLUDE_DIRS include
   LIBRARIES test_asl_gremlin trajectory_generation controller state_feedback asl_gremlin_pkg 
   CATKIN_DEPENDS geometry_msgs mavros_msgs nav_msgs roscpp rospy sensor_msgs std_msgs trajectory_generation
   controller state_feedback asl_gremlin_pkg
@@ -154,7 +154,7 @@ add_executable(test_publish_feedback_selected src/test_publish_feedback_selected
 add_executable(test_publish_ref_traj src/test_publish_ref_traj.cpp)
 add_executable(test_ang_vel_to_pwm src/test_ang_vel_to_pwm.cpp)
 add_executable(test_controller src/test_controller.cpp)
-add_executable(test_ptr_assign src/test_ptr_assign.cpp)
+add_executable(test_ptr_assign src/test_prvt_namespace.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the

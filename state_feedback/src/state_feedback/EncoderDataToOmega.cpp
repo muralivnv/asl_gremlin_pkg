@@ -6,20 +6,20 @@ using namespace asl_gremlin_pkg;
 EncoderDataToOmega::EncoderDataToOmega(ros::NodeHandle& nh)
 {
     encoder_left_ticks_per_meter_ = GetParam_with_shutdown<double>
-                                    (nh, "/motor/left_encoder_ticks_per_meter", __LINE__);
+                                    (nh, "motor/left_encoder_ticks_per_meter", __LINE__);
 
     encoder_right_ticks_per_meter_ = GetParam_with_shutdown<double>
-                                    (nh, "/motor/right_encoder_ticks_per_meter", __LINE__);
+                                    (nh, "motor/right_encoder_ticks_per_meter", __LINE__);
 
     radius_of_wheel_ = GetParam_with_warn<double>
-                        (nh, "/wheel/radius", __LINE__ );
+                        (nh, "wheel/radius", __LINE__ );
 
     std::string encoder_left_topic, encoder_right_topic;
     encoder_left_topic = GetParam_with_shutdown<std::string>
-                            (nh, "/state_feedback/encoder/left_timeStamped_topic", __LINE__);
+                            (nh, "state_feedback/encoder/left_timeStamped_topic", __LINE__);
 
     encoder_right_topic = GetParam_with_shutdown<std::string>
-                            (nh, "/state_feedback/encoder/right_timeStamped_topic", __LINE__);
+                            (nh, "state_feedback/encoder/right_timeStamped_topic", __LINE__);
 
     left_wheel_data_  = new asl_gremlin_pkg::SubscribeTopic<std_msgs::Float64MultiArray>(nh, encoder_left_topic, 150);
     right_wheel_data_ = new asl_gremlin_pkg::SubscribeTopic<std_msgs::Float64MultiArray>(nh, encoder_right_topic, 150);

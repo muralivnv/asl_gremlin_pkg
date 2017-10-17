@@ -9,18 +9,21 @@
 
 #include <ros/ros.h>
 #include <ros/time.h>
+#include <chrono>
 
 #include <string>
 
 using namespace trajectory_generation;
 
 struct traj_params{
-   double accel_max = 0.5;
+   double accel_max = 0.1;
 };
 
 int main(int argc, char** argv)
 {
     ros::init(argc, argv , "trajectory_generation"); 
+    ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
+
     ros::NodeHandle traj_nh;
 
     traj_params params;
@@ -29,25 +32,25 @@ int main(int argc, char** argv)
     WaypointSubscribe waypoint_stack(traj_nh);
     DistanceToWaypoint* dist_to_wp = new DistanceToWaypoint(traj_nh);
 
-    asl_gremlin_pkg::SubscribeTopic<std_msgs::Bool> sim(traj_nh, ros::this_node::getNamespace()+"/start_sim"); 
+    asl_gremlin_pkg::SubscribeTopic<std_msgs::Bool> sim(traj_nh,"start_sim"); 
     
     std::string traj_pub_name;
     
     traj_pub_name = asl_gremlin_pkg::GetParam_with_shutdown<std::string>
-                    (traj_nh, "/trajectory/publisher_topic", __LINE__);
+                    (traj_nh, "trajectory/publisher_topic", __LINE__);
     ros::Publisher traj_pub = traj_nh.advertise<asl_gremlin_msgs::RefTraj>(traj_pub_name, 10);
 
     double rate = 10.0;
-    if (!traj_nh.getParam(ros::this_node::getNamespace()+"/sim/rate", rate))
+    if (!traj_nh.getParam("sim/rate", rate))
     {
-        ROS_WARN("Unable access parameter $robot_name/sim/rate, setting rate as 10Hz");
+        ROS_WARN("Unable access parameter /%s/sim/rate, setting rate as 10Hz",
+                    ros::this_node::getNamespace().c_str());
     }
     ros::Rate loop_rate(rate);
 
     bool updated_ini_params = false;
     std::vector<double> waypoint(2,0);
     
-    ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
     while(ros::ok())
     {
         if ( (sim.get_data())->data )
