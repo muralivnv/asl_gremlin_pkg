@@ -1,6 +1,6 @@
 <launch>
 
-<arg name="robot_name" />
+<arg name="robot_name" default="asl_gremlin1" />
 
 <node   ns="$(arg robot_name)"
         name="timestamp_encoder"

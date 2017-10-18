@@ -1,3 +1,15 @@
+/**
+ * @brief Global to local co-ordinate transformation definitions
+ * @file Gps2xy.cpp
+ * @author Murali VNV <muralivnv@gmail.com>
+ */
+/*
+ * Copyright (c) 2017, muralivnv
+ *
+ * This file is part of the asl_gremlin_package and subject to the license terms
+ * in the top-level LICENSE file of the asl_gremlin_pkg repository.
+ * https://github.com/muralivnv/asl_gremlin_pkg/blob/master/LICENSE
+ */
 #include <state_feedback/Gps2xy.h>
 
 using namespace state_feedback;

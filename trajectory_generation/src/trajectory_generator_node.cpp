@@ -1,3 +1,15 @@
+/**
+ * @brief trajectory_generator_node
+ * @file trajectory_generator_node.cpp
+ * @author Murali VNV <muralivnv@gmail.com>
+ */
+/*
+ * Copyright (c) 2017, muralivnv
+ *
+ * This file is part of the asl_gremlin_package and subject to the license terms
+ * in the top-level LICENSE file of the asl_gremlin_pkg repository.
+ * https://github.com/muralivnv/asl_gremlin_pkg/blob/master/LICENSE
+ */
 #include <trajectory_generation/MinimumJerkTrajectory.h>
 #include <trajectory_generation/trajectory_publisher.h>
 #include <trajectory_generation/WaypointSubscribe.h>
@@ -9,7 +21,6 @@
 
 #include <ros/ros.h>
 #include <ros/time.h>
-#include <chrono>
 
 #include <string>
 
@@ -22,7 +33,6 @@ struct traj_params{
 int main(int argc, char** argv)
 {
     ros::init(argc, argv , "trajectory_generation"); 
-    ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
 
     ros::NodeHandle traj_nh;
 
@@ -51,6 +61,7 @@ int main(int argc, char** argv)
     bool updated_ini_params = false;
     std::vector<double> waypoint(2,0);
     
+    ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
     while(ros::ok())
     {
         if ( (sim.get_data())->data )

@@ -1,9 +1,22 @@
-#include <ros/ros.h>                        // including "ros" libraries
-#include <sensor_msgs/NavSatFix.h>          // including "NavSatFix" (for "/mavros/global_position/global" topic)
-#include <geometry_msgs/PointStamped.h>     // PointStamped contains (X,Y,Z with timeStamp)
-#include <std_msgs/Float64.h>               // including Float64 (for "/mavros/global/compass_hdg" topic)
+/**
+ * @brief Global to local rover co-ordinate transformation node
+ * @file gps_to_pose.cpp
+ * @author Murali VNV <muralivnv@gmail.com>
+ */
+/*
+ * Copyright (c) 2017, muralivnv
+ *
+ * This file is part of the asl_gremlin_package and subject to the license terms
+ * in the top-level LICENSE file of the asl_gremlin_pkg repository.
+ * https://github.com/muralivnv/asl_gremlin_pkg/blob/master/LICENSE
+ */
+
+#include <ros/ros.h>
+#include <sensor_msgs/NavSatFix.h>
+#include <geometry_msgs/PointStamped.h>
+#include <std_msgs/Float64.h>
 #include <std_msgs/Float32MultiArray.h>
-#include <std_msgs/Bool.h>                  // including Bool (for "/enco_reset" topic)
+#include <std_msgs/Bool.h>
 #include <state_feedback/Gps2xy.h>
 #include <string>
 #include <asl_gremlin_pkg/GetParam.h>
@@ -17,7 +30,6 @@ int main(int argc, char **argv)
     Gps2xy gps2xy;
 
 	ros::init(argc, argv, "gps2xy"); //initialising the node with name "gps2xy"
-	ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
 
 	ros::NodeHandle nh; //creating nodehandle
 
@@ -44,6 +56,7 @@ int main(int argc, char **argv)
     ros::spinOnce();
 
 
+	ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
 	while(ros::ok())
 	{
         if ( (sim.get_data())->data && !initiated)

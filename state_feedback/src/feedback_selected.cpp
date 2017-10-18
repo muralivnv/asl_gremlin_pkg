@@ -1,10 +1,21 @@
+/**
+ * @brief publish selected feedback node
+ * @file feedback_selected.cpp
+ * @author Murali VNV <muralivnv@gmail.com>
+ */
+/*
+ * Copyright (c) 2017, muralivnv
+ *
+ * This file is part of the asl_gremlin_package and subject to the license terms
+ * in the top-level LICENSE file of the asl_gremlin_pkg repository.
+ * https://github.com/muralivnv/asl_gremlin_pkg/blob/master/LICENSE
+ */
 #include <state_feedback/FeedbackSelected.h>
 #include <ros/ros.h>
 
 int main(int argc, char** argv)
 {
     ros::init(argc, argv, "feedback_selected");
-    ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
 
     ros::NodeHandle feedback_nh;
 
@@ -19,6 +30,7 @@ int main(int argc, char** argv)
     ros::Rate loop_rate(rate);
 
     
+    ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
     while(ros::ok())
     {
         feedback_method.get_gps_data();

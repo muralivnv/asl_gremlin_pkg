@@ -1,3 +1,16 @@
+/**
+ * @brief Timestamp encoder data from arduino node
+ * @file encoder_data_stamped.cpp
+ * @author Murali VNV <muralivnv@gmail.com>
+ */
+/*
+ * Copyright (c) 2017, muralivnv
+ *
+ * This file is part of the asl_gremlin_package and subject to the license terms
+ * in the top-level LICENSE file of the asl_gremlin_pkg repository.
+ * https://github.com/muralivnv/asl_gremlin_pkg/blob/master/LICENSE
+ */
+
 #include <ros/ros.h>
 #include <std_msgs/Float64MultiArray.h>
 #include <std_msgs/Int32.h>
@@ -8,7 +21,6 @@
 int main(int argc, char** argv)
 {
 	ros::init(argc,argv,"encoder_stamped_node");
-	ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
 
 	ros::NodeHandle nh;
 
@@ -36,6 +48,7 @@ int main(int argc, char** argv)
 	ros::Rate loop_rate(250);
 	
 
+	ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
 	while(ros::ok())
 	{
 		msg_right.data.clear();

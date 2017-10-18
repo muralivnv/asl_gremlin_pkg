@@ -1,3 +1,16 @@
+/**
+ * @brief Backstepping controller Node
+ * @file backstepping_controller_node.cpp
+ * @author Murali VNV <muralivnv@gmail.com>
+ */
+/*
+ * Copyright (c) 2017, muralivnv
+ *
+ * This file is part of the asl_gremlin_package and subject to the license terms
+ * in the top-level LICENSE file of the asl_gremlin_pkg repository.
+ * https://github.com/muralivnv/asl_gremlin_pkg/blob/master/LICENSE
+ */
+
 #include <controller/BackSteppingController.h>
 #include <ros/ros.h>
 #include <ros/time.h>
@@ -15,7 +28,6 @@ using namespace asl_gremlin_pkg;
 int main(int argc, char** argv)
 {
     ros::init(argc, argv , "backstepping_controller"); 
-    ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
 
     ros::NodeHandle ctrl_nh;
     
@@ -51,6 +63,7 @@ int main(int argc, char** argv)
     ros::Rate loop_rate(rate);
     ros::spinOnce();
 
+    ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
     while(ros::ok())
     {
         if ( (sim.get_data())->data )

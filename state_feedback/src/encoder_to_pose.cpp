@@ -1,3 +1,16 @@
+/**
+ * @brief Actual angular velocity to pose of rover node
+ * @file encoder_to_pose.cpp
+ * @author Murali VNV <muralivnv@gmail.com>
+ */
+/*
+ * Copyright (c) 2017, muralivnv
+ *
+ * This file is part of the asl_gremlin_package and subject to the license terms
+ * in the top-level LICENSE file of the asl_gremlin_pkg repository.
+ * https://github.com/muralivnv/asl_gremlin_pkg/blob/master/LICENSE
+ */
+
 #include <ros/ros.h>
 #include <geometry_msgs/PointStamped.h>
 #include <state_feedback/ForwardEuler.h>
@@ -37,7 +50,6 @@ std::array<double, 3> rover_kinematics(double time,
 int main(int argc, char** argv)
 {
     ros::init(argc, argv,"encoder_to_pose");
-    ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
 
     ros::NodeHandle enco2w_nh;
 
@@ -90,6 +102,7 @@ int main(int argc, char** argv)
     bool initiated = false;
 
 
+    ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
     while(ros::ok())
     {
         if ( (sim.get_data())->data && !initiated)
