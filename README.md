@@ -6,13 +6,13 @@ look at **project wiki** for configuration and setup.
 
 If you use this work in an academic context, please cite the following publication(s):
 
-* Godbole, Ameya, VNV, Murali, Quillen, Paul, Subbarao, Kamesh: **PAPER TITLE**. Optimal Trajectory Design and Control of a Planetary Exploration Rover, AAS/AIAA (2017).
+* Ameya R. Godbole, V. N. V. Murali, Paul Quilen and Kamesh Subbarao: **PAPER TITLE**. Optimal Trajectory Design and Control of a Planetary Exploration Rover, AAS/AIAA (2017).
 ```
    @incollection{godbole2017,
                 title={Optimal Trajectory Design and Control of a Planetary Exploration Rover},
-                author={Godbole, Ameya and VNV, Murali and Quillen, Paul and Subbarao, Kamesh},
+                author={Ameya R. Godbole, V. N. V. Murali, Paul Quilen and Kamesh Subbarao},
                 booktitle={AIAA SPACE 2017},
-                pages={},
+                pages={14},
                 year={2017}
   }
 ```
