@@ -15,4 +15,4 @@ export ROS_IP=$IP
 export ROS_MASTER_URI=http://$IP:11311
 
 roslaunch asl_gremlin_pkg launch_asl_gremlin.launch robot_name:=$robot_name \
-													arduino_port:=$arduino_port_num
+													arduino_port:=$arduino_port_num 

@@ -67,9 +67,7 @@ int main(int argc, char** argv)
         if ( (sim.get_data())->data )
         {
             if (!waypoint_stack.received_waypoints())
-            { 
-                ROS_ERROR("cannot create trajectory, waypoint stack is empty");
-            }
+            { ROS_ERROR("cannot create trajectory, waypoint stack is empty"); }
             else
             {
                 if ( !updated_ini_params )
