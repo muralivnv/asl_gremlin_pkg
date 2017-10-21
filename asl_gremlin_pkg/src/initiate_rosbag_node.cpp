@@ -5,29 +5,29 @@
 #include <iostream>
 #include <cstdio>
 #include <string>
-#include <memory>
 #include <array>
 
 std::string exec_cmd(const std::string& cmd)
 {
-    std::array<char, 128> buffer;
+    std::array<char, 256> buffer;
     std::string cmd_output;
 
-    std::shared_ptr<FILE> pipe(popen(cmd.c_str(), "r"), pclose);
+    FILE* pipe= popen(cmd.c_str(), "r");
+
     if (!pipe)
     { throw std::runtime_error("popen() failed"); }
 
-    while (!feof(pipe.get()))
+    while (!feof(pipe))
     {
-        if (fgets(buffer.data(), 128, pipe.get()) != nullptr)
+        if (fgets(buffer.data(), 256, pipe) != nullptr)
         { cmd_output += buffer.data(); }
     }
+    pclose(pipe);
     return cmd_output;
 }
 
 int main(int argc, char** argv)
 {
-
     ros::init(argc, argv, "rosbag_node");
     ros::NodeHandle nh;
 
@@ -51,15 +51,17 @@ int main(int argc, char** argv)
         if ( (sim_start.get_data())->data && !initiated_sim)
         {
             rosbag_pid_process_num = exec_cmd("bash $HOME/asl_gremlin1/src/bash_scripts/record_sim_data.sh");
+            ROS_INFO("Initialized:= data recording"); 
             initiated_sim = true;
         }
         else if (initiated_sim && !(sim_start.get_data())->data )
         {
+            ROS_INFO("Stopped:= data recording"); 
+
             std::string kill_bag_cmd("kill -INT "+rosbag_pid_process_num);
             auto res = std::system(kill_bag_cmd.c_str());
             initiated_sim = false;
         }
-
         ros::spinOnce();
         loop_rate.sleep();
     }

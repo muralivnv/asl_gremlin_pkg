@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Obtain the time of launch
-launch_time=$(date +%F-%M-%S)
+launch_time=$(date +%F-%H-%M-%S)
 
 # Create bag_file_name
 bag_file_name="asl_gremlin_pkg_${launch_time}.bag"
