@@ -12,7 +12,7 @@ sleep 2s
 
 # obtain pid process number for the bag_file
 # filter rosbag/record (grep) | select pid (print $2) | select first one (NR==1)
-pid_num=$(ps aux | grep rosbag/record | awk '{print $2}' | awk 'NR==1')
+pid_num=$(ps aux | grep rosbag/record | awk 'NR==1{print $2}')
 
 # send out the file num
 echo "${pid_num}"
