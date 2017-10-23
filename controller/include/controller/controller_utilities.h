@@ -17,33 +17,27 @@
 #include <cmath>
 
 
+static constexpr double deg2rad = M_PI/180.0;
+static constexpr double rad2deg = 180.0/M_PI;
+static constexpr double quadrant_ratio = 4/360.0;
+
 #define FIRST_QUADRANT 1
 #define SECOND_QUADRANT 2
 #define THIRD_QUADRANT 3
 #define FOURTH_QUADRANT 4
 
-
 namespace controller{
 
 inline int get_angle_quadrant(double angle)
 {
-    double sin_of_angle = std::sin(angle);
-    double cos_of_angle = std::cos(angle);
+    angle = angle*rad2deg;
 
-    if (sin_of_angle >= 0 && cos_of_angle >= 0)
-    { return FIRST_QUADRANT; }
+    if (angle < 0.0)
+    { angle = angle + 360.0; }
 
-    else if (sin_of_angle > 0 && cos_of_angle < 0)
-    { return SECOND_QUADRANT; }
+   double quadrant = (angle*quadrant_ratio);
 
-    else if (sin_of_angle <= 0 && cos_of_angle <= 0)
-    { return THIRD_QUADRANT; }
-
-    else if (sin_of_angle < 0 && cos_of_angle > 0)
-    { return FOURTH_QUADRANT; }
-
-    else
-    { return FIRST_QUADRANT; }
+   return quadrant + (fmod(quadrant,1.0) == 0 ? 0 : 1);
 }
 
 
