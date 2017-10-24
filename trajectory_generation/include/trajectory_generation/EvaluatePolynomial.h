@@ -27,6 +27,16 @@ enum orderOfDiff{
     snap
 };
 
+inline double int_pow(double base, int exponent)
+{
+    double result = base;
+    --exponent;
+    while (exponent > 0)
+    { result *= base; --exponent; }
+
+    return result;
+}
+
 double expand_diff_coeff(int N, int order)
 {
     if ( N < 0)
@@ -48,7 +58,7 @@ double evaluatePolynomial(int N, double t, const T& arr, orderOfDiff order)
     { return differentiation_coeff * arr[N]; }
     else
     {
-        return differentiation_coeff * arr[N] * std::pow(t, N - order)+
+        return differentiation_coeff * arr[N] * int_pow(t, N - order)+
             evaluatePolynomial (N-1, t,arr,order);
     }
 }
