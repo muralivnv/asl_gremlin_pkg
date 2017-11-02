@@ -41,7 +41,7 @@ class EncoderDataToOmega{
     double delta_left_encoder_time_ = 0.0,
            delta_right_encoder_time_ = 0.0;
     
-    double radius_of_wheel_ = 0.6858;
+    double radius_of_wheel_ = 0.06858;
  
     asl_gremlin_pkg::SubscribeTopic<std_msgs::Float64MultiArray>* left_wheel_data_;
     asl_gremlin_pkg::SubscribeTopic<std_msgs::Float64MultiArray>* right_wheel_data_;

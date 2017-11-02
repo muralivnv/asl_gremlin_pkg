@@ -39,8 +39,8 @@ std::vector<T> string_to_vector(std::string& S)
 {
     auto splitted_strs = split(S, ',');
     
-    std::vector<T> Vec;
-    std::transform(splitted_strs.begin(), splitted_strs.end(), std::back_inserter(Vec),
+    std::vector<T> Vec(splitted_strs.size(),0);
+    std::transform(splitted_strs.begin(), splitted_strs.end(), std::begin(Vec),
                     [](auto item){ return te_interp(item.c_str(),0); });
     return Vec;
 }

@@ -20,12 +20,27 @@ namespace controller{
 
 double delta_theta(double theta_act, double theta_des)
 {
+	/* 			-- IMPORTANT NOTE -- 
+	*	The output of this function will be multiplied by -ve sign 
+	*	as there is a negative multiplying the error in heading
+	* 	so as to obtain the correct direction of rotation
+	*
+	*		(wr - wl) = (b/r)(theta_dot_cmd - lambda_theta * delta_theta)
+	*									  __^__
+	*/
+
+	// normal difference
 	double delta1 = theta_act - theta_des;
+
+	// angle difference in "Clockwise"
 	double delta2 = -((M_PI - theta_act) - (-M_PI - theta_des));
+
+	// angle difference in "Anti-Clockwise"
 	double delta3 = ((M_PI - theta_des) - (-M_PI - theta_act));
 
 	double delta = 0.0;
 
+	// pick the smallest rotational direction
 	if (std::fabs(delta1) < std::fabs(delta2))
 	{	delta = delta1;	}
 	else

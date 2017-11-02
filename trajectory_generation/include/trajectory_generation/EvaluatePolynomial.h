@@ -27,7 +27,7 @@ enum orderOfDiff{
     snap
 };
 
-inline double int_pow(double base, int exponent)
+inline double int_pow(double base, int exponent) noexcept
 {
     double result = base;
     --exponent;
@@ -37,7 +37,7 @@ inline double int_pow(double base, int exponent)
     return result;
 }
 
-double expand_diff_coeff(int N, int order)
+double expand_diff_coeff(int N, int order) noexcept
 {
     if ( N < 0)
     { return 0; }

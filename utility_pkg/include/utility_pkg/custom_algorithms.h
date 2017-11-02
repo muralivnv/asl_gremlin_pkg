@@ -25,18 +25,18 @@ namespace custom_algorithms{
 template<typename T, typename S>
 int get_lower_index(const T& container, S value)
 {
-    try{
+    try
+    {
         if (value < *(container.begin()) || value > *(container.end()-1))
-        {
-            throw std::length_error("value is out-of-bounds on either side of range");
-        }
+        { throw std::length_error("value is out-of-bounds on either side of range"); }
+
         else
         {
             auto val_it = std::lower_bound(container.begin(), container.end(), value);
-            
+
             int idx = ( val_it - container.begin() );
-            
             idx -= 1;
+
             return idx < 0 ? 0 : idx;
         }
     }

@@ -59,7 +59,7 @@ void SubscribeTopic<T>::topic_callback(const typename T::ConstPtr& topic_data)
 }
 
 template<typename T>
-T* SubscribeTopic<T>::get_data()
+inline T* SubscribeTopic<T>::get_data()
 { return data_.get(); }
 
 } //end namespace {asl_gremlin_pkg}

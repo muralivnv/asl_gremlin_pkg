@@ -15,29 +15,22 @@
 
 #include <vector>
 #include <array>
+#include <type_traits>
 
 namespace custom_type_traits{
 
 template<typename T>
-struct is_vector{
-    const static bool value = false;
-};
+struct is_vector : std::false_type{ };
 
 template<typename T>
-struct is_vector<std::vector<T>>{
-    const static bool value = true;
-};
+struct is_vector<std::vector<T>> : std::true_type{ };
 
 
 template<typename T>
-struct is_array{
-    const static bool value = false;
-};
+struct is_array : std::false_type{ };
 
 template<typename T, std::size_t array_size>
-struct is_array<std::array<T, array_size>>{
-    const static bool value = true;
-};
+struct is_array<std::array<T, array_size>> : std::true_type{ };
 
 } // end namespace
 

@@ -28,6 +28,10 @@ using namespace controller;
 
 #define SIGN(x) (x>0?1:(x==0?0:-1))
 
+template<typename T, typename S>
+inline T saturate(T lb, S val, T ub) 
+{  return std::min(ub, std::max(lb, static_cast<T>(val)) ); }
+
 namespace controller{
 
 template<typename ref_state_type, typename act_state_type>
@@ -142,8 +146,8 @@ void BackSteppingController<ref_state_type, act_state_type>::calculate_control_a
     wheel_angular_vel_->wl = 0.5*(angular_vel_sum - angular_vel_diff);
     wheel_angular_vel_->wr = 0.5*(angular_vel_sum + angular_vel_diff);
 
-    wheel_angular_vel_->wl = std::min(max_wheel_angular_vel_, std::max(-max_wheel_angular_vel_, static_cast<double>(wheel_angular_vel_->wl)));
-    wheel_angular_vel_->wr = std::min(max_wheel_angular_vel_, std::max(-max_wheel_angular_vel_, static_cast<double>(wheel_angular_vel_->wr)));
+    wheel_angular_vel_->wl = saturate(-max_wheel_angular_vel_, wheel_angular_vel_->wl, max_wheel_angular_vel_);
+    wheel_angular_vel_->wr = saturate(-max_wheel_angular_vel_, wheel_angular_vel_->wr, max_wheel_angular_vel_);
 }
 
 template<typename ref_state_type, typename act_state_type>

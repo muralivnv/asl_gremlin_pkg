@@ -31,15 +31,15 @@ void WaypointSubscribe::dynamic_reconfigure_waypointSet_callback(trajectory_gene
     {
         ROS_ERROR(" trajectory_generation: x and y waypoints are not of equal size, change them");
         
-        x_waypoints_.erase(begin(x_waypoints_), end(x_waypoints_));
-        y_waypoints_.erase(begin(y_waypoints_), end(y_waypoints_));
+        x_waypoints_.erase(std::begin(x_waypoints_), std::end(x_waypoints_));
+        y_waypoints_.erase(std::begin(y_waypoints_), std::end(y_waypoints_));
     }
     else if ( x_waypoints_.size() == 1 && x_waypoints_[0] == 0 && y_waypoints_[0] == 0 )
     { 
         ROS_WARN(" trajectory_generation: waypoint stack is empty, use 'rosservice' to set them "); 
        
-        x_waypoints_.erase(begin(x_waypoints_), end(x_waypoints_));
-        y_waypoints_.erase(begin(y_waypoints_), end(y_waypoints_));
+        x_waypoints_.erase(std::begin(x_waypoints_), std::end(x_waypoints_));
+        y_waypoints_.erase(std::begin(y_waypoints_), std::end(y_waypoints_));
     }
     else
     {
@@ -48,8 +48,8 @@ void WaypointSubscribe::dynamic_reconfigure_waypointSet_callback(trajectory_gene
        
         if (std::fabs(x_waypoints_[0]) < 2 && std::fabs(y_waypoints_[0]) < 2)
         { 
-            x_waypoints_.erase(begin(x_waypoints_));
-            y_waypoints_.erase(begin(y_waypoints_));
+            x_waypoints_.erase(std::begin(x_waypoints_));
+            y_waypoints_.erase(std::begin(y_waypoints_));
         }
 
         std::cout << "x_waypoints: ";

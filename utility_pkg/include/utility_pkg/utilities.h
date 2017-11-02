@@ -10,8 +10,8 @@
  * in the top-level LICENSE file of the asl_gremlin_pkg repository.
  * https://github.com/muralivnv/asl_gremlin_pkg/blob/master/LICENSE
  */
-#ifndef UTILITY_PKG__UTILITIES_H
-#define UTILITY_PKG__UTILITIES_H
+#ifndef _utility_pkg_UTILITIES_H_
+#define _utility_pkg_UTILITIES_H_
 
 namespace utility_pkg{
 

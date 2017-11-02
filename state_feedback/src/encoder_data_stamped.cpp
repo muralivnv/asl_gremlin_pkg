@@ -45,22 +45,27 @@ int main(int argc, char** argv)
 	msg_right.data.clear();
 	msg_left.data.clear();
 
+    msg_right.data.push_back(0.0);
+    msg_right.data.push_back(0.0);
+    msg_right.data.push_back(0.0);
+
+    msg_left.data.push_back(0.0);
+    msg_left.data.push_back(0.0);
+    msg_left.data.push_back(0.0);
+
 	ros::Rate loop_rate(250);
 	
 
 	ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
 	while(ros::ok())
 	{
-		msg_right.data.clear();
-		msg_left.data.clear();
+		msg_right.data[0] = ((right_encoder_data.get_data())->data);
+		msg_right.data[1] = (ros::Time::now().toSec());
+		msg_right.data[2] = (count);
 
-		msg_right.data.push_back((right_encoder_data.get_data())->data);
-		msg_right.data.push_back(ros::Time::now().toSec());
-		msg_right.data.push_back(count);
-
-		msg_left.data.push_back((left_encoder_data.get_data())->data);
-		msg_left.data.push_back(ros::Time::now().toSec());
-		msg_left.data.push_back(count);
+		msg_left.data[0] = ((left_encoder_data.get_data())->data);
+		msg_left.data[1] = (ros::Time::now().toSec());
+		msg_left.data[2] = (count);
 
 		left_encoder_data_stamped.publish(msg_left);
 		right_encoder_data_stamped.publish(msg_right);

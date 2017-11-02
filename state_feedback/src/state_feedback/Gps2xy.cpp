@@ -105,5 +105,3 @@ double Gps2xy::pos_ENU_y() const
 
 double Gps2xy::pos_ENU_z() const
 { return pos_ENU[2]; }
-
-
