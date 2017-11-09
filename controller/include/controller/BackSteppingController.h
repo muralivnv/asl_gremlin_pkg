@@ -28,11 +28,16 @@ using namespace controller;
 
 #define SIGN(x) (x>0?1:(x==0?0:-1))
 
+namespace controller{
+
 template<typename T, typename S>
-inline T saturate(T lb, S val, T ub) 
+inline T saturate(T lb, S val, T ub) noexcept
 {  return std::min(ub, std::max(lb, static_cast<T>(val)) ); }
 
-namespace controller{
+template<typename T>
+inline T calc_error_decay_rate(T constant_gain, T error) noexcept
+{ return constant_gain*std::fabs(std::log(std::fabs( (error/0.1) + 0.01))); }
+
 
 template<typename ref_state_type, typename act_state_type>
 class BackSteppingController : 
@@ -108,8 +113,8 @@ void BackSteppingController<ref_state_type, act_state_type>::calculate_control_a
     double error_x = actual.pose.point.x - ref.x;
     double error_y = actual.pose.point.y - ref.y;
     
-    lambda_x_ = lambda_gains_[0]*std::fabs(std::log(std::fabs( (error_x/0.1) + 0.01)));
-    lambda_y_ = lambda_gains_[1]*std::fabs(std::log(std::fabs( (error_y/0.1) + 0.01)));
+    lambda_x_ = controller::calc_error_decay_rate(lambda_gains_[0], error_x);
+    lambda_y_ = controller::calc_error_decay_rate(lambda_gains_[1], error_y);
 
     double x_act_dot_req = ref.x_dot  - lambda_x_*error_x;
     double y_act_dot_req = ref.y_dot  - lambda_y_*error_y;
@@ -117,9 +122,7 @@ void BackSteppingController<ref_state_type, act_state_type>::calculate_control_a
     double theta_cmd = std::atan2(y_act_dot_req, x_act_dot_req);
 
     double error_theta = controller::delta_theta(actual_hdg, theta_cmd);
-    
-    //if (std::fabs(error_theta) >= 7*M_PI/180.0)
-    { lambda_theta_ = lambda_gains_[2]*std::fabs(std::log(std::fabs( (error_theta/0.1) + 0.01))); }
+    lambda_theta_ = controller::calc_error_decay_rate(lambda_gains_[2], error_theta);
 
     double vel_cmd = std::sqrt( x_act_dot_req*x_act_dot_req + y_act_dot_req*y_act_dot_req );
 
@@ -146,8 +149,8 @@ void BackSteppingController<ref_state_type, act_state_type>::calculate_control_a
     wheel_angular_vel_->wl = 0.5*(angular_vel_sum - angular_vel_diff);
     wheel_angular_vel_->wr = 0.5*(angular_vel_sum + angular_vel_diff);
 
-    wheel_angular_vel_->wl = saturate(-max_wheel_angular_vel_, wheel_angular_vel_->wl, max_wheel_angular_vel_);
-    wheel_angular_vel_->wr = saturate(-max_wheel_angular_vel_, wheel_angular_vel_->wr, max_wheel_angular_vel_);
+    wheel_angular_vel_->wl = controller::saturate(-max_wheel_angular_vel_, wheel_angular_vel_->wl, max_wheel_angular_vel_);
+    wheel_angular_vel_->wr = controller::saturate(-max_wheel_angular_vel_, wheel_angular_vel_->wr, max_wheel_angular_vel_);
 }
 
 template<typename ref_state_type, typename act_state_type>

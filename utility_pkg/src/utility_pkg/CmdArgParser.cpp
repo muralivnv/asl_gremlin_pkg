@@ -82,5 +82,3 @@ utility_pkg::CmdArgParser::get_param(const std::string& key) const
     }
     return opt;
 }
-
-
