@@ -21,6 +21,9 @@
 #include <asl_gremlin_pkg/GetParam.h>
 #include <std_msgs/Bool.h>
 
+#include <thread>
+#include <chrono>
+
 using namespace controller;
 using namespace asl_gremlin_msgs;
 using namespace asl_gremlin_pkg;
@@ -64,16 +67,22 @@ int main(int argc, char** argv)
     ros::spinOnce();
 
     ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
+    bool initialized = false;
     while(ros::ok())
     {
         if ( (sim.get_data())->data )
         {
+            if (!initialized)
+            { 
+                std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+                initialized = true;
+            }
             ROS_INFO_ONCE("Started generating control commands");
             controller->calculate_control_action(*(ref_traj.get_data()),
                                                 *(act_state.get_data()));
         }
         else
-        { controller->reset(); }
+        { controller->reset(); initialized = false;}
 
        ang_vel_cmd.publish(*(controller->get_control_action()));
 

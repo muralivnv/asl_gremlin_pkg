@@ -31,8 +31,6 @@ class WaypointSubscribe{
         dynamic_reconfigure::Server<trajectory_generation::waypointSetConfig> dr_wp_srv_;
         dynamic_reconfigure::Server<trajectory_generation::waypointSetConfig>::CallbackType fun_;
 
-        ros::Publisher sim_stop_pub_;
-
     public:
        
         WaypointSubscribe(ros::NodeHandle& );

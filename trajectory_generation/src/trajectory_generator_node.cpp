@@ -23,6 +23,8 @@
 #include <ros/time.h>
 
 #include <string>
+#include <chrono>
+#include <thread>
 
 using namespace trajectory_generation;
 
@@ -72,6 +74,7 @@ int main(int argc, char** argv)
             {
                 if ( !updated_ini_params )
                 {
+                    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
                     ROS_INFO_ONCE("Started creating trajectory for given waypoints");
                     min_jerk_traj->set_ini_pose(0.0, 0.0);
 
