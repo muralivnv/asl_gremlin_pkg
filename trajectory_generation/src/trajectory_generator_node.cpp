@@ -53,7 +53,7 @@ int main(int argc, char** argv)
     double rate = 10.0;
     if (!traj_nh.getParam("sim/rate", rate))
     {
-        ROS_WARN("Unable access parameter /%s/sim/rate, setting rate as 10Hz",
+        ROS_WARN("Unable to access parameter /%s/sim/rate, setting rate as 10Hz",
                     ros::this_node::getNamespace().c_str());
     }
     ros::Rate loop_rate(rate);
@@ -89,6 +89,10 @@ int main(int argc, char** argv)
                     min_jerk_traj->set_current_traj_value_to_ini();
 
                     waypoint = waypoint_stack.get_next_waypoint();
+                    
+                    if (waypoint.size() == 1)
+                    { continue; }
+                    
                     dist_to_wp->set_waypoint(waypoint[0], waypoint[1]);
 
                     min_jerk_traj->set_final_pose(waypoint[0], waypoint[1]);

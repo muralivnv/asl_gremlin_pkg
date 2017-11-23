@@ -20,6 +20,8 @@ WaypointSubscribe::WaypointSubscribe(ros::NodeHandle& nh)
     dr_wp_srv_.setCallback(fun_);
     x_waypoints_ = {0};
     y_waypoints_ = {0};
+
+    sim_stop_pub_ = nh.advertise<std_msgs::Bool>("start_sim",10);
 }
 
 void WaypointSubscribe::dynamic_reconfigure_waypointSet_callback(trajectory_generation::waypointSetConfig & config,  uint32_t level)
@@ -70,6 +72,12 @@ std::vector<double> WaypointSubscribe::get_current_waypoint()
 std::vector<double> WaypointSubscribe::get_next_waypoint()
 {
     ++current_waypoint_ptr_;
+    if (current_waypoint_ptr_ == x_waypoints_.size())
+    {
+        sim_stop_pub_.publish(std_msgs::Bool());
+        --current_waypoint_ptr_;
+        return {0};
+    }
     return {x_waypoints_[current_waypoint_ptr_],
                 y_waypoints_[current_waypoint_ptr_] };
 }

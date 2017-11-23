@@ -65,6 +65,7 @@ val_t lookup_table(const T& x_container, const S& y_container, const val_t& x_va
 
     int idx = get_lower_index(x_container, x_val);
     val_t interpolated_data = linear_interpolate(y_container, x_container, idx, x_val);
+    return interpolated_data;
 }
 
 } // end namespace { custom_algorithms }

@@ -30,5 +30,12 @@
 		<arg name="robot_name" value="$(arg robot_name)" />
 	</include>
 
+	<node   ns="$(arg robot_name)"
+        pkg="asl_gremlin_pkg"
+        name="record_data_to_rosbag"
+        type="initiate_rosbag_node"
+        respawn="true"
+        output="screen" />
+
 </launch>
 

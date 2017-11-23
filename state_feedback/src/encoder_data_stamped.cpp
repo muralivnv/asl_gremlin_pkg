@@ -24,8 +24,8 @@ int main(int argc, char** argv)
 
 	ros::NodeHandle nh;
 
-    asl_gremlin_pkg::SubscribeTopic<std_msgs::Int32>    left_encoder_data(nh, "arduino/left_encoder", 100),
-                                                        right_encoder_data(nh, "arduino/right_encoder", 100),
+    asl_gremlin_pkg::SubscribeTopic<std_msgs::Int32>    left_encoder_data(nh, "arduino/left_encoder", 250),
+                                                        right_encoder_data(nh, "arduino/right_encoder", 250),
                                                         reset_encoder(nh, "reset_encoders", 10);
 
     std::string left_encoder_stamped_topic, right_encoder_stamped_topic;
@@ -35,8 +35,8 @@ int main(int argc, char** argv)
     right_encoder_stamped_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>
                                     (nh, "state_feedback/encoder/right_timeStamped_topic", __LINE__);
 
-	ros::Publisher left_encoder_data_stamped  = nh.advertise < std_msgs::Float64MultiArray >(left_encoder_stamped_topic, 100);
-	ros::Publisher right_encoder_data_stamped = nh.advertise < std_msgs::Float64MultiArray >(right_encoder_stamped_topic,100);
+	ros::Publisher left_encoder_data_stamped  = nh.advertise < std_msgs::Float64MultiArray >(left_encoder_stamped_topic, 250);
+	ros::Publisher right_encoder_data_stamped = nh.advertise < std_msgs::Float64MultiArray >(right_encoder_stamped_topic,250);
 
 	std_msgs::Float64MultiArray msg_right;
 	std_msgs::Float64MultiArray msg_left;

@@ -34,8 +34,8 @@ EncoderDataToOmega::EncoderDataToOmega(ros::NodeHandle& nh)
     encoder_right_topic = GetParam_with_shutdown<std::string>
                             (nh, "state_feedback/encoder/right_timeStamped_topic", __LINE__);
 
-    left_wheel_data_  = new asl_gremlin_pkg::SubscribeTopic<std_msgs::Float64MultiArray>(nh, encoder_left_topic, 150);
-    right_wheel_data_ = new asl_gremlin_pkg::SubscribeTopic<std_msgs::Float64MultiArray>(nh, encoder_right_topic, 150);
+    left_wheel_data_  = new asl_gremlin_pkg::SubscribeTopic<std_msgs::Float64MultiArray>(nh, encoder_left_topic, 250);
+    right_wheel_data_ = new asl_gremlin_pkg::SubscribeTopic<std_msgs::Float64MultiArray>(nh, encoder_right_topic, 250);
 
     ros::spinOnce();
     update_encoder_starting_values();

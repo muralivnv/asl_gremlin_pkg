@@ -20,6 +20,7 @@
 #include <trajectory_generation/waypointSetConfig.h>
 #include <dynamic_reconfigure/server.h>
 #include <utility_pkg/str_manip.h>
+#include <std_msgs/Bool.h>
 
 class WaypointSubscribe{
         
@@ -29,6 +30,8 @@ class WaypointSubscribe{
 
         dynamic_reconfigure::Server<trajectory_generation::waypointSetConfig> dr_wp_srv_;
         dynamic_reconfigure::Server<trajectory_generation::waypointSetConfig>::CallbackType fun_;
+
+        ros::Publisher sim_stop_pub_;
 
     public:
        
