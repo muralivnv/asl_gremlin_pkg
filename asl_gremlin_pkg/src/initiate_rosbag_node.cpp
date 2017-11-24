@@ -55,7 +55,7 @@ int main(int argc, char** argv)
 
     bool initiated_sim = false;
     
-    ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
+    ROS_INFO("\033[1;32mInitialized\033[0;m:= %s",ros::this_node::getName().c_str());
 
     std::string rosbag_pid_process_num;
     while (ros::ok())
@@ -63,12 +63,12 @@ int main(int argc, char** argv)
         if ( (sim_start.get_data())->data && !initiated_sim)
         {
             rosbag_pid_process_num = exec_cmd("bash $HOME/asl_gremlin1/src/bash_scripts/record_sim_data.sh");
-            ROS_INFO("Initialized:= data recording");
+            ROS_INFO("\033[1;32mInitialized\033[0;m:= data recording");
             initiated_sim = true;
         }
         else if (initiated_sim && !(sim_start.get_data())->data )
         {
-            ROS_INFO("Aborted:= data recording"); 
+            ROS_INFO("\033[1;31mStopped\033[0;m:= data recording"); 
 
             std::string kill_bag_cmd("kill -INT "+rosbag_pid_process_num);
             auto res = std::system(kill_bag_cmd.c_str());

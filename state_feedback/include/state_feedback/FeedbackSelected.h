@@ -104,13 +104,13 @@ void FeedbackSelected<N>::dynamic_reconfigure_feedback_callback(feedbackSelectCo
     switch(feedback)
     {
         case(0):
-            ROS_INFO("Feedback is set to 'GPS+Compass'");
+            ROS_INFO("\033[0;33mUpdated\033[0;m:= {Feedback}-> \033[1;37m'GPS+Compass'\033[0;m");
             break;
         case(1):
-            ROS_INFO("Feedback is set to 'Encoder+Compass'");
+            ROS_INFO("\033[0;33mUpdated\033[0;m:= {Feedback}-> \033[1;37m'Encoder+Compass'\033[0;m");
             break;
         case(2):
-            ROS_INFO("Feedback is set to 'Pure GPS'");
+            ROS_INFO("\033[0;33mUpdated\033[0;m:= {Feedback}-> \033[1;37m'Pure GPS'\033[0;m");
             break;
     }
 }

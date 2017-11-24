@@ -54,14 +54,20 @@ int main(int argc, char** argv)
 	bool initiated = false;
 	int pwm_left = 0, pwm_right = 0;
     
-    ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
+    ROS_INFO("\033[1;32mInitialized\033[0;m:= %s",ros::this_node::getName().c_str());
 	while(ros::ok())
     {
     	if ( (sim.get_data())->data && !initiated )
-    	{	initiated = true;  	}
+    	{	
+            ROS_INFO("\033[1;32mInitialized\033[0;m:= Sending PWM to arduino");
+            initiated = true;  	
+        }
     	
     	else if ( !(sim.get_data())->data && initiated )
-    	{	initiated = false;  }
+    	{  
+            ROS_INFO("\033[1;31mStopped\033[0;m:= Sending PWM to arduino");
+            initiated = false;   
+        }
     	
     	if ( initiated )
     	{

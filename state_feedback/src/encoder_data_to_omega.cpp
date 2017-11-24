@@ -53,16 +53,18 @@ int main(int argc, char** argv)
     bool initiated = false;
 
 
-    ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
+    ROS_INFO("\033[1;32mInitialized\033[0;m:= %s",ros::this_node::getName().c_str());
     while(ros::ok())
     {
         if ( !initiated && (sim.get_data())->data )
         {
             encoder_data_to_omega.update_encoder_starting_values();
+            ROS_INFO("\033[1;32mInitialized\033[0;m:= Converting encoder ticks to angular velocity");
             initiated = true;
         }
         if ( !(sim.get_data())->data && initiated)
         {
+            ROS_INFO("\033[1;31mStopped\033[0;m:= Converting encoder ticks to angular velocity");
             initiated = false;
         }
         encoder_data_to_omega.calculate_angular_velocities();

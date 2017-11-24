@@ -66,18 +66,18 @@ int main(int argc, char** argv)
     ros::Rate loop_rate(rate);
     ros::spinOnce();
 
-    ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
+    ROS_INFO("\033[1;32mInitialized\033[0;m:= %s",ros::this_node::getName().c_str());
     bool initialized = false;
     while(ros::ok())
     {
         if ( (sim.get_data())->data )
         {
             if (!initialized)
-            { 
+            {
                 std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+                ROS_INFO("\033[1;32mInitialized\033[0;m:= generating control commands");
                 initialized = true;
             }
-            ROS_INFO_ONCE("Started generating control commands");
             controller->calculate_control_action(*(ref_traj.get_data()),
                                                 *(act_state.get_data()));
         }

@@ -44,7 +44,7 @@ void WaypointSubscribe::dynamic_reconfigure_waypointSet_callback(trajectory_gene
     else
     {
         received_wp_ = true;
-        ROS_INFO(" Waypoint mission received--> beep boop beep");
+        ROS_INFO("\033[0;33mUpdated\033[0;m:= {Waypoints}--> \033[1;37mbeep boop beep\033[0;m");
        
         if (std::fabs(x_waypoints_[0]) < 2 && std::fabs(y_waypoints_[0]) < 2)
         { 
@@ -52,10 +52,10 @@ void WaypointSubscribe::dynamic_reconfigure_waypointSet_callback(trajectory_gene
             y_waypoints_.erase(std::begin(y_waypoints_));
         }
 
-        std::cout << "X:= ";
+        std::cout << "\033[1;mX\033[0;m:= ";
         utility_pkg::print_stl_container(x_waypoints_);
 
-        std::cout << "\nY:= ";
+        std::cout << "\n\033[1;mY\033[0;m:= ";
         utility_pkg::print_stl_container(y_waypoints_);
     }
 }

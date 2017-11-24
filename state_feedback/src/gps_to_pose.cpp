@@ -56,18 +56,20 @@ int main(int argc, char **argv)
     ros::spinOnce();
 
 
-	ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
+	ROS_INFO("\033[1;32mInitialized\033[0;m:= %s",ros::this_node::getName().c_str());
 	while(ros::ok())
 	{
         if ( (sim.get_data())->data && !initiated)
         {
+            ROS_INFO("\033[1;32mInitialized\033[0;m:= Local position from raw-GPS");
             gps2xy.reset();
             count = 0;
             initiated = true;
         }
         if ( initiated && !(sim.get_data())->data)
         {
-            initiated = true;
+            ROS_INFO("\033[1;31mStopped\033[0;m:= Local position from raw-GPS");
+            initiated = false;
         }
         // first convert the current global to ecef co-ordinates
         gps2xy.geod2ecef();

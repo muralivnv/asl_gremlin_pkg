@@ -56,7 +56,7 @@ int main(int argc, char** argv)
 	ros::Rate loop_rate(250);
 	
 
-	ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
+	ROS_INFO("\033[1;32mInitialized\033[0;m:= %s",ros::this_node::getName().c_str());
 	while(ros::ok())
 	{
 		msg_right.data[0] = ((right_encoder_data.get_data())->data);

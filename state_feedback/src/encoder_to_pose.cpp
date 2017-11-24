@@ -102,16 +102,20 @@ int main(int argc, char** argv)
     bool initiated = false;
 
 
-    ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
+    ROS_INFO("\033[1;32mInitialized\033[0;m:= %s",ros::this_node::getName().c_str());
     while(ros::ok())
     {
         if ( (sim.get_data())->data && !initiated)
         {
+            ROS_INFO("\033[1;32mInitialized\033[0;m:= Encoder based dead-reckoning");
             initial_states[0] = 0.0; initial_states[1] = 0.0;
             initiated = true;
         }
         if (initiated && !(sim.get_data())->data)
-        { initiated = false; }
+        { 
+            ROS_INFO("\033[1;31mStopped\033[0;m:= Encoder based dead-reckoning");
+            initiated = false; 
+        }
 
         actual_omega = actual_angular_vel.get_data();
         params.wl = actual_omega->wl;

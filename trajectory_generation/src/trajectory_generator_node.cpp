@@ -63,7 +63,7 @@ int main(int argc, char** argv)
     bool updated_ini_params = false;
     std::vector<double> waypoint(2,0);
     
-    ROS_INFO("Initialized:= %s",ros::this_node::getName().c_str());
+    ROS_INFO("\033[1;32mInitialized\033[0;m:= %s",ros::this_node::getName().c_str());
     while(ros::ok())
     {
         if ( (sim.get_data())->data )
@@ -77,7 +77,7 @@ int main(int argc, char** argv)
                     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
                     waypoint_stack.reset_counter();
                     dist_to_wp->reset_vehicle_pos();
-                    ROS_INFO_ONCE("Started creating trajectory for given waypoints");
+                    ROS_INFO("\033[1;32mInitialized\033[0;m:= Generating trajectory for given waypoints");
                     min_jerk_traj->set_ini_pose(0.0, 0.0);
 
                     waypoint = waypoint_stack.get_current_waypoint();
@@ -112,6 +112,7 @@ int main(int argc, char** argv)
         }
         else if (!(sim.get_data())->data && updated_ini_params)
         {
+            ROS_INFO("\033[1;31mStopped\033[0;m:= Generating trajectory for given waypoints");
             updated_ini_params = false;
             dist_to_wp->reset_vehicle_pos();
             waypoint_stack.reset_counter();
