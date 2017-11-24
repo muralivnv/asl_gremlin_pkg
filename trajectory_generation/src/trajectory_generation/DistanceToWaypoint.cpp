@@ -34,9 +34,6 @@ DistanceToWaypoint::~DistanceToWaypoint()
 
 void DistanceToWaypoint::set_waypoint(double x, double y)
 {
-    if ( std::fabs(x_wp_) >= 1.0 && std::fabs(y_wp_) >= 1.0 )
-    { ROS_INFO("Reached waypoint(x,y):= (%f,%f)",x_wp_,y_wp_); }
-
     x_wp_ = x; y_wp_ = y;
     ++local_counter_;
 }
@@ -46,7 +43,19 @@ bool DistanceToWaypoint::is_reached_waypoint()
     double x_current = (vehicle_state_->get_data())->pose.point.x;
     double y_current = (vehicle_state_->get_data())->pose.point.y;
 
-    return std::sqrt( std::pow(x_current - x_wp_,2) + 
+    if( std::sqrt( std::pow(x_current - x_wp_,2) + 
                         (std::pow(y_current - y_wp_, 2))) < 
-            waypoint_proximity_ ? true : false;
+            waypoint_proximity_ )
+    {
+    	ROS_INFO("Reached waypoint (x,y):= (%f, %f)",x_wp_,y_wp_);
+    	return true;
+    }
+    else
+    { return false; }
+}
+void DistanceToWaypoint::reset_vehicle_pos()
+{
+    local_counter_ = 0;
+    (vehicle_state_->get_data())->pose.point.x = 0.0;
+    (vehicle_state_->get_data())->pose.point.y = 0.0;
 }

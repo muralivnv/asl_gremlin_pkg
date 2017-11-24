@@ -36,6 +36,7 @@ class DistanceToWaypoint{
         
         void set_waypoint(double, double);
         bool is_reached_waypoint();
+        void reset_vehicle_pos();
 };
 
 } // end namespace{trajectory_generation}

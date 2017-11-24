@@ -75,6 +75,8 @@ int main(int argc, char** argv)
                 if ( !updated_ini_params )
                 {
                     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+                    waypoint_stack.reset_counter();
+                    dist_to_wp->reset_vehicle_pos();
                     ROS_INFO_ONCE("Started creating trajectory for given waypoints");
                     min_jerk_traj->set_ini_pose(0.0, 0.0);
 
@@ -94,7 +96,11 @@ int main(int argc, char** argv)
                     waypoint = waypoint_stack.get_next_waypoint();
                     
                     if (waypoint.size() == 1)
-                    { continue; }
+                    { 
+                        ros::spinOnce(); 
+                        dist_to_wp->reset_vehicle_pos();
+                        continue; 
+                    }
                     
                     dist_to_wp->set_waypoint(waypoint[0], waypoint[1]);
 
@@ -107,6 +113,7 @@ int main(int argc, char** argv)
         else if (!(sim.get_data())->data && updated_ini_params)
         {
             updated_ini_params = false;
+            dist_to_wp->reset_vehicle_pos();
             waypoint_stack.reset_counter();
         }
 
