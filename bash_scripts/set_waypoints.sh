@@ -15,6 +15,11 @@ if [ "$#" == "0" ] || [ "$1" == "-h" ]; then
     echo -e "Both set of waypoints need to be provided\n"
     echo -e "${light_green}ex: ./set_waypoints.sh -x \"20, 10+10*cos(45*pi/180),..\" -y \"10, 10+10*sin(45*pi/180),..\" ${normal}\n"
 else
-    rosrun trajectory_generation waypointSet_client __ns:=${robot_name} $@
+	ARGS=""
+	for var in "$@"
+	do
+		ARGS=$(echo "$ARGS "$(echo -e "$var" | tr -d '[:space:]' | tr -s ',')"")
+	done
+    rosrun trajectory_generation waypointSet_client __ns:=${robot_name} $ARGS
 fi
 

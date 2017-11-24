@@ -63,12 +63,12 @@ int main(int argc, char** argv)
         if ( (sim_start.get_data())->data && !initiated_sim)
         {
             rosbag_pid_process_num = exec_cmd("bash $HOME/asl_gremlin1/src/bash_scripts/record_sim_data.sh");
-            ROS_INFO("Initialized:= data recording"); 
+            ROS_INFO("Initialized:= data recording");
             initiated_sim = true;
         }
         else if (initiated_sim && !(sim_start.get_data())->data )
         {
-            ROS_INFO("Stopped:= data recording"); 
+            ROS_INFO("Aborted:= data recording"); 
 
             std::string kill_bag_cmd("kill -INT "+rosbag_pid_process_num);
             auto res = std::system(kill_bag_cmd.c_str());
