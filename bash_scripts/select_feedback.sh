@@ -6,13 +6,13 @@ light_green='\033[1;32m'
 normal='\033[0;m'
 yellow='\033[1;33m'
 light_purple='\033[0;35m'
-
+light_red='\033[1;31m'
 
 if [ "$#" == "0" ] || [ "$1" == "-h" ]; then
-    echo -e "use flags"
-    echo -e "${cyan}-encoder_cmp${normal}(or) ${cyan}1${normal}: to use ENCODER for pose and COMPASS for heading"
-    echo -e "${cyan}-gps_cmp${normal}(or) ${cyan}0${normal}: to use GPS for pose and COMPASS for heading"
-    echo -e "${cyan}-gps${normal} (or) ${cyan}2${normal}: to use only GPS for both pose and heading\n"
+    echo -e "\t${yellow}use flags${normal}"
+    echo -e "\t${light_red}-encoder_cmp${normal}(or) ${light_red}1${normal}: to use ENCODER for pose and COMPASS for heading"
+    echo -e "\t${light_red}-gps_cmp${normal}(or) ${light_red}0${normal}: to use GPS for pose and COMPASS for heading"
+    echo -e "\t${light_red}-gps${normal} (or) ${light_red}2${normal}: to use only GPS for both pose and heading\n"
     echo -e "${light_green}ex: ./select_feedback -encoder_cmp${normal}\n"
     echo -e "${light_green}ex: ./select_feedback 1${normal}\n"
 

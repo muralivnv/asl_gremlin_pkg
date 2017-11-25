@@ -24,40 +24,40 @@ WaypointSubscribe::WaypointSubscribe(ros::NodeHandle& nh)
 
 void WaypointSubscribe::dynamic_reconfigure_waypointSet_callback(trajectory_generation::waypointSetConfig & config,  uint32_t level)
 {
-    x_waypoints_ = utility_pkg::string_to_vector<double>(config.X_waypoint);
-    y_waypoints_ = utility_pkg::string_to_vector<double>(config.Y_waypoint);
+    received_wp_ = false;
 
-    if (  x_waypoints_.size() != y_waypoints_.size() )
-    {
-        ROS_ERROR(" trajectory_generation: x and y waypoints are not of equal size, change them");
-        
-        x_waypoints_.erase(std::begin(x_waypoints_), std::end(x_waypoints_));
-        y_waypoints_.erase(std::begin(y_waypoints_), std::end(y_waypoints_));
-    }
-    else if ( x_waypoints_.size() == 1 && x_waypoints_[0] == 0 && y_waypoints_[0] == 0 )
-    { 
-        ROS_WARN(" trajectory_generation: waypoint stack is empty, use 'rosservice' to set them "); 
-       
-        x_waypoints_.erase(std::begin(x_waypoints_), std::end(x_waypoints_));
-        y_waypoints_.erase(std::begin(y_waypoints_), std::end(y_waypoints_));
-    }
+    auto x_wp_tmp = utility_pkg::string_to_vector<double>(config.X_waypoint);
+    auto y_wp_tmp = utility_pkg::string_to_vector<double>(config.Y_waypoint);
+
+    if (config.Reset_Xwp)
+    { x_waypoints_ = x_wp_tmp; }
+    if (config.Concatenate_Xwp)
+    {  std::copy(x_wp_tmp.begin(), x_wp_tmp.end(), std::back_inserter(x_waypoints_)); }
+
+    if (config.Reset_Ywp)
+    { y_waypoints_ = y_wp_tmp; }
+
+    if (config.Concatenate_Ywp)
+    {  std::copy(y_wp_tmp.begin(), y_wp_tmp.end(), std::back_inserter(y_waypoints_)); }
+
+    if (  x_waypoints_.size() == y_waypoints_.size() )
+    { received_wp_ = true; }
     else
-    {
-        received_wp_ = true;
-        ROS_INFO("\033[0;33mUpdated\033[0;m:= {Waypoints}--> \033[1;37mbeep boop beep\033[0;m");
+    { ROS_WARN("Unequal waypoint stack sizes between X and Y, rectify this before 'Initialization'"); }
+    
+    ROS_INFO("\033[0;33mUpdated\033[0;m:= {Waypoints}--> \033[1;37mbeep boop beep\033[0;m");
        
-        if (std::fabs(x_waypoints_[0]) < 2 && std::fabs(y_waypoints_[0]) < 2)
-        { 
-            x_waypoints_.erase(std::begin(x_waypoints_));
-            y_waypoints_.erase(std::begin(y_waypoints_));
-        }
-
-        std::cout << "\033[1;37mX_wp\033[0;m:= ";
-        utility_pkg::print_stl_container(x_waypoints_);
-
-        std::cout << "\n\033[1;37mY_wp\033[0;m:= ";
-        utility_pkg::print_stl_container(y_waypoints_);
+    if (std::fabs(x_waypoints_[0]) < 2 && std::fabs(y_waypoints_[0]) < 2)
+    {
+        x_waypoints_.erase(std::begin(x_waypoints_));
+        y_waypoints_.erase(std::begin(y_waypoints_));
     }
+
+    std::cout << "\033[1;37mX_wp\033[0;m:= ";
+    utility_pkg::print_stl_container(x_waypoints_);
+
+    std::cout << "\n\033[1;37mY_wp\033[0;m:= ";
+    utility_pkg::print_stl_container(y_waypoints_);
 }
 
 std::vector<double> WaypointSubscribe::get_current_waypoint()

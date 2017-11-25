@@ -12,6 +12,7 @@
  */
 #include <ros/ros.h>
 #include <dynamic_reconfigure/StrParameter.h>
+#include <dynamic_reconfigure/BoolParameter.h>
 #include <dynamic_reconfigure/Reconfigure.h>
 #include <dynamic_reconfigure/Config.h>
 #include <string>
@@ -26,8 +27,9 @@ int main(int argc, char** argv)
 
     dynamic_reconfigure::ReconfigureRequest srv_req;
     dynamic_reconfigure::ReconfigureResponse srv_resp;
-    dynamic_reconfigure::StrParameter X_wp;
-    dynamic_reconfigure::StrParameter Y_wp;
+    dynamic_reconfigure::StrParameter X_wp, Y_wp;
+    dynamic_reconfigure::BoolParameter cnctX, cnctY;
+    dynamic_reconfigure::BoolParameter resetX, resetY;
     dynamic_reconfigure::Config conf;
 
     std::string nh_namespace(ros::this_node::getNamespace());
@@ -41,34 +43,81 @@ int main(int argc, char** argv)
 	    {
             utility_pkg::CmdArgParser cmd_arg_parser(argc, argv);
 
-            utility_pkg::CmdArgParser::option* opt = cmd_arg_parser.get_param("-x");
+            utility_pkg::CmdArgParser::option* opt = cmd_arg_parser.get_param("-nx");
+            resetX.name = "Reset_Xwp";
+            resetX.value = false;
 	        if (opt != nullptr)
 	        {
 	            if (opt->second == "")
-	            { throw "X_component of waypoints not specified"; }
+	            { throw "data for X-waypoints not specified"; }
 	            else
 	            {
+	            	resetX.value = true;
 	                X_wp.name = "X_waypoint";
 	                X_wp.value = opt->second;
 	                conf.strs.push_back(X_wp);
 	            }
 	        }
-	        opt = cmd_arg_parser.get_param("-y");
+	        conf.bools.push_back(resetX);
+
+	        opt = cmd_arg_parser.get_param("-ax");
+	        cnctX.name = "Concatenate_Xwp";
+	        cnctX.value = false;
+	        if (opt != nullptr)
+	        {
+	        	if (resetX.value)
+	        	{throw "Specified both flags '-nx' and '-ax', rectify this";}
+	        	
+	        	if (opt->second == "")
+	            { throw "data for X-waypoints not specified"; }
+	            else
+	            {
+	            	cnctX.value = true;
+	                X_wp.name = "X_waypoint";
+	                X_wp.value = opt->second;
+	                conf.strs.push_back(X_wp);
+	            }
+	        }
+	        conf.bools.push_back(cnctX);
+
+	        opt = cmd_arg_parser.get_param("-ny");
+	        resetY.name = "Reset_Ywp";
+            resetY.value = false;
 	        if (opt != nullptr)
 	        {
 	            if (opt->second == "")
-	            { throw "Y_component of waypoints not specified"; }
+	            { throw "data for Y-waypoints not specified"; }
 	            else
 	            {
 	                Y_wp.name = "Y_waypoint";
 	                Y_wp.value = opt->second;
+	                resetY.value = true;
 	                conf.strs.push_back(Y_wp);
 	            }
 	        }
+			conf.bools.push_back(resetY);
+
+	        opt = cmd_arg_parser.get_param("-ay");
+	        cnctY.name = "Concatenate_Ywp";
+            cnctY.value = false;
+	        if (opt != nullptr)
+	        {
+	        	if (resetY.value)
+	        	{throw "Specified both flags '-ny' and '-ay', rectify this";}
+
+	            if (opt->second == "")
+	            { throw "data for  Y-waypoints not specified"; }
+	            else
+	            {
+	                Y_wp.name = "Y_waypoint";
+	                Y_wp.value = opt->second;
+	                cnctY.value = true;
+	                conf.strs.push_back(Y_wp);
+	            }
+	        }
+	        conf.bools.push_back(cnctY);
 
 	        srv_req.config = conf;
-	        if (conf.strs.size() != 2)
-	        { throw "incorrect flags or one waypoint component(X/Y) didn't specified"; }
 	        
 	        if(ros::service::call(waypoint_server_topic_name, srv_req, srv_resp) )
 	        { ROS_INFO("waypoint_set_client: waypoints have been sent successfully"); }
@@ -84,7 +133,7 @@ int main(int argc, char** argv)
 	catch (const char* msg)
 	{
 	    ROS_ERROR("waypoint_set_client: %s\n"
-	                "\t\t\t\tuse syntax: -x string -y string", msg);
+	                "\t\t\t\tuse syntax: -nx string -ny string", msg);
 	}   
 	return EXIT_SUCCESS;
 }

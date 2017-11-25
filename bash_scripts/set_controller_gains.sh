@@ -7,12 +7,14 @@ light_green='\033[1;32m'
 normal='\033[0;m'
 yellow='\033[1;33m'
 light_purple='\033[0;35m'
+light_red='\033[1;31m'
 
 if [ "$#" == "0" ] || [ "$1" == "-h" ]; then
-    echo -e "${cyan}use flags${normal}\n${light_green}-lx${normal}:   ${light_purple}to set lambda_x${normal}"
-    echo -e  "${light_green}-ly${normal}:   ${light_purple}to set lambda_y${normal}"
-    echo -e "${light_green}-lth${normal}:  ${light_purple}to set lambda_theta${normal}"
-    echo -e "\n${yellow}ex: ./set_controller_gains -lx 0.5 -ly 0.98${normal}\n"
+    echo -e "\t${yellow}use flags${normal}"
+    echo -e "\t${light_red}-lx${normal}:   to set lambda_x"
+    echo -e "\t${light_red}-ly${normal}:   to set lambda_y"
+    echo -e "\t${light_red}-lth${normal}:  to set lambda_theta"
+    echo -e "\n${light_green}ex: ./set_controller_gains -lx 0.5 -ly 0.98${normal}\n"
 else 
     rosrun controller controllerGainSet_client __ns:=${robot_name} $@
 fi
