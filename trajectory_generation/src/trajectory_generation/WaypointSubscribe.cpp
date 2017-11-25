@@ -52,10 +52,10 @@ void WaypointSubscribe::dynamic_reconfigure_waypointSet_callback(trajectory_gene
             y_waypoints_.erase(std::begin(y_waypoints_));
         }
 
-        std::cout << "\033[1;mX\033[0;m:= ";
+        std::cout << "\033[1;37mX_wp\033[0;m:= ";
         utility_pkg::print_stl_container(x_waypoints_);
 
-        std::cout << "\n\033[1;mY\033[0;m:= ";
+        std::cout << "\n\033[1;37mY_wp\033[0;m:= ";
         utility_pkg::print_stl_container(y_waypoints_);
     }
 }
@@ -71,7 +71,7 @@ std::vector<double> WaypointSubscribe::get_next_waypoint()
     ++current_waypoint_ptr_;
     if (current_waypoint_ptr_ == x_waypoints_.size())
     {
-        ROS_INFO("All waypoints reached, stopping rover");
+        ROS_INFO("\033[1;33mReached last waypoint, stopping rover\033[0;m");
 
         std::string topic_name = ros::this_node::getNamespace()+"/start_sim";
         if (topic_name[0] == '/' && topic_name[1] == '/')

@@ -76,6 +76,9 @@ int main(int argc, char** argv)
 		++count;
 
         if ((reset_encoder.get_data())->data)
-        { count = 0.0; }
+        {
+            ROS_INFO("\033[0;33mRestted encoders\033[0;m");
+            count = 0.0;
+        }
 	}
 }

@@ -47,7 +47,7 @@ bool DistanceToWaypoint::is_reached_waypoint()
                         (std::pow(y_current - y_wp_, 2))) < 
             waypoint_proximity_ )
     {
-    	ROS_INFO("Reached waypoint (x,y):= (%f, %f)",x_wp_,y_wp_);
+    	ROS_INFO("Reached waypoint \033[1;37m(x,y)\033[0;m:= (%f, %f)",x_wp_,y_wp_);
     	return true;
     }
     else
