@@ -30,6 +30,8 @@ int main(int argc, char** argv)
     dynamic_reconfigure::StrParameter X_wp, Y_wp;
     dynamic_reconfigure::BoolParameter cnctX, cnctY;
     dynamic_reconfigure::BoolParameter resetX, resetY;
+    dynamic_reconfigure::BoolParameter removeX, removeY;
+    dynamic_reconfigure::BoolParameter re_arrX, re_arrY;
     dynamic_reconfigure::Config conf;
 
     std::string nh_namespace(ros::this_node::getNamespace());
@@ -80,6 +82,28 @@ int main(int argc, char** argv)
 	        }
 	        conf.bools.push_back(cnctX);
 
+	        opt = cmd_arg_parser.get_param("-dx");
+	        removeX.name = "Remove_Xwp";
+	        removeX.value = false;
+	        if (opt != nullptr)
+	        {
+	        	if (resetX.value)
+	        	{throw "Specified both flags '-nx' and '-dx', rectify this";}
+	        	if (cnctX.value)
+	        	{throw "Specified both flags '-ax' and '-dx', rectify this";}
+	        	
+	        	if (opt->second == "")
+	            { throw "data for X-waypoints not specified"; }
+	            else
+	            {
+	            	removeX.value = true;
+	                X_wp.name = "X_waypoint";
+	                X_wp.value = opt->second;
+	                conf.strs.push_back(X_wp);
+	            }
+	        }
+	        conf.bools.push_back(removeX);
+
 	        opt = cmd_arg_parser.get_param("-ny");
 	        resetY.name = "Reset_Ywp";
             resetY.value = false;
@@ -117,6 +141,28 @@ int main(int argc, char** argv)
 	        }
 	        conf.bools.push_back(cnctY);
 
+	        opt = cmd_arg_parser.get_param("-dy");
+	        removeY.name = "Remove_Ywp";
+	        removeY.value = false;
+	        if (opt != nullptr)
+	        {
+	        	if (resetY.value)
+	        	{throw "Specified both flags '-ny' and '-dy', rectify this";}
+	        	if (cnctY.value)
+	        	{throw "Specified both flags '-ay' and '-dy', rectify this";}
+	        	
+	        	if (opt->second == "")
+	            { throw "data for Y-waypoints not specified"; }
+	            else
+	            {
+	            	removeY.value = true;
+	                Y_wp.name = "Y_waypoint";
+	                Y_wp.value = opt->second;
+	                conf.strs.push_back(Y_wp);
+	            }
+	        }
+	        conf.bools.push_back(removeY);
+	        
 	        srv_req.config = conf;
 	        
 	        if(ros::service::call(waypoint_server_topic_name, srv_req, srv_resp) )

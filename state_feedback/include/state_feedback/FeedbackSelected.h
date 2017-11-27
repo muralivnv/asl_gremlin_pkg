@@ -132,7 +132,7 @@ void FeedbackSelected<N>::get_gps_data()
 
     pose_[2].pose.point  = (gps_pose_data_->get_data())->point;
     pose_[2].pose.header = (gps_pose_data_->get_data())->header;
-    pose_[2].heading     = theta_gps;
+    pose_[2].heading     = theta_gps * 180.0/M_PI;
 }
 
 

@@ -37,7 +37,10 @@ void print_stl_container(const STL_Container<type, Args...>& stl_container)
 
 std::vector<std::string> split(const std::string& S, char delim)
 {
-    std::stringstream str_stream(S);
+    std::size_t start_idx = S.find_first_not_of("\"");
+    std::size_t end_idx = S.find_last_not_of("\"");
+
+    std::stringstream str_stream(S.substr(start_idx, end_idx - start_idx + 1));
     std::string str_item;
     std::vector<std::string> splitted_strs;
 
