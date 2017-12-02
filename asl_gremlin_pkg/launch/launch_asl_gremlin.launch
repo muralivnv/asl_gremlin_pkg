@@ -3,39 +3,14 @@
 	<arg name="arduino_port" default="/dev/ttyACM0" />
 	<arg name="robot_name" default="asl_gremlin1" />
 
-                        <!-- Load Parameters -->
-	<include file="$(find asl_gremlin_pkg)/launch/load_params.launch" >
-		<arg name="robot_name" value="$(arg robot_name)" />
+	<include file="$(find asl_gremlin_pkg)/launch/launch_mavros_rosserial.launch">
+			<arg name="robot_name" value="$(arg robot_name)" />
+			<arg name="arduino_port" value="$(arg arduino_port)" />
 	</include>
 
-                        <!-- Launch MAVROS -->
-    <!-- <include 	file="$(find mavros)/launch/apm2.launch" 
-        ns="$(arg robot_name)" /> -->
-
-                        <!-- Launch ROSSerial -->
-    <!--	<node ns="$(arg robot_name)" name="rosserial" pkg="rosserial_python" type="serial_node.py" respawn="true">
-    <param name="port" value="$(arg arduino_port)" /> 
-	</node>-->
-                        <!-- Launch TrajectoryGenerator -->
-	<include file="$(find trajectory_generation)/launch/launch_trajectory_generation.launch" >
-		<arg name="robot_name" value="$(arg robot_name)" />
+	<include file="$(find asl_gremlin_pkg)/launch/launch_asl_gremlin_pkg.launch">
+			<arg name="robot_name" value="$(arg robot_name)" />
 	</include>
-
-                        <!-- Launch Controller -->
-	<include file="$(find controller)/launch/launch_controller.launch" >
-		<arg name="robot_name" value="$(arg robot_name)" />
-	</include>
-                        <!-- Launch Feedback -->
-	<include file="$(find state_feedback)/launch/launch_state_feedback.launch" >
-		<arg name="robot_name" value="$(arg robot_name)" />
-	</include>
-
-	<node   ns="$(arg robot_name)"
-        pkg="asl_gremlin_pkg"
-        name="record_data_to_rosbag"
-        type="initiate_rosbag_node"
-        respawn="true"
-        output="screen" />
 
 </launch>
 

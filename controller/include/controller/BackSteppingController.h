@@ -36,7 +36,7 @@ inline T saturate(T lb, S val, T ub) noexcept
 
 template<typename T>
 inline T calc_error_decay_rate(T constant_gain, T error) noexcept
-{ return constant_gain*std::fabs(std::log(std::fabs( (error/0.1) + 0.01))); }
+{ return constant_gain*std::log(std::fabs( (error/0.1) + 0.01)); }
 
 
 template<typename ref_state_type, typename act_state_type>

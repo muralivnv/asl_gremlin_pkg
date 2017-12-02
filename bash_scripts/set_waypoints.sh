@@ -27,6 +27,7 @@ elif [ "$1" == "-f" ] || [ "$1" == "-file" ]; then
     if [ "$#" == "3" ]; then
         cmd=$(echo "awk '/$3:|$3/ { for (i=2; i <= NF; i++) printf \$i \" \"}' $2")
         ARGS=$(eval "$cmd")
+        ARGS=$(echo $ARGS | awk -F\" '{OFS="\""; for (i=2; i<NF; i+=2) gsub(/ /,"", $i); print}')
         rosrun trajectory_generation waypointSet_client __ns:=${robot_name} $ARGS
     else
         cmd=$(echo "awk '\$1 == \"-nx\" || \$1 == \"-ny\" {print \$0}' $2 | tr -s '\n' ' ' ")
