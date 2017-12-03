@@ -24,18 +24,19 @@
 #include <dynamic_reconfigure/server.h>
 #include <asl_gremlin_msgs/MotorAngVel.h>
 
+
 using namespace controller;
 
 #define SIGN(x) (x>0?1:(x==0?0:-1))
 
 namespace controller{
 
-template<typename T, typename S>
-inline T saturate(T lb, S val, T ub) noexcept
-{  return std::min(ub, std::max(lb, static_cast<T>(val)) ); }
+template<typename BoundsType, typename DataType>
+inline BoundsType saturate(BoundsType lb, DataType val, BoundsType ub) noexcept
+{  return std::min(ub, std::max(lb, static_cast<BoundsType>(val)) ); }
 
-template<typename T>
-inline T calc_error_decay_rate(T constant_gain, T error) noexcept
+template<typename ArgType>
+inline ArgType calc_error_decay_rate(ArgType constant_gain, ArgType error) noexcept
 { return constant_gain*std::log(std::fabs( (error/0.1) + 0.01)); }
 
 

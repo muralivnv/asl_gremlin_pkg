@@ -26,7 +26,7 @@ class TrajectoryBase{
         virtual void calc_coeff() = 0;
         virtual void generate_traj(double) = 0;
         virtual asl_gremlin_msgs::RefTraj* get_trajectory() = 0;
-        virtual void set_current_traj_value_to_ini() = 0;
+        virtual void set_current_pose_as_ini() = 0;
 };
 
 #endif 

@@ -18,7 +18,7 @@
 
 namespace trajectory_generation{
 
-void publish_trajectory(ros::Publisher& , TrajectoryBase* );
+void publish_trajectory(ros::Publisher& , const std::unique_ptr<TrajectoryBase>& );
 }
 
 #endif

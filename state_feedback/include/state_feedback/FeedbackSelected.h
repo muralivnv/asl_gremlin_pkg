@@ -36,7 +36,7 @@ using pose_type = asl_gremlin_msgs::VehicleState;
 
 namespace state_feedback{
 
-template<int N>
+template<int NumOfFeedbacks>
 class FeedbackSelected{
 
     pose_type* pose_;
@@ -62,8 +62,8 @@ class FeedbackSelected{
         void publish();
 };
 
-template<int N>
-FeedbackSelected<N>::FeedbackSelected(ros::NodeHandle& nh) : pose_(new pose_type[N])
+template<int NumOfFeedback>
+FeedbackSelected<NumOfFeedback>::FeedbackSelected(ros::NodeHandle& nh) : pose_(new pose_type[NumOfFeedback])
 {                
     fun_ = boost::bind(&FeedbackSelected::dynamic_reconfigure_feedback_callback,
                         this, _1, _2);
@@ -88,8 +88,8 @@ FeedbackSelected<N>::FeedbackSelected(ros::NodeHandle& nh) : pose_(new pose_type
     ros::spinOnce();
 }
 
-template<int N>
-FeedbackSelected<N>::~FeedbackSelected()
+template<int NumOfFeedback>
+FeedbackSelected<NumOfFeedback>::~FeedbackSelected()
 {
     delete[] pose_;
     delete compass_data_;
@@ -97,8 +97,8 @@ FeedbackSelected<N>::~FeedbackSelected()
     delete enco_pose_data_;
 }
 
-template<int N>
-void FeedbackSelected<N>::dynamic_reconfigure_feedback_callback(feedbackSelectConfig& config, uint32_t level)
+template<int NumOfFeedback>
+void FeedbackSelected<NumOfFeedback>::dynamic_reconfigure_feedback_callback(feedbackSelectConfig& config, uint32_t level)
 {
     feedback = config.feedback;
     switch(feedback)
@@ -115,8 +115,8 @@ void FeedbackSelected<N>::dynamic_reconfigure_feedback_callback(feedbackSelectCo
     }
 }
 
-template<int N>
-void FeedbackSelected<N>::get_gps_data()
+template<int NumOfFeedback>
+void FeedbackSelected<NumOfFeedback>::get_gps_data()
 {
     double theta_enu = utility_pkg::compass_angle_to_polar_angle((compass_data_->get_data())->data);
     
@@ -136,16 +136,16 @@ void FeedbackSelected<N>::get_gps_data()
 }
 
 
-template<int N>
-void FeedbackSelected<N>::get_enco_data()
+template<int NumOfFeedback>
+void FeedbackSelected<NumOfFeedback>::get_enco_data()
 {
     pose_[1].pose.header = (enco_pose_data_->get_data())->header;
     pose_[1].pose.point.x = (enco_pose_data_->get_data())->point.x;
     pose_[1].pose.point.y = (enco_pose_data_->get_data())->point.y;
 }
 
-template<int N>
-void FeedbackSelected<N>::publish()
+template<int NumOfFeedback>
+void FeedbackSelected<NumOfFeedback>::publish()
 {
     feedback_pub_.publish(pose_[feedback]);
 }

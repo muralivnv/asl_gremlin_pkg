@@ -21,9 +21,9 @@
 
 namespace asl_gremlin_pkg{
 
-template<typename T>
+template<typename MsgType>
 class SubscribeTopic{
-    std::unique_ptr<T> data_;
+    std::unique_ptr<MsgType> data_;
     ros::Subscriber topic_sub_;
 
     public:
@@ -31,35 +31,35 @@ class SubscribeTopic{
                         const std::string& ,int = 20);
         ~SubscribeTopic();
 
-        void topic_callback(const typename T::ConstPtr& );
-        T* get_data();
+        void topic_callback(const typename MsgType::ConstPtr& );
+        MsgType* get_data();
 };
 
-template<typename T>
-SubscribeTopic<T>::SubscribeTopic(ros::NodeHandle& nh,
+template<typename MsgType>
+SubscribeTopic<MsgType>::SubscribeTopic(ros::NodeHandle& nh,
                                 const std::string& topic_name,
                                 int queue_size)
 {
    topic_sub_ = nh.subscribe(   topic_name,
                                 queue_size,
-                                &SubscribeTopic<T>::topic_callback,
+                                &SubscribeTopic<MsgType>::topic_callback,
                                 this);
-   data_.reset(new T());
+   data_.reset(new MsgType());
 }
 
 
-template<typename T>
-SubscribeTopic<T>::~SubscribeTopic()
+template<typename MsgType>
+SubscribeTopic<MsgType>::~SubscribeTopic()
 { data_.reset(); }
 
-template<typename T>
-void SubscribeTopic<T>::topic_callback(const typename T::ConstPtr& topic_data)
+template<typename MsgType>
+void SubscribeTopic<MsgType>::topic_callback(const typename MsgType::ConstPtr& topic_data)
 {
-    data_.reset(new T(*topic_data) ) ;
+    data_.reset(new MsgType(*topic_data) ) ;
 }
 
-template<typename T>
-inline T* SubscribeTopic<T>::get_data()
+template<typename MsgType>
+inline MsgType* SubscribeTopic<MsgType>::get_data()
 { return data_.get(); }
 
 } //end namespace {asl_gremlin_pkg}

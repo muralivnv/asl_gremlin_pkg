@@ -45,8 +45,8 @@ int main(int argc, char** argv)
     SubscribeTopic<asl_gremlin_msgs::VehicleState> act_state(ctrl_nh, act_state_topic);
   
     
-    ControllerBase<RefTraj, VehicleState>* controller = 
-                            new BackSteppingController<RefTraj, VehicleState>(ctrl_nh);
+    std::unique_ptr<ControllerBase<RefTraj, VehicleState>> controller = 
+                            std::make_unique<BackSteppingController<RefTraj, VehicleState>>(ctrl_nh);
     
     std::string ang_vel_topic;
     ang_vel_topic = GetParam_with_shutdown<std::string>

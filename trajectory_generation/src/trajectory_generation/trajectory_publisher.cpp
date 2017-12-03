@@ -12,5 +12,5 @@
  */
 #include <trajectory_generation/trajectory_publisher.h>
 
-void trajectory_generation::publish_trajectory(ros::Publisher& traj_pub, TrajectoryBase* trajectory)
+void trajectory_generation::publish_trajectory(ros::Publisher& traj_pub, const std::unique_ptr<TrajectoryBase>& trajectory)
 { traj_pub.publish(*(trajectory->get_trajectory())); }

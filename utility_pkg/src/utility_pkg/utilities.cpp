@@ -29,3 +29,16 @@ double utility_pkg::compass_angle_to_polar_angle(double theta_NED)
 	return theta_ENU;
 }
 
+double utility_pkg::wrapTo2Pi(double theta)
+{
+	if (theta < 0 && theta >= - M_PI)
+	{ return 2*M_PI + theta; }
+    else if (theta > 0)
+    { 
+        theta = std::fmod(theta, 2*M_PI);
+        if (theta == 0.0)
+        { return 2*M_PI; }
+    }
+
+	return theta; 
+}

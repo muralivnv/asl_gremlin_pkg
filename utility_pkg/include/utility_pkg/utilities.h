@@ -13,11 +13,15 @@
 #ifndef _utility_pkg_UTILITIES_H_
 #define _utility_pkg_UTILITIES_H_
 
+#include <cmath>
+
 namespace utility_pkg{
 
 // function which converts the compass angle (0 to 360) NED to
 // (-180 to 180) ENU frame
 double compass_angle_to_polar_angle(double);
+
+double wrapTo2Pi(double);
 
 
 } // end namepace {utility_pkg}

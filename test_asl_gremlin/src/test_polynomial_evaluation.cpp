@@ -8,6 +8,7 @@
 #include <ros/time.h>
 
 #include <string>
+#include <memory>
 //#include <fstream>
 //#include <cassert>
 
@@ -25,7 +26,7 @@ int main(int argc, char** argv)
 
     traj_params params;
 
-    TrajectoryBase* min_jerk_traj = new MinimumJerkTrajectory<traj_params>(&params);
+    std::unique_ptr<TrajectoryBase> min_jerk_traj = std::make_unique<MinimumJerkTrajectory<traj_params>>(traj_nh, &params);
     asl_gremlin_pkg::SubscribeTopic<std_msgs::Bool> sim(traj_nh,"/asl_gremlin/start_sim"); 
 
     std::string traj_pub_name = "/asl_gremlin/trajectory_generation/test_poly";

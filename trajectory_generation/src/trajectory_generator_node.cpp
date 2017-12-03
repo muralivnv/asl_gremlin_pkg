@@ -25,6 +25,7 @@
 #include <string>
 #include <chrono>
 #include <thread>
+#include <memory>
 
 using namespace trajectory_generation;
 
@@ -40,9 +41,12 @@ int main(int argc, char** argv)
 
     traj_params params;
 
-    TrajectoryBase* min_jerk_traj = new MinimumJerkTrajectory<traj_params>(&params);
+    std::unique_ptr<TrajectoryBase> min_jerk_traj = 
+                            std::make_unique<MinimumJerkTrajectory<traj_params>>(traj_nh, &params);
     WaypointSubscribe waypoint_stack(traj_nh);
-    DistanceToWaypoint* dist_to_wp = new DistanceToWaypoint(traj_nh);
+
+    std::unique_ptr<DistanceToWaypoint> dist_to_wp = 
+                            std::make_unique<DistanceToWaypoint>(traj_nh);
 
     asl_gremlin_pkg::SubscribeTopic<std_msgs::Bool> sim(traj_nh,"start_sim"); 
     
@@ -91,7 +95,7 @@ int main(int argc, char** argv)
 
                 if ( dist_to_wp->is_reached_waypoint() )
                 {
-                    min_jerk_traj->set_current_traj_value_to_ini();
+                    min_jerk_traj->set_current_pose_as_ini();
 
                     waypoint = waypoint_stack.get_next_waypoint();
                     

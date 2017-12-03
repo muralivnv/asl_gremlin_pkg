@@ -17,6 +17,9 @@
 #include "TrajectoryBase.h"
 #include <array>
 #include <asl_gremlin_msgs/RefTraj.h>
+#include <asl_gremlin_msgs/VehicleState.h>
+#include <asl_gremlin_pkg/SubscribeTopic.h>
+#include <asl_gremlin_pkg/GetParam.h>
 #include <ros/ros.h>
 #include <ros/time.h>
 #include "EvaluatePolynomial.h"
@@ -25,12 +28,12 @@ template<typename T>
 class MinimumJerkTrajectory : 
                     public TrajectoryBase {
     public:
-        MinimumJerkTrajectory(T*);
+        MinimumJerkTrajectory(ros::NodeHandle&, T*);
         ~MinimumJerkTrajectory();
         void update_start_time(double) override;
         void set_ini_pose(double = 0.0,double = 0.0,double = 0.0) override;
         void set_final_pose(double,double,double = 0.0) override;
-        void set_current_traj_value_to_ini() override;
+        void set_current_pose_as_ini() override;
         
         void calc_coeff() override;
         void generate_traj(double) override;
@@ -51,20 +54,31 @@ class MinimumJerkTrajectory :
         void calc_x_coeff_(double);
         void calc_y_coeff_(double);
         int msg_count = 0;
+        asl_gremlin_pkg::SubscribeTopic<asl_gremlin_msgs::VehicleState>* vehicle_state_;
 };
 
 template<typename T>
-MinimumJerkTrajectory<T>::MinimumJerkTrajectory(T* params)
-{ params_ = params; }
+MinimumJerkTrajectory<T>::MinimumJerkTrajectory(ros::NodeHandle& nh, T* params)
+{
+	std::string feedback_selected_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>
+                                            (nh, "state_feedback/feedback_selected", __LINE__);
+
+    vehicle_state_ = new asl_gremlin_pkg::SubscribeTopic<asl_gremlin_msgs::VehicleState>
+                                                        (nh, feedback_selected_topic); 
+	params_ = params;
+	ros::spinOnce();
+}
 
 template<typename T>
 MinimumJerkTrajectory<T>::~MinimumJerkTrajectory()
-{ delete params_;}
+{ 
+	delete vehicle_state_;
+	delete params_;
+}
 
 template<typename T>
 void MinimumJerkTrajectory<T>::update_start_time(double t_initial)
 { t_initial_ = t_initial; }
-
 
 template<typename T>
 void MinimumJerkTrajectory<T>::set_ini_pose(    double x_ini,
@@ -86,10 +100,10 @@ void MinimumJerkTrajectory<T>::set_final_pose(  double x_final,
 }
 
 template<typename T>
-void MinimumJerkTrajectory<T>::set_current_traj_value_to_ini()
+void MinimumJerkTrajectory<T>::set_current_pose_as_ini()
 {
-    x_ini_ = ref_traj_obj_.x;
-    y_ini_ = ref_traj_obj_.y;
+    x_ini_ = (vehicle_state_->get_data())->pose.point.x;
+    y_ini_ = (vehicle_state_->get_data())->pose.point.y;
 }
 
 template<typename T> 
