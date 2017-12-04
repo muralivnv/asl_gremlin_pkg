@@ -22,8 +22,8 @@
 namespace utility_pkg{
 namespace custom_algorithms{
 
-template<typename T, typename S>
-int get_lower_index(const T& container, S value)
+template<typename ContainerType, typename ValueType>
+int get_lower_index(const ContainerType& container, ValueType value)
 {
     try
     {
@@ -47,8 +47,8 @@ int get_lower_index(const T& container, S value)
     }
 }
 
-template<typename T, typename S, typename N, typename val>
-auto linear_interpolate(const T& y_container, const S& x_container, N index, val x)
+template<typename YContainerType, typename XContainerType, typename IndexType, typename ValueType>
+auto linear_interpolate(const YContainerType& y_container, const XContainerType& x_container, IndexType index, ValueType x)
 {
     auto y0 = *(y_container.begin() + index);
     auto y1 = *(y_container.begin() + index + 1);
@@ -59,12 +59,12 @@ auto linear_interpolate(const T& y_container, const S& x_container, N index, val
     return y0 + (x - x0)*(y1 - y0)/(x1 - x0);
 }
 
-template<typename T, typename S, typename val_t>
-val_t lookup_table(const T& x_container, const S& y_container, const val_t& x_val)
+template<typename XContainerType, typename YContainerType, typename ValueType>
+ValueType lookup_table(const XContainerType& x_container, const YContainerType& y_container, const ValueType& x_val)
 {
 
     int idx = get_lower_index(x_container, x_val);
-    val_t interpolated_data = linear_interpolate(y_container, x_container, idx, x_val);
+    ValueType interpolated_data = linear_interpolate(y_container, x_container, idx, x_val);
     return interpolated_data;
 }
 

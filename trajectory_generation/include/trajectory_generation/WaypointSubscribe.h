@@ -38,6 +38,11 @@ class WaypointSubscribe{
        
         std::vector<double> get_current_waypoint();
         std::vector<double> get_next_waypoint();
+        void decrement_counter(){
+            --current_waypoint_ptr_;
+            if (current_waypoint_ptr_ < 0)
+            { current_waypoint_ptr_ = 0; }
+        }
         void reset_counter();
 
         bool received_waypoints(){

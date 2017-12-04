@@ -24,11 +24,11 @@
 #include <ros/time.h>
 #include "EvaluatePolynomial.h"
 
-template<typename T>
+template<typename ParamType>
 class MinimumJerkTrajectory : 
                     public TrajectoryBase {
     public:
-        MinimumJerkTrajectory(ros::NodeHandle&, T*);
+        MinimumJerkTrajectory(ros::NodeHandle&, ParamType*);
         ~MinimumJerkTrajectory();
         void update_start_time(double) override;
         void set_ini_pose(double = 0.0,double = 0.0,double = 0.0) override;
@@ -41,7 +41,7 @@ class MinimumJerkTrajectory :
         asl_gremlin_msgs::RefTraj* get_trajectory() override;
 
     private:
-        T* params_ = nullptr;
+        ParamType* params_ = nullptr;
 
         std::array<double, 6> x_coeff_{{0,0,0,0,0,0}};
         std::array<double, 6> y_coeff_{{0,0,0,0,0,0}};
@@ -57,8 +57,8 @@ class MinimumJerkTrajectory :
         asl_gremlin_pkg::SubscribeTopic<asl_gremlin_msgs::VehicleState>* vehicle_state_;
 };
 
-template<typename T>
-MinimumJerkTrajectory<T>::MinimumJerkTrajectory(ros::NodeHandle& nh, T* params)
+template<typename ParamType>
+MinimumJerkTrajectory<ParamType>::MinimumJerkTrajectory(ros::NodeHandle& nh, ParamType* params)
 {
 	std::string feedback_selected_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>
                                             (nh, "state_feedback/feedback_selected", __LINE__);
@@ -69,45 +69,45 @@ MinimumJerkTrajectory<T>::MinimumJerkTrajectory(ros::NodeHandle& nh, T* params)
 	ros::spinOnce();
 }
 
-template<typename T>
-MinimumJerkTrajectory<T>::~MinimumJerkTrajectory()
+template<typename ParamType>
+MinimumJerkTrajectory<ParamType>::~MinimumJerkTrajectory()
 { 
 	delete vehicle_state_;
 	delete params_;
 }
 
-template<typename T>
-void MinimumJerkTrajectory<T>::update_start_time(double t_initial)
+template<typename ParamType>
+void MinimumJerkTrajectory<ParamType>::update_start_time(double t_initial)
 { t_initial_ = t_initial; }
 
-template<typename T>
-void MinimumJerkTrajectory<T>::set_ini_pose(    double x_ini,
-                                                double y_ini, 
-                                                double theta_ini)
+template<typename ParamType>
+void MinimumJerkTrajectory<ParamType>::set_ini_pose(    double x_ini,
+                                                        double y_ini, 
+                                                        double theta_ini)
 {
     x_ini_ = x_ini;
     y_ini_ = y_ini;
 }
 
-template<typename T>
-void MinimumJerkTrajectory<T>::set_final_pose(  double x_final, 
-                                                double y_final,
-                                                double theta_final)
+template<typename ParamType>
+void MinimumJerkTrajectory<ParamType>::set_final_pose(  double x_final, 
+                                                        double y_final,
+                                                        double theta_final)
 {
     update_start_time(ros::Time::now().toSec());
     x_final_ = x_final;
     y_final_ = y_final;
 }
 
-template<typename T>
-void MinimumJerkTrajectory<T>::set_current_pose_as_ini()
+template<typename ParamType>
+void MinimumJerkTrajectory<ParamType>::set_current_pose_as_ini()
 {
     x_ini_ = (vehicle_state_->get_data())->pose.point.x;
     y_ini_ = (vehicle_state_->get_data())->pose.point.y;
 }
 
-template<typename T> 
-void MinimumJerkTrajectory<T>::calc_coeff()
+template<typename ParamType> 
+void MinimumJerkTrajectory<ParamType>::calc_coeff()
 {
     // calculate final time required
    double delta_x = fabs(x_final_ - x_ini_);
@@ -122,8 +122,8 @@ void MinimumJerkTrajectory<T>::calc_coeff()
    calc_y_coeff_(t_final);
 }
 
-template<typename T>
-void MinimumJerkTrajectory<T>::generate_traj(double time)
+template<typename ParamType>
+void MinimumJerkTrajectory<ParamType>::generate_traj(double time)
 {
     double t_rel = (time - t_initial_);
 
@@ -145,14 +145,14 @@ void MinimumJerkTrajectory<T>::generate_traj(double time)
     msg_count++;
 }
 
-template<typename T>
-asl_gremlin_msgs::RefTraj* MinimumJerkTrajectory<T>::get_trajectory()
+template<typename ParamType>
+asl_gremlin_msgs::RefTraj* MinimumJerkTrajectory<ParamType>::get_trajectory()
 {
     return &ref_traj_obj_;
 }
 
-template<typename T>
-void MinimumJerkTrajectory<T>::calc_x_coeff_(double t_final)
+template<typename ParamType>
+void MinimumJerkTrajectory<ParamType>::calc_x_coeff_(double t_final)
 {
     x_coeff_[0] = x_ini_;
     x_coeff_[3] = 10*(x_final_ - x_ini_)/(std::pow(t_final,3)); 
@@ -160,8 +160,8 @@ void MinimumJerkTrajectory<T>::calc_x_coeff_(double t_final)
     x_coeff_[5] = 6*(x_final_ - x_ini_)/(std::pow(t_final,5));
 }
 
-template<typename T>
-void MinimumJerkTrajectory<T>::calc_y_coeff_(double t_final)
+template<typename ParamType>
+void MinimumJerkTrajectory<ParamType>::calc_y_coeff_(double t_final)
 {
     y_coeff_[0] = y_ini_;
     y_coeff_[3] = 10*(y_final_ - y_ini_)/(std::pow(t_final,3)); 
