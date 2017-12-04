@@ -31,7 +31,7 @@ class CircularTrajectory : public TrajectoryBase{
     public:
         CircularTrajectory(ros::NodeHandle&, ParamType*);
         ~CircularTrajectory(){
-            delete params_;
+            params_ = nullptr;
             delete ref_traj_ptr_;
             delete vehicle_state_;
         }
@@ -39,8 +39,8 @@ class CircularTrajectory : public TrajectoryBase{
         void set_ini_pose(double = 0.0, double = 0.0, double = 0.0) override;
         void set_final_pose(double, double, double = 0.0) override;
         void set_current_pose_as_ini() override;
-        void calc_coeff() override;
-        void generate_traj() override;
+        void calc_params() override;
+        void generate_traj(double) override;
         asl_gremlin_msgs::RefTraj* get_trajectory() override;
 
     private:
@@ -97,6 +97,7 @@ void CircularTrajectory<ParamType>::set_final_pose( double x_final,
 template<typename ParamType>
 void CircularTrajectory<ParamType>::set_current_pose_as_ini()
 {
+    ros::spinOnce();
     current_pose_x_ = (vehicle_state_->get_data())->pose.point.x;
     current_pose_y_ = (vehicle_state_->get_data())->pose.point.y;
     current_heading_ = (vehicle_state_->get_data())->heading*M_PI/180.0;
@@ -104,7 +105,7 @@ void CircularTrajectory<ParamType>::set_current_pose_as_ini()
 
 
 template<typename ParamType>
-void CircularTrajectory<ParamType>::calc_coeff()
+void CircularTrajectory<ParamType>::calc_params()
 {
     ros::spinOnce();
     
@@ -130,10 +131,10 @@ void CircularTrajectory<ParamType>::calc_coeff()
     double perpendicular_to_theta_req = utility_pkg::wrapTo2Pi(required_heading_ - turn_dir_*M_PI/2);
     
     circle_end_angle_ = utility_pkg::wrapTo2Pi(turn_dir_*(perpendicular_to_theta_req - perpendicular_to_theta_current));
-    circle_center_x_ = current_pose_x_ + params_->min_turn_rad_*std::cos(M_PI - start_horiz + current_heading_ - M_PI/2);
-    circle_center_y_ = current_pose_y_ + params_->min_turn_rad_*std::sin(M_PI - start_horiz + current_heading_ - M_PI/2);
+    circle_center_x_ = current_pose_x_ + params_->min_turn_rad*std::cos(M_PI - start_horiz + current_heading_ - M_PI/2);
+    circle_center_y_ = current_pose_y_ + params_->min_turn_rad*std::sin(M_PI - start_horiz + current_heading_ - M_PI/2);
 
-    final_time_ = params_->min_turn_rad_*circle_end_angle_/(params_->const_turn_vel_);
+    final_time_ = params_->min_turn_rad*circle_end_angle_/(params_->const_turn_vel);
     
     if (turn_dir_ == -1)
     { circle_start_angle_ = perpendicular_to_theta_req; }
@@ -143,9 +144,9 @@ void CircularTrajectory<ParamType>::calc_coeff()
 
 
 template<typename ParamType>
-void CircularTrajectory<ParamType>::generate_traj()
+void CircularTrajectory<ParamType>::generate_traj(double time)
 {
-    double t_rel = (ros::Time::now().toSec() - t_initial_);
+    double t_rel = (time - t_initial_);
     if (turn_dir_ == -1)
     { 
         t_rel = final_time_ - t_rel; 

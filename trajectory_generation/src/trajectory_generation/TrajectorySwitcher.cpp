@@ -1,6 +1,6 @@
 /**
- * @brief Calculate Distance to current waypoint definitions
- * @file DistanceToWaypoint.cpp
+ * @brief Trajectory switcher definitions
+ * @file TrajectorySwitcher.cpp
  * @author Murali VNV <muralivnv@gmail.com>
  */
 /*
@@ -14,7 +14,7 @@
 
 using namespace trajectory_generation;
 
-double delta_theta(double theta_act, double theta_des)
+double trajectory_generation::delta_theta(double theta_act, double theta_des)
 {
 	/* 			-- IMPORTANT NOTE -- 
 	*	The output of this function will be multiplied by -ve sign 
@@ -70,9 +70,6 @@ TrajectorySwitcher::TrajectorySwitcher(ros::NodeHandle& nh)
 TrajectorySwitcher::~TrajectorySwitcher()
 { delete vehicle_state_; }
 
-double TrajectorySwitcher::get_current_heading() const
-{ return (vehicle_state_->get_data())->heading*M_PI/180.0; }
-
 void TrajectorySwitcher::change_next_desired_state(double x, double y)
 {
     x_wp_ = x; y_wp_ = y;
@@ -83,9 +80,6 @@ void TrajectorySwitcher::change_next_desired_state(double x, double y)
     double y_current = (vehicle_state_->get_data())->pose.point.y;
 
     theta_req_ = std::atan2(y_wp_ - y_current, x_wp_ - x_current);
-
-    ++local_counter_;
-            src/${PROJECT_NAME}/MinimumJerkTrajectory.cpp 
 }
 
 bool TrajectorySwitcher::need_to_switch_trajectory()
@@ -111,7 +105,6 @@ bool TrajectorySwitcher::need_to_switch_trajectory()
     {
         if ( std::fabs(delta_theta(theta_current, theta_req_)) <= turn_tolerance_)
         {
-
             ROS_INFO("Aligned rover towards the next waypoint within tolerance\033[1;37m(theta)\033[0;m:= (%f)",theta_req_);
             return true;
         }
@@ -129,12 +122,11 @@ bool TrajectorySwitcher::current_hdg_within_tolerance_to_ref()
     return std::fabs(delta_theta(current_heading, theta_req_)) <= turn_tolerance_;
 }
 
-inline void TrajectorySwitcher::change_switch_condition(trajSwitchCond condition)
+void TrajectorySwitcher::change_switch_condition(trajSwitchCond condition)
 { switch_condition_ = condition; }
 
-inline void TrajectorySwitcher::reset_vehicle_pos()
+void TrajectorySwitcher::reset_vehicle_state()
 {
-    local_counter_ = 0;
     (vehicle_state_->get_data())->pose.point.x = 0.0;
     (vehicle_state_->get_data())->pose.point.y = 0.0;
 }

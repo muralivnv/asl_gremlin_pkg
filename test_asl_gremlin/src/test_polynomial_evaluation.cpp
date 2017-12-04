@@ -55,7 +55,7 @@ int main(int argc, char** argv)
 
                 min_jerk_traj->update_start_time(ros::Time::now().toSec());
                 min_jerk_traj->set_final_pose(waypoint[0], waypoint[1]);
-                min_jerk_traj->calc_coeff();
+                min_jerk_traj->calc_params();
 
                 updated_ini_params = true;
                 initial_time = ros::Time::now().toSec();

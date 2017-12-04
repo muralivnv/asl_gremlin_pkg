@@ -88,7 +88,7 @@ int main(int argc, char** argv)
                     dist_to_wp->set_waypoint(waypoint[0], waypoint[1]);
 
                     min_jerk_traj->set_final_pose(waypoint[0], waypoint[1]);
-                    min_jerk_traj->calc_coeff();
+                    min_jerk_traj->calc_params();
 
                     updated_ini_params = true;
                 }
@@ -109,7 +109,7 @@ int main(int argc, char** argv)
                     dist_to_wp->set_waypoint(waypoint[0], waypoint[1]);
 
                     min_jerk_traj->set_final_pose(waypoint[0], waypoint[1]);
-                    min_jerk_traj->calc_coeff();
+                    min_jerk_traj->calc_params();
                 }
                 min_jerk_traj->generate_traj(ros::Time::now().toSec());
             }

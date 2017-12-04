@@ -4,7 +4,7 @@
 <node   ns="$(arg robot_name)"
         name="trajectory_generator" 
         pkg="trajectory_generation" 
-        type="trajectory_generator_node" 
+        type="trajectory_generator_with_turning_node" 
         respawn="true" 
         output="screen"/>
 

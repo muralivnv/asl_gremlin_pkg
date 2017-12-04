@@ -35,7 +35,7 @@ class MinimumJerkTrajectory :
         void set_final_pose(double,double,double = 0.0) override;
         void set_current_pose_as_ini() override;
         
-        void calc_coeff() override;
+        void calc_params() override;
         void generate_traj(double) override;
 
         asl_gremlin_msgs::RefTraj* get_trajectory() override;
@@ -73,7 +73,7 @@ template<typename ParamType>
 MinimumJerkTrajectory<ParamType>::~MinimumJerkTrajectory()
 { 
 	delete vehicle_state_;
-	delete params_;
+    params_ = nullptr;
 }
 
 template<typename ParamType>
@@ -107,7 +107,7 @@ void MinimumJerkTrajectory<ParamType>::set_current_pose_as_ini()
 }
 
 template<typename ParamType> 
-void MinimumJerkTrajectory<ParamType>::calc_coeff()
+void MinimumJerkTrajectory<ParamType>::calc_params()
 {
     // calculate final time required
    double delta_x = fabs(x_final_ - x_ini_);

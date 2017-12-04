@@ -11,7 +11,7 @@
  * https://github.com/muralivnv/asl_gremlin_pkg/blob/master/LICENSE
  */
 #include <trajectory_generation/MinimumJerkTrajectory.h>
-#include <trajectory_generation/trajectory_publisher.h>
+#include <trajectory_generation/CircularTrajectory.h>
 #include <trajectory_generation/WaypointSubscribe.h>
 #include <trajectory_generation/TrajectorySwitcher.h>
 #include <std_msgs/Bool.h>
@@ -49,10 +49,11 @@ int main(int argc, char** argv)
 
     TrajectoryBase* traj_gen = nullptr;
     MinimumJerkTrajectory<traj_params>* min_jerk_traj = 
-                                        new MinimumJerkTrajectory<traj_params>(traj_nh, &params)
+                                        new MinimumJerkTrajectory<traj_params>(traj_nh, &params);
     
     CircularTrajectory<circle_params>* circular_traj = 
                                         new CircularTrajectory<circle_params>(traj_nh, &params_circle);
+    traj_gen = min_jerk_traj;
 
     WaypointSubscribe waypoint_stack(traj_nh);
 
@@ -110,10 +111,9 @@ int main(int argc, char** argv)
                         switch_trajectory->change_switch_condition(trajSwitchCond::dist_to_waypoint);
                     }
 
-
                     traj_gen->set_ini_pose(0.0, 0.0);
                     traj_gen->set_final_pose(waypoint[0], waypoint[1]);
-                    traj_gen->calc_coeff();
+                    traj_gen->calc_params();
 
                     updated_ini_params = true;
                 }
@@ -126,10 +126,9 @@ int main(int argc, char** argv)
                     if (waypoint.size() == 1)
                     { 
                         ros::spinOnce(); 
-                        dist_to_wp->reset_vehicle_pos();
+                        switch_trajectory->reset_vehicle_state();
                         continue; 
                     }
-                   /* Need to add 'decrement waypoint counter' */ 
                     if (!switch_trajectory->current_hdg_within_tolerance_to_ref())
                     { 
                         traj_gen = circular_traj;
@@ -144,7 +143,7 @@ int main(int argc, char** argv)
 
                     traj_gen->set_current_pose_as_ini();
                     traj_gen->set_final_pose(waypoint[0], waypoint[1]);
-                    traj_gen->calc_coeff();
+                    traj_gen->calc_params();
                 }
                 traj_gen->generate_traj(ros::Time::now().toSec());
             }
@@ -153,7 +152,7 @@ int main(int argc, char** argv)
         {
             ROS_INFO("\033[1;31mStopped\033[0;m:= Generating trajectory for given waypoints");
             updated_ini_params = false;
-            dist_to_wp->reset_vehicle_pos();
+            switch_trajectory->reset_vehicle_state();
             waypoint_stack.reset_counter();
         }
 
