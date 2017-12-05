@@ -90,11 +90,10 @@ std::vector<double> WaypointSubscribe::get_next_waypoint()
         if (topic_name[0] == '/' && topic_name[1] == '/')
         { topic_name.erase(0,1); }
 
-        ROS_WARN("%s",topic_name.c_str());
         std::string cmd = "rostopic pub --once "+ topic_name + " std_msgs/Bool \"data: false\"";
 
-        if (!std::system(cmd.c_str()))
-        { ROS_WARN("Not able to stop the rover"); }
+        if(!std::system(cmd.c_str()))
+        { }
 
         --current_waypoint_ptr_;
         return {0};

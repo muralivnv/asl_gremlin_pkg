@@ -56,6 +56,8 @@ class CircularTrajectory : public TrajectoryBase{
         
         double t_initial_ = ros::Time::now().toSec(), 
                final_time_ = 8.0; // (sec)
+
+        int msg_count_ = 0;
 };
 
 template<typename ParamType>
@@ -176,6 +178,11 @@ void CircularTrajectory<ParamType>::generate_traj(double time)
     ref_traj_ptr_->theta = std::atan2(ref_traj_ptr_->y_dot, ref_traj_ptr_->x_dot);
     ref_traj_ptr_->theta_dot = 0.0;
     ref_traj_ptr_->theta_ddot = 0.0;
+
+    ref_traj_ptr_->header.seq = msg_count_;
+    ref_traj_ptr_->header.stamp = ros::Time::now();
+
+    ++msg_count_;
 }
 
 

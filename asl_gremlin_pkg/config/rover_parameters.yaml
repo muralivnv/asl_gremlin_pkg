@@ -20,4 +20,4 @@ motor:
 sim:
     rate: 10.0 #(Hz)
     waypoint_proximity: 0.8 #(m)
-    angle_align_tolerance: rad(25*pi/180) #(rad)
+    angle_align_tolerance: 0.1745 #(rad)

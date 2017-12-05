@@ -155,6 +155,7 @@ add_executable(test_publish_ref_traj src/test_publish_ref_traj.cpp)
 add_executable(test_ang_vel_to_pwm src/test_ang_vel_to_pwm.cpp)
 add_executable(test_controller src/test_controller.cpp)
 add_executable(test_ptr_assign src/test_prvt_namespace.cpp)
+add_executable(test_traj_with_turning src/test_traj_with_turning.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -176,6 +177,7 @@ add_dependencies(test_publish_ref_traj ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(test_ang_vel_to_pwm ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(test_controller ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(test_ptr_assign ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(test_traj_with_turning ${PROJECT_NAME}_generate_messages_cpp)
 
 
 ## Specify libraries to link a library or executable target against
@@ -191,6 +193,7 @@ target_link_libraries(test_publish_ref_traj ${catkin_LIBRARIES} )
 target_link_libraries(test_ang_vel_to_pwm ${catkin_LIBRARIES} )
 target_link_libraries(test_controller ${catkin_LIBRARIES} )
 target_link_libraries(test_ptr_assign ${catkin_LIBRARIES} )
+target_link_libraries(test_traj_with_turning ${catkin_LIBRARIES} )
 
 #############
 ## Install ##

@@ -137,7 +137,7 @@ int main(int argc, char** argv)
                     }
                     else
                     {
-                        traj_gen= min_jerk_traj;
+                        traj_gen = min_jerk_traj;
                         switch_trajectory->change_switch_condition(trajSwitchCond::dist_to_waypoint);
                     }
 

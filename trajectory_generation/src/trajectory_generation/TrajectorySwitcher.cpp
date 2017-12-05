@@ -87,7 +87,7 @@ bool TrajectorySwitcher::need_to_switch_trajectory()
     double x_current = (vehicle_state_->get_data())->pose.point.x;
     double y_current = (vehicle_state_->get_data())->pose.point.y;
 
-    double theta_current =  (vehicle_state_->get_data())->heading * 180.0/M_PI;
+    double theta_current =  (vehicle_state_->get_data())->heading * M_PI/180.0;
     
     if (switch_condition_ == trajSwitchCond::dist_to_waypoint)
     {
@@ -105,7 +105,7 @@ bool TrajectorySwitcher::need_to_switch_trajectory()
     {
         if ( std::fabs(delta_theta(theta_current, theta_req_)) <= turn_tolerance_)
         {
-            ROS_INFO("Aligned rover towards the next waypoint within tolerance\033[1;37m(theta)\033[0;m:= (%f)",theta_req_);
+            ROS_INFO("Aligned rover towards next waypoint\033[1;37m(x,y)\033[0;m:= (%f,%f)",x_wp_,y_wp_);
             return true;
         }
         else

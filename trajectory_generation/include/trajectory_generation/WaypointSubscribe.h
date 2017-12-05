@@ -40,8 +40,8 @@ class WaypointSubscribe{
         std::vector<double> get_next_waypoint();
         void decrement_counter(){
             --current_waypoint_ptr_;
-            if (current_waypoint_ptr_ < 0)
-            { current_waypoint_ptr_ = 0; }
+            if (current_waypoint_ptr_ < -1)
+            { current_waypoint_ptr_ = -1; }
         }
         void reset_counter();
 
