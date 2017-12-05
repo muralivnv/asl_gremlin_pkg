@@ -100,14 +100,14 @@ int main(int argc, char** argv)
                     switch_trajectory->change_next_desired_state(waypoint[0], waypoint[1]);
 
                     if (!switch_trajectory->current_hdg_within_tolerance_to_ref())
-                    { 
+                    {
                         traj_gen = circular_traj;
                         switch_trajectory->change_switch_condition(trajSwitchCond::delta_theta_to_ref);
                         waypoint_stack.decrement_counter();
                     }
                     else
                     {
-                        traj_gen= min_jerk_traj;
+                        traj_gen = min_jerk_traj;
                         switch_trajectory->change_switch_condition(trajSwitchCond::dist_to_waypoint);
                     }
 
@@ -124,13 +124,13 @@ int main(int argc, char** argv)
                     switch_trajectory->change_next_desired_state(waypoint[0], waypoint[1]);
                     
                     if (waypoint.size() == 1)
-                    { 
+                    {
                         ros::spinOnce(); 
                         switch_trajectory->reset_vehicle_state();
                         continue; 
                     }
                     if (!switch_trajectory->current_hdg_within_tolerance_to_ref())
-                    { 
+                    {
                         traj_gen = circular_traj;
                         switch_trajectory->change_switch_condition(trajSwitchCond::delta_theta_to_ref);
                         waypoint_stack.decrement_counter();
@@ -145,6 +145,7 @@ int main(int argc, char** argv)
                     traj_gen->set_final_pose(waypoint[0], waypoint[1]);
                     traj_gen->calc_params();
                 }
+
                 traj_gen->generate_traj(ros::Time::now().toSec());
             }
         }
@@ -156,11 +157,15 @@ int main(int argc, char** argv)
             waypoint_stack.reset_counter();
         }
 
-        traj_pub.publish(*(traj_gen->get_trajectory()));
+        if (traj_gen != nullptr)
+        { traj_pub.publish(*(traj_gen->get_trajectory())); }
+        else
+        { traj_pub.publish(*(min_jerk_traj->get_trajectory())); }
 
         ros::spinOnce();
         loop_rate.sleep();
     }
+
     traj_gen = nullptr;
     delete min_jerk_traj;
     delete circular_traj;

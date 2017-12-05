@@ -9,7 +9,7 @@ bag = rosbag.Bag(sys.argv[1])
 
 ## extract reference trajectory
 ref_traj = [[msg.x, msg.x_dot, msg.x_ddot, msg.y, msg.y_dot ,msg.y_ddot, msg.theta,t] for (topic,msg,t) in
-                        bag.read_messages(topics=["/asl_gremlin2/trajectory_generation/reference_trajectory"])]
+                        bag.read_messages(topics=["/asl_gremlin1/trajectory_generation/reference_trajectory"])]
 
 x_ref       = [i[0] for i in ref_traj]
 x_dot_ref   = [i[1] for i in ref_traj]
@@ -26,7 +26,7 @@ t_ref       = [(t-t_ref[0]).to_sec() for t in t_ref]
 ## extract actual rover pose
 actual_state = [[msg.pose.point.x, msg.pose.point.y, msg.heading,t] for (topic, msg, t) in 
 
-                        bag.read_messages(topics=["/asl_gremlin2/state_feedback/selected_feedback"])]
+                        bag.read_messages(topics=["/asl_gremlin1/state_feedback/selected_feedback"])]
 x_act       = [i[0] for i in actual_state]
 y_act       = [i[1] for i in actual_state]
 theta_act   = [i[2] for i in actual_state]
@@ -36,7 +36,7 @@ t_act       = [(t-t_act[0]).to_sec() for t in t_act]
 ### extract commanded angular velocities
 
 cmd_ang_vel = [[msg.wl, msg.wr,t] for (topic, msg, t) in
-                    bag.read_messages(topics=["/asl_gremlin2/controller/cmd_angular_vel"])]
+                    bag.read_messages(topics=["/asl_gremlin1/controller/cmd_angular_vel"])]
 
 wl_cmd      = [i[0] for i in cmd_ang_vel]
 wr_cmd      = [i[1] for i in cmd_ang_vel]
@@ -46,7 +46,7 @@ t_omega_cmd     = [(t-t_omega_cmd[0]).to_sec() for t in t_omega_cmd]
 ### extract actual angular velocities
 
 actual_ang_vel = [[msg.wl, msg.wr,t] for (topic, msg, t) in
-                    bag.read_messages(topics=["/asl_gremlin2/state_feedback/encoder/actual_ang_vel"])]
+                    bag.read_messages(topics=["/asl_gremlin1/state_feedback/encoder/actual_ang_vel"])]
 
 wl_act      = [i[0] for i in actual_ang_vel]
 wr_act      = [i[1] for i in actual_ang_vel]

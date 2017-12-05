@@ -61,7 +61,7 @@ class CircularTrajectory : public TrajectoryBase{
 template<typename ParamType>
 CircularTrajectory<ParamType>::CircularTrajectory(ros::NodeHandle& nh, ParamType* param)
 {
-
+    ref_traj_ptr_ = new asl_gremlin_msgs::RefTraj();
 	std::string feedback_selected_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>
                                             (nh, "state_feedback/feedback_selected", __LINE__);
 
