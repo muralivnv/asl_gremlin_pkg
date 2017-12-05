@@ -78,6 +78,7 @@ int main(int argc, char** argv)
     ros::Rate loop_rate(rate);
 
     bool updated_ini_params = false;
+    bool aligned_rover = false;
     std::vector<double> waypoint(2,0);
     
     ROS_INFO("\033[1;32mInitialized\033[0;m:= %s",ros::this_node::getName().c_str());
@@ -104,11 +105,13 @@ int main(int argc, char** argv)
                         traj_gen = circular_traj;
                         switch_trajectory->change_switch_condition(trajSwitchCond::delta_theta_to_ref);
                         waypoint_stack.decrement_counter();
+                        aligned_rover = true;
                     }
                     else
                     {
                         traj_gen = min_jerk_traj;
                         switch_trajectory->change_switch_condition(trajSwitchCond::dist_to_waypoint);
+                        aligned_rover = false;
                     }
 
                     traj_gen->set_ini_pose(0.0, 0.0);
@@ -120,6 +123,7 @@ int main(int argc, char** argv)
 
                 if ( switch_trajectory->need_to_switch_trajectory() )
                 {
+                    ros::spinOnce();
                     waypoint = waypoint_stack.get_next_waypoint();
                     switch_trajectory->change_next_desired_state(waypoint[0], waypoint[1]);
                     
@@ -129,16 +133,18 @@ int main(int argc, char** argv)
                         switch_trajectory->reset_vehicle_state();
                         continue; 
                     }
-                    if (!switch_trajectory->current_hdg_within_tolerance_to_ref())
+                    if (!switch_trajectory->current_hdg_within_tolerance_to_ref() && !aligned_rover)
                     {
                         traj_gen = circular_traj;
                         switch_trajectory->change_switch_condition(trajSwitchCond::delta_theta_to_ref);
                         waypoint_stack.decrement_counter();
+                        aligned_rover = true;
                     }
                     else
                     {
                         traj_gen = min_jerk_traj;
                         switch_trajectory->change_switch_condition(trajSwitchCond::dist_to_waypoint);
+                        aligned_rover = false;
                     }
 
                     traj_gen->set_current_pose_as_ini();
@@ -155,6 +161,7 @@ int main(int argc, char** argv)
             updated_ini_params = false;
             switch_trajectory->reset_vehicle_state();
             waypoint_stack.reset_counter();
+            aligned_rover = false;
         }
 
         if (traj_gen != nullptr)

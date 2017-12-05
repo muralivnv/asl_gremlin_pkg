@@ -110,13 +110,13 @@ template<typename ParamType>
 void CircularTrajectory<ParamType>::calc_params()
 {
     ros::spinOnce();
-    
+   
     required_heading_ = utility_pkg::wrapTo2Pi(required_heading_);
     current_heading_ = utility_pkg::wrapTo2Pi(current_heading_);
 
-    double delta_theta_left = required_heading_ - current_heading_;
+    double delta_theta_left = utility_pkg::wrapTo2Pi(required_heading_ - current_heading_);
     double delta_theta_right = utility_pkg::wrapTo2Pi(current_heading_ - (required_heading_ - 2*M_PI));
-    
+
     double start_horiz = 0;
     if (std::fabs(delta_theta_left) < std::fabs(delta_theta_right))
     {
@@ -150,9 +150,9 @@ void CircularTrajectory<ParamType>::generate_traj(double time)
 {
     double t_rel = (time - t_initial_);
     if (turn_dir_ == -1)
-    { 
-        t_rel = final_time_ - t_rel; 
-        t_rel = std::max(0.0, t_rel); 
+    {
+        t_rel = final_time_ - t_rel;
+        t_rel = std::max(0.0, t_rel);
     }
     else
     { t_rel = std::min(t_rel, final_time_); }
