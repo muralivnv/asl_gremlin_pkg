@@ -31,11 +31,33 @@ using namespace trajectory_generation;
 
 struct traj_params{
    double accel_max = 0.1;
+    traj_params(ros::NodeHandle& nh){
+        if (!nh.getParam("sim/max_accel",accel_max))
+        { 
+            ROS_WARN("Unable to access param '%s/sim/max_accel', setting to 0.1m/sec^2",
+                    ros::this_node::getNamespace().c_str());
+            accel_max = 0.1;
+        }
+    }
 };
 
 struct circle_params{
     double min_turn_rad = 2; // (m)
     double const_turn_vel = 0.5; // (m/sec)
+    circle_params(ros::NodeHandle& nh){
+        if (!nh.getParam("sim/min_turn_radius",min_turn_rad))
+        {
+            ROS_WARN("Unable to access param '%s/sim/min_turn_radius', setting to 2m",
+                    ros::this_node::getNamespace().c_str());
+            min_turn_rad = 2.0;
+        }
+        if (!nh.getParam("sim/const_turn_vel",const_turn_vel))
+        {
+            ROS_WARN("Unable to access param '/%s/sim/const_turn_vel', setting to 0.5m/sec",
+                    ros::this_node::getNamespace().c_str());
+            const_turn_vel = 0.5;
+        }
+    }
 };
 
 int main(int argc, char** argv)
@@ -44,8 +66,8 @@ int main(int argc, char** argv)
 
     ros::NodeHandle traj_nh;
 
-    traj_params params;
-    circle_params params_circle;
+    traj_params params(traj_nh);
+    circle_params params_circle(traj_nh);
 
     TrajectoryBase* traj_gen = nullptr;
     MinimumJerkTrajectory<traj_params>* min_jerk_traj = 
@@ -123,7 +145,6 @@ int main(int argc, char** argv)
 
                 if ( switch_trajectory->need_to_switch_trajectory() )
                 {
-                    ros::spinOnce();
                     waypoint = waypoint_stack.get_next_waypoint();
                     switch_trajectory->change_next_desired_state(waypoint[0], waypoint[1]);
                     
@@ -133,11 +154,12 @@ int main(int argc, char** argv)
                         switch_trajectory->reset_vehicle_state();
                         continue; 
                     }
-                    if (!switch_trajectory->current_hdg_within_tolerance_to_ref() && !aligned_rover)
+                    if (!switch_trajectory->current_hdg_within_tolerance_to_ref())
                     {
                         traj_gen = circular_traj;
                         switch_trajectory->change_switch_condition(trajSwitchCond::delta_theta_to_ref);
-                        waypoint_stack.decrement_counter();
+                        if (!aligned_rover)
+                        { waypoint_stack.decrement_counter(); }
                         aligned_rover = true;
                     }
                     else

@@ -21,3 +21,6 @@ sim:
     rate: 10.0 #(Hz)
     waypoint_proximity: 0.8 #(m)
     angle_align_tolerance: 0.1745 #(rad)
+    max_accel: 0.1 # (m/sec^2)
+    min_turn_radius: 2.0 # (m)
+    const_turn_vel: 0.5 # (m/sec)

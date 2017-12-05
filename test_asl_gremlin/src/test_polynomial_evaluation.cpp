@@ -1,5 +1,4 @@
 #include <trajectory_generation/MinimumJerkTrajectory.h>
-#include <trajectory_generation/trajectory_publisher.h>
 #include <std_msgs/Bool.h>
 #include <asl_gremlin_pkg/SubscribeTopic.h>
 #include <asl_gremlin_msgs/RefTraj.h>
@@ -11,8 +10,6 @@
 #include <memory>
 //#include <fstream>
 //#include <cassert>
-
-using namespace trajectory_generation;
 
 struct traj_params{
    double accel_max = 0.5;
@@ -69,7 +66,7 @@ int main(int argc, char** argv)
     //        file_write << '\n';
         }
 
-        trajectory_generation::publish_trajectory(traj_pub, min_jerk_traj);
+       traj_pub.publish(*(min_jerk_traj->get_trajectory()));
         std::cout<<ros::this_node::getNamespace()<<'\n';
 
         ros::spinOnce();

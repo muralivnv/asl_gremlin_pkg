@@ -134,9 +134,7 @@ add_library(${PROJECT_NAME}
             src/${PROJECT_NAME}/MinimumJerkTrajectory.cpp 
             src/${PROJECT_NAME}/CircularTrajectory.cpp 
             src/${PROJECT_NAME}/WaypointSubscribe.cpp
-            src/${PROJECT_NAME}/trajectory_publisher.cpp
             src/${PROJECT_NAME}/TrajectoryBase.cpp
-            src/${PROJECT_NAME}/DistanceToWaypoint.cpp
             src/${PROJECT_NAME}/TrajectorySwitcher.cpp
 )
 
