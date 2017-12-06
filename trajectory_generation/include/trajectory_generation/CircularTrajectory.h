@@ -118,7 +118,7 @@ void CircularTrajectory<ParamType>::calc_params()
     double delta_theta_right = utility_pkg::wrapTo2Pi(current_heading_ - (required_heading_ - 2*M_PI));
 
     double start_horiz = 0;
-    if (std::fabs(delta_theta_left) < std::fabs(delta_theta_right))
+    if (delta_theta_left <= delta_theta_right)
     {
         turn_dir_ = 1;
         start_horiz = 0;
@@ -157,23 +157,23 @@ void CircularTrajectory<ParamType>::generate_traj(double time)
     else
     { t_rel = std::min(t_rel, final_time_); }
 
-    ref_traj_ptr_->x = circle_center_x_ + params_->min_turn_rad * 
-                                        std::cos(circle_end_angle_*t_rel/final_time_ + circle_start_angle_);
+    double theta_at_t_rel = circle_end_angle_*(t_rel/final_time_) + circle_start_angle_;
+    double vel_coeff      = turn_dir_*params_->min_turn_rad*(circle_end_angle_/final_time_);
+    double accel_coeff    = params_->min_turn_rad*std::pow((circle_end_angle_/final_time_),2);
+        
+    ref_traj_ptr_->x      = circle_center_x_ + params_->min_turn_rad * 
+                                               std::cos(theta_at_t_rel);
     
-    ref_traj_ptr_->y = circle_center_y_ + params_->min_turn_rad * 
-                                        std::sin(circle_end_angle_*t_rel/final_time_ + circle_start_angle_);
+    ref_traj_ptr_->y      = circle_center_y_ + params_->min_turn_rad * 
+                                               std::sin(theta_at_t_rel);
     
-    ref_traj_ptr_->x_dot = -turn_dir_*params_->min_turn_rad*(circle_end_angle_/final_time_)*
-                                        std::sin(circle_end_angle_*t_rel/final_time_ + circle_start_angle_);
+    ref_traj_ptr_->x_dot  = -vel_coeff   * std::sin(theta_at_t_rel);
 
-    ref_traj_ptr_->y_dot = turn_dir_*params_->min_turn_rad*(circle_end_angle_/final_time_)*
-                                        std::cos(circle_end_angle_*t_rel/final_time_ + circle_start_angle_);
+    ref_traj_ptr_->y_dot  =  vel_coeff   * std::cos(theta_at_t_rel);
 
-    ref_traj_ptr_->x_ddot = -params_->min_turn_rad*std::pow((circle_end_angle_/final_time_),2)*
-                                        std::cos(circle_end_angle_*t_rel/final_time_ + circle_start_angle_);
+    ref_traj_ptr_->x_ddot = -accel_coeff * std::cos(theta_at_t_rel);
 
-    ref_traj_ptr_->y_ddot = -params_->min_turn_rad*std::pow((circle_end_angle_/final_time_),2)*
-                                        std::sin(circle_end_angle_*t_rel/final_time_ + circle_start_angle_);
+    ref_traj_ptr_->y_ddot = -accel_coeff * std::sin(theta_at_t_rel);
 
     ref_traj_ptr_->theta = std::atan2(ref_traj_ptr_->y_dot, ref_traj_ptr_->x_dot);
     ref_traj_ptr_->theta_dot = 0.0;

@@ -154,12 +154,11 @@ int main(int argc, char** argv)
                         switch_trajectory->reset_vehicle_state();
                         continue; 
                     }
-                    if (!switch_trajectory->current_hdg_within_tolerance_to_ref())
+                    if (!switch_trajectory->current_hdg_within_tolerance_to_ref() && !aligned_rover)
                     {
                         traj_gen = circular_traj;
                         switch_trajectory->change_switch_condition(trajSwitchCond::delta_theta_to_ref);
-                        if (!aligned_rover)
-                        { waypoint_stack.decrement_counter(); }
+                        waypoint_stack.decrement_counter();
                         aligned_rover = true;
                     }
                     else
