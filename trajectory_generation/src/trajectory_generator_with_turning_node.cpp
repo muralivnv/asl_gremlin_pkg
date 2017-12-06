@@ -1,6 +1,6 @@
 /**
- * @brief trajectory_generator_node
- * @file trajectory_generator_node.cpp
+ * @brief trajectory_generator_with_turning_node
+ * @file trajectory_generator_with_turning_node.cpp
  * @author Murali VNV <muralivnv@gmail.com>
  */
 /*

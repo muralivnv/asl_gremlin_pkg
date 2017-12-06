@@ -50,8 +50,16 @@ void utility_pkg::CmdArgParser::parse()
         }
         else if (opt->first != "")
         {
-            opt->second = tmp_str;
-            _Options.insert(option(opt->first, opt->second));
+            if (has_key(opt->first))
+            {
+                auto key_iterator = _Options.find(opt->first);
+                key_iterator->second += tmp_str;
+            }
+            else
+            {
+               opt->second = tmp_str;
+                _Options.insert(option(opt->first, opt->second));
+            }
             opt->first = "";
             opt->second = "";
         }
