@@ -19,6 +19,23 @@
 #include <algorithm>
 #include <stdexcept>
 
+#ifndef CONCATENATE_helper
+    #define CONCATENATE_helper(X,Y) X ## Y
+#endif
+
+#ifndef CONCATENATE
+    #define CONCATENATE(X,Y)  CONCATENATE_helper(X,Y)
+#endif
+
+#ifndef FOR_EVERY
+    #define FOR_EVERY(x) \
+        static auto CONCATENATE(start_time_,__LINE__) = std::chrono::system_clock::now();  \
+        static auto CONCATENATE(end_time_,__LINE__) = std::chrono::system_clock::now(); \
+        if (std::chrono::duration_cast<decltype(x)>(CONCATENATE(end_time_,__LINE__) - CONCATENATE(start_time_,__LINE__)) < x) \
+        { CONCATENATE(end_time_,__LINE__) = std::chrono::system_clock::now(); } \
+        else if ( (CONCATENATE(start_time_,__LINE__) = std::chrono::system_clock::now()) > CONCATENATE(end_time_,__LINE__))
+#endif
+
 namespace utility_pkg{
 namespace custom_algorithms{
 
