@@ -18,6 +18,7 @@
 #include <asl_gremlin_pkg/SubscribeTopic.h>
 #include <asl_gremlin_msgs/RefTraj.h>
 #include <asl_gremlin_pkg/GetParam.h>
+#include <utility_pkg/utilities.h>
 
 #include <ros/ros.h>
 #include <ros/time.h>
@@ -149,6 +150,7 @@ int main(int argc, char** argv)
                     
                     if (waypoint.size() == 1)
                     {
+                        utility_pkg::stop_rover(ros::this_node::getNamespace());
                         ros::spinOnce(); 
                         switch_trajectory->reset_vehicle_state();
                         continue; 

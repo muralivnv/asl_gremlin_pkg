@@ -14,6 +14,9 @@
 #define _utility_pkg_UTILITIES_H_
 
 #include <cmath>
+#include <string>
+#include <cstdlib>
+#include <ros/ros.h>
 
 namespace utility_pkg{
 
@@ -22,6 +25,8 @@ namespace utility_pkg{
 double compass_angle_to_polar_angle(double);
 
 double wrapTo2Pi(double);
+
+void stop_rover(const std::string&);
 
 
 } // end namepace {utility_pkg}

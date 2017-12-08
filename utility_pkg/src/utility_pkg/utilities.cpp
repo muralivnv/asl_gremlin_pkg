@@ -47,3 +47,18 @@ double utility_pkg::wrapTo2Pi(double theta)
 
 	return theta; 
 }
+
+
+void utility_pkg::stop_rover(const std::string& rover_name)
+{
+    ROS_INFO("\033[1;33mReached all waypoints, stopping rover\033[0;m");
+
+    std::string topic_name = rover_name +"/start_sim";
+
+    std::size_t end_idx = topic_name.find_first_not_of('/');
+    topic_name = '/' + topic_name.substr(end_idx);
+    
+    std::string cmd = "rostopic pub --once "+ topic_name + " std_msgs/Bool \"data: false\"";
+
+    auto res = std::system(cmd.c_str());
+}

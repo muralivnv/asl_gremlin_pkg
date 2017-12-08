@@ -101,7 +101,8 @@ int main(int argc, char** argv)
     }
     ros::Rate loop_rate(rate);
 
-    bool aligned_rover = false;
+    bool reached_waypoint = false;
+    bool previously_switched_traj = false;
     std::vector<double> waypoint_prev(2,0);
     
     ROS_INFO("\033[1;32mInitialized\033[0;m:= %s",ros::this_node::getName().c_str());
@@ -125,36 +126,45 @@ int main(int argc, char** argv)
                     {
                         traj_gen = circular_traj;
                         switch_trajectory->change_switch_condition(trajSwitchCond::delta_theta_to_ref);
-                        aligned_rover = true;
+                        previously_switched_traj = false;
                     }
                     else
                     {
                         traj_gen = min_jerk_traj;
                         switch_trajectory->change_switch_condition(trajSwitchCond::dist_to_waypoint);
-                        aligned_rover = false;
+                        previously_switched_traj = true;
                     }
 
                     traj_gen->set_current_pose_as_ini();
                     traj_gen->set_final_pose(waypoint_prev[0], waypoint_prev[1]);
                     traj_gen->calc_params();
+                    reached_waypoint = false;
                 }
+                else if (reached_waypoint)
+                { utility_pkg::stop_rover(ros::this_node::getNamespace()); }
             }
-            if ( switch_trajectory->need_to_switch_trajectory())
+            if ( switch_trajectory->need_to_switch_trajectory() && !reached_waypoint)
             {
-                traj_gen = min_jerk_traj;
-                switch_trajectory->change_switch_condition(trajSwitchCond::dist_to_waypoint);
-                aligned_rover = false;
-                traj_gen->set_current_pose_as_ini();
-                traj_gen->set_final_pose(waypoint_prev[0], waypoint_prev[1]);
-                traj_gen->calc_params();
+                if(!previously_switched_traj)
+                {
+                    traj_gen = min_jerk_traj;
+                    switch_trajectory->change_switch_condition(trajSwitchCond::dist_to_waypoint);
+                    traj_gen->set_current_pose_as_ini();
+                    traj_gen->set_final_pose(waypoint_prev[0], waypoint_prev[1]);
+                    traj_gen->calc_params();
+                    previously_switched_traj = true;
+                }
+                else
+                { reached_waypoint = true; }
         }
             traj_gen->generate_traj(ros::Time::now().toSec());
         }
         else if (!(sim.get_data())->data)
         {
             ROS_INFO("\033[1;31mStopped\033[0;m:= Generating trajectory for given waypoints");
+            reached_waypoint = false;
+            previously_switched_traj = false;
             switch_trajectory->reset_vehicle_state();
-            aligned_rover = false;
         }
 
         if (traj_gen != nullptr)

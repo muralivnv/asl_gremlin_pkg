@@ -84,20 +84,10 @@ std::vector<double> WaypointSubscribe::get_next_waypoint()
     ++current_waypoint_ptr_;
     if (current_waypoint_ptr_ == x_waypoints_.size())
     {
-        ROS_INFO("\033[1;33mReached last waypoint, stopping rover\033[0;m");
-
-        std::string topic_name = ros::this_node::getNamespace()+"/start_sim";
-        if (topic_name[0] == '/' && topic_name[1] == '/')
-        { topic_name.erase(0,1); }
-
-        std::string cmd = "rostopic pub --once "+ topic_name + " std_msgs/Bool \"data: false\"";
-
-        if(!std::system(cmd.c_str()))
-        { }
-
         --current_waypoint_ptr_;
         return {0};
     }
+    
     return {x_waypoints_[current_waypoint_ptr_],
                 y_waypoints_[current_waypoint_ptr_] };
 }
