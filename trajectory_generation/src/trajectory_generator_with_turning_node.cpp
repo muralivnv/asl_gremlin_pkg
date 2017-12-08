@@ -146,7 +146,6 @@ int main(int argc, char** argv)
                 if ( switch_trajectory->need_to_switch_trajectory() )
                 {
                     waypoint = waypoint_stack.get_next_waypoint();
-                    switch_trajectory->change_next_desired_state(waypoint[0], waypoint[1]);
                     
                     if (waypoint.size() == 1)
                     {
@@ -154,6 +153,7 @@ int main(int argc, char** argv)
                         switch_trajectory->reset_vehicle_state();
                         continue; 
                     }
+                    switch_trajectory->change_next_desired_state(waypoint[0], waypoint[1]);
                     if (!switch_trajectory->current_hdg_within_tolerance_to_ref() && !aligned_rover)
                     {
                         traj_gen = circular_traj;

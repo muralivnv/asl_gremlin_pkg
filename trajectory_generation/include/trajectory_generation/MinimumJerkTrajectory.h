@@ -116,16 +116,18 @@ void MinimumJerkTrajectory<ParamType>::calc_params()
    double t_final_x = sqrt(10/(sqrt(3)) * delta_x/params_->accel_max);
    double t_final_y = sqrt(10/(sqrt(3)) * delta_y/params_->accel_max);
     
-   double t_final = std::max(t_final_x, t_final_y) + std::max(delta_x, delta_y);
+   t_final_ = std::max(t_final_x, t_final_y) + std::max(delta_x, delta_y);
 
-   calc_x_coeff_(t_final);
-   calc_y_coeff_(t_final);
+   calc_x_coeff_(t_final_);
+   calc_y_coeff_(t_final_);
 }
 
 template<typename ParamType>
 void MinimumJerkTrajectory<ParamType>::generate_traj(double time)
 {
     double t_rel = (time - t_initial_);
+
+    t_rel = std::min(t_rel, t_final_);
 
     ref_traj_obj_.x         = eval_poly< 5 >(t_rel, x_coeff_, orderOfDiff::position);
     ref_traj_obj_.x_dot     = eval_poly< 5 >(t_rel, x_coeff_, orderOfDiff::velocity);

@@ -150,6 +150,7 @@ add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EX
 add_executable(waypointSet_client src/waypointSet_client.cpp)
 add_executable(trajectory_generator_node src/trajectory_generator_node.cpp)
 add_executable(trajectory_generator_with_turning_node src/trajectory_generator_with_turning_node.cpp)
+add_executable(track_other_rover src/track_other_rover.cpp)
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use
@@ -161,11 +162,13 @@ add_executable(trajectory_generator_with_turning_node src/trajectory_generator_w
 add_dependencies(waypointSet_client  ${PROJECT_NAME}_gencfg ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(trajectory_generator_node ${PROJECT_NAME}_gencfg ${PROJECT_NAME}_generate_messages_cpp)
 add_dependencies(trajectory_generator_with_turning_node ${PROJECT_NAME}_gencfg ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(track_other_rover ${PROJECT_NAME}_gencfg ${PROJECT_NAME}_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(waypointSet_client  ${catkin_LIBRARIES})
 target_link_libraries(trajectory_generator_node ${PROJECT_NAME} ${catkin_LIBRARIES})
 target_link_libraries(trajectory_generator_with_turning_node ${PROJECT_NAME} ${catkin_LIBRARIES})
+target_link_libraries(track_other_rover ${PROJECT_NAME} ${catkin_LIBRARIES})
 #############
 ## Install ##
 #############

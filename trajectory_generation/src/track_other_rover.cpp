@@ -13,6 +13,7 @@
 #include <trajectory_generation/MinimumJerkTrajectory.h>
 #include <trajectory_generation/CircularTrajectory.h>
 #include <trajectory_generation/TrajectorySwitcher.h>
+#include <utility_pkg/custom_algorithms.h>
 #include <std_msgs/Bool.h>
 #include <asl_gremlin_pkg/SubscribeTopic.h>
 #include <asl_gremlin_msgs/RefTraj.h>
@@ -26,6 +27,7 @@
 #include <thread>
 #include <memory>
 
+using namespace std::chrono_literals;
 using namespace trajectory_generation;
 
 struct traj_params{
@@ -88,6 +90,9 @@ int main(int argc, char** argv)
 
     ros::Publisher traj_pub = traj_nh.advertise<asl_gremlin_msgs::RefTraj>(traj_pub_name, 10);
 
+    asl_gremlin_pkg::SubscribeTopic<asl_gremlin_msgs::VehicleState>
+                            asl_gremlin1_state(traj_nh, "/asl_gremlin1/state_feedback/selected_feedback");
+
     double rate = 10.0;
     if (!traj_nh.getParam("sim/rate", rate))
     {
@@ -97,44 +102,58 @@ int main(int argc, char** argv)
     ros::Rate loop_rate(rate);
 
     bool aligned_rover = false;
-    std::vector<double> waypoint(2,0);
+    std::vector<double> waypoint_prev(2,0);
     
     ROS_INFO("\033[1;32mInitialized\033[0;m:= %s",ros::this_node::getName().c_str());
     while(ros::ok())
     {
         if ( (sim.get_data())->data )
         {
-            for_every(30sec);
-            waypoint[0] = (asl_gremlin1_state->get_data())->pose.point.x;
-            waypoint[1] = (asl_gremlin1_state->get_data())->pose.point.y;
-
-            switch_trajectory->change_next_desired_state(waypoint[0], waypoint[1]);
-
-
-            if (!switch_trajectory->current_hdg_within_tolerance_to_ref() && !aligned_rover)
+            FOR_EVERY(30s)
             {
-                traj_gen = circular_traj;
-                switch_trajectory->change_switch_condition(trajSwitchCond::delta_theta_to_ref);
-                waypoint_stack.decrement_counter();
-                aligned_rover = true;
+                double rover1_pose_x = (asl_gremlin1_state.get_data())->pose.point.x;
+                double rover1_pose_y = (asl_gremlin1_state.get_data())->pose.point.y;
+                
+                if (sqrt(std::pow(rover1_pose_x - waypoint_prev[0],2) + 
+                         std::pow(rover1_pose_y - waypoint_prev[1],2)) >= 5)
+                {
+                    waypoint_prev[0] = rover1_pose_x;
+                    waypoint_prev[1] = rover1_pose_y;
+                    
+                    switch_trajectory->change_next_desired_state(waypoint_prev[0], waypoint_prev[1]);
+                    if (!switch_trajectory->current_hdg_within_tolerance_to_ref())
+                    {
+                        traj_gen = circular_traj;
+                        switch_trajectory->change_switch_condition(trajSwitchCond::delta_theta_to_ref);
+                        aligned_rover = true;
+                    }
+                    else
+                    {
+                        traj_gen = min_jerk_traj;
+                        switch_trajectory->change_switch_condition(trajSwitchCond::dist_to_waypoint);
+                        aligned_rover = false;
+                    }
+
+                    traj_gen->set_current_pose_as_ini();
+                    traj_gen->set_final_pose(waypoint_prev[0], waypoint_prev[1]);
+                    traj_gen->calc_params();
+                }
             }
-            else
+            if ( switch_trajectory->need_to_switch_trajectory())
             {
                 traj_gen = min_jerk_traj;
                 switch_trajectory->change_switch_condition(trajSwitchCond::dist_to_waypoint);
                 aligned_rover = false;
-            }
-
-            traj_gen->set_current_pose_as_ini();
-            traj_gen->set_final_pose(waypoint[0], waypoint[1]);
-            traj_gen->calc_params();
+                traj_gen->set_current_pose_as_ini();
+                traj_gen->set_final_pose(waypoint_prev[0], waypoint_prev[1]);
+                traj_gen->calc_params();
+        }
             traj_gen->generate_traj(ros::Time::now().toSec());
         }
-        else if (!(sim.get_data())->data && updated_ini_params)
+        else if (!(sim.get_data())->data)
         {
             ROS_INFO("\033[1;31mStopped\033[0;m:= Generating trajectory for given waypoints");
             switch_trajectory->reset_vehicle_state();
-            waypoint_stack.reset_counter();
             aligned_rover = false;
         }
 
