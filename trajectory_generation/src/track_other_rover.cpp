@@ -91,7 +91,7 @@ int main(int argc, char** argv)
     ros::Publisher traj_pub = traj_nh.advertise<asl_gremlin_msgs::RefTraj>(traj_pub_name, 10);
 
     asl_gremlin_pkg::SubscribeTopic<asl_gremlin_msgs::VehicleState>
-                            asl_gremlin1_state(traj_nh, "/asl_gremlin1/state_feedback/selected_feedback");
+                            asl_gremlin1_state(traj_nh, "/asl_gremlin2/state_feedback/selected_feedback");
 
     double rate = 10.0;
     if (!traj_nh.getParam("sim/rate", rate))
@@ -104,12 +104,14 @@ int main(int argc, char** argv)
     bool reached_waypoint = false;
     bool previously_switched_traj = false;
     std::vector<double> waypoint_prev(2,0);
+    bool initialized = false;
     
     ROS_INFO("\033[1;32mInitialized\033[0;m:= %s",ros::this_node::getName().c_str());
     while(ros::ok())
     {
         if ( (sim.get_data())->data )
         {
+            initialized = true;
             FOR_EVERY(30s)
             {
                 double rover1_pose_x = (asl_gremlin1_state.get_data())->pose.point.x;
@@ -118,6 +120,9 @@ int main(int argc, char** argv)
                 if (sqrt(std::pow(rover1_pose_x - waypoint_prev[0],2) + 
                          std::pow(rover1_pose_y - waypoint_prev[1],2)) >= 5)
                 {
+                    ROS_INFO("Creating Trajectory towards \033[1;37m(x,y)\033[0;m:= (%f, %f)",
+                                rover1_pose_x, rover1_pose_y);
+
                     waypoint_prev[0] = rover1_pose_x;
                     waypoint_prev[1] = rover1_pose_y;
                     
@@ -159,10 +164,11 @@ int main(int argc, char** argv)
         }
             traj_gen->generate_traj(ros::Time::now().toSec());
         }
-        else if (!(sim.get_data())->data)
+        else if (!(sim.get_data())->data && initialized)
         {
             ROS_INFO("\033[1;31mStopped\033[0;m:= Generating trajectory for given waypoints");
             reached_waypoint = false;
+            initialized = false;
             previously_switched_traj = false;
             switch_trajectory->reset_vehicle_state();
         }

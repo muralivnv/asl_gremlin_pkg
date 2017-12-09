@@ -200,5 +200,7 @@ int main(int argc, char** argv)
     delete min_jerk_traj;
     delete circular_traj;
 
+    ROS_INFO("Gremlin signing off!");
+
     return EXIT_SUCCESS;
 }

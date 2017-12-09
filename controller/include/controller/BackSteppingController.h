@@ -166,9 +166,11 @@ asl_gremlin_msgs::MotorAngVel* BackSteppingController<ref_state_type, act_state_
 }
 
 template<typename ref_state_type, typename act_state_type>
-void BackSteppingController<ref_state_type, act_state_type>::dynamic_reconfigure_gain_callback(controller::controllerGainSetConfig& config, uint32_t level)
+void BackSteppingController<ref_state_type, act_state_type>::
+    dynamic_reconfigure_gain_callback(controller::controllerGainSetConfig& config, uint32_t level)
 {
-    ROS_INFO("\033[0;33mUpdated\033[0;m:= {Control-Gains}-> \033[1;37mlambda_x\033[0;m:= %f, \033[1;37mlambda_y\033[0;m:= %f, \033[1;37mlambda_theta\033[0;m:= %f",
+    ROS_INFO("\033[0;33mUpdated\033[0;m:= {Control-Gains}-> \033[1;37mlambda_x\033[0;m:= %f,"
+                " \033[1;37mlambda_y\033[0;m:= %f, \033[1;37mlambda_theta\033[0;m:= %f",
              config.lambda_x, config.lambda_y, config.lambda_theta);
     lambda_gains_[0] = config.lambda_x;
     lambda_gains_[1] = config.lambda_y;

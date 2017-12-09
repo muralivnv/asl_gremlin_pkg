@@ -32,8 +32,8 @@
 
 <node   ns="$(arg robot_name)"
         name="feedback_selected"
-        pkg="test_asl_gremlin"
-        type="test_traj_with_turning"
+        pkg="state_feedback"
+        type="feedback_selected"
         respawn="true"
         output="screen" />
 

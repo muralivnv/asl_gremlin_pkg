@@ -36,6 +36,7 @@ class TrajectorySwitcher{
     double turn_tolerance_ = 25*M_PI/180.0; // (rad)
 
     int switch_condition_ = trajSwitchCond::dist_to_waypoint;
+    bool do_console_output_ = true;
 
     asl_gremlin_pkg::SubscribeTopic<asl_gremlin_msgs::VehicleState>* vehicle_state_;
 

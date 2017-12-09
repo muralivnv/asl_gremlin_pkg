@@ -72,6 +72,7 @@ TrajectorySwitcher::~TrajectorySwitcher()
 
 void TrajectorySwitcher::change_next_desired_state(double x, double y)
 {
+	do_console_output_ = true;
     x_wp_ = x; y_wp_ = y;
 
     ros::spinOnce();
@@ -95,7 +96,11 @@ bool TrajectorySwitcher::need_to_switch_trajectory()
                     (std::pow(y_current - y_wp_, 2))) < 
                 waypoint_proximity_ )
         {
-            ROS_INFO("Reached waypoint \033[1;37m(x,y)\033[0;m:= (%f, %f)",x_wp_,y_wp_);
+        	if (do_console_output_)
+            { 
+            	ROS_INFO("Reached waypoint \033[1;37m(x,y)\033[0;m:= (%f, %f)",x_wp_,y_wp_); 
+            	do_console_output_ = false;
+    		}
             return true;
         }
         else
@@ -105,7 +110,11 @@ bool TrajectorySwitcher::need_to_switch_trajectory()
     {
         if ( std::fabs(delta_theta(theta_current, theta_req_)) <= turn_tolerance_)
         {
-            ROS_INFO("Aligned rover towards next waypoint\033[1;37m(x,y)\033[0;m:= (%f,%f)",x_wp_,y_wp_);
+        	if(do_console_output_)
+            { 
+            	ROS_INFO("Aligned rover towards next waypoint\033[1;37m(x,y)\033[0;m:= (%f,%f)",x_wp_,y_wp_); 
+            	do_console_output_ = false;
+    		}
             return true;
         }
         else
@@ -123,10 +132,14 @@ bool TrajectorySwitcher::current_hdg_within_tolerance_to_ref()
 }
 
 void TrajectorySwitcher::change_switch_condition(trajSwitchCond condition)
-{ switch_condition_ = condition; }
+{ 
+	switch_condition_ = condition; 
+	do_console_output_ = true;
+}
 
 void TrajectorySwitcher::reset_vehicle_state()
 {
+	do_console_output_ = true;
     (vehicle_state_->get_data())->pose.point.x = 0.0;
     (vehicle_state_->get_data())->pose.point.y = 0.0;
 }
