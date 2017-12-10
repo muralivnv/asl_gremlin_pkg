@@ -58,11 +58,18 @@ int main(int argc, char** argv)
     ROS_INFO("\033[1;32mInitialized\033[0;m:= %s",ros::this_node::getName().c_str());
 
     std::string rosbag_pid_process_num;
+	
+	auto get_path = [](auto exec_wd){
+        std::string dir(exec_wd);
+        return dir.substr(0,dir.find("devel"));
+    };
+    std::string pkg_directory( get_path(argv[0]) );
+    
     while (ros::ok())
     {
         if ( (sim_start.get_data())->data && !initiated_sim)
         {
-            rosbag_pid_process_num = exec_cmd("bash $HOME/asl_gremlin1/src/bash_scripts/record_sim_data.sh");
+            rosbag_pid_process_num = exec_cmd("bash "+ pkg_directory +"src/bash_scripts/record_sim_data.sh");
             ROS_INFO("\033[1;32mInitialized\033[0;m:= data recording");
             initiated_sim = true;
         }

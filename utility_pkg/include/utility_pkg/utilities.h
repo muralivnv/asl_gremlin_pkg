@@ -16,6 +16,8 @@
 #include <cmath>
 #include <string>
 #include <cstdlib>
+#include <cstdio>
+#include <array>
 #include <ros/ros.h>
 
 namespace utility_pkg{
@@ -28,6 +30,9 @@ double wrapTo2Pi(double);
 
 void stop_rover(const std::string&);
 
+std::string exec_cmd(const std::string&);
+
+std::string get_robot_name(char**);
 
 } // end namepace {utility_pkg}
 #endif

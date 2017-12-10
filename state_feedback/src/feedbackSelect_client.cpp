@@ -14,6 +14,7 @@
 #include <dynamic_reconfigure/IntParameter.h>
 #include <dynamic_reconfigure/Reconfigure.h>
 #include <dynamic_reconfigure/Config.h>
+#include <utility_pkg/utilities.h>
 
 int main(int argc, char** argv)
 {
@@ -27,7 +28,13 @@ int main(int argc, char** argv)
 
     std::string nh_namespace(ros::this_node::getNamespace());
     if ( nh_namespace == "/" || nh_namespace == "//")
-    { nh_namespace = "/asl_gremlin1"; }
+    { 
+        nh_namespace = utility_pkg::get_robot_name(argv);
+        if (nh_namespace == "")
+        {nh_namespace = "/asl_gremlin1";}
+        else
+        {nh_namespace = "/"+nh_namespace;}
+    }
 
     if (argc == 2)
     {

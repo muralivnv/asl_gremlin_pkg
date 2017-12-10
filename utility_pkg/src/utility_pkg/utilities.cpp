@@ -48,7 +48,6 @@ double utility_pkg::wrapTo2Pi(double theta)
 	return theta; 
 }
 
-
 void utility_pkg::stop_rover(const std::string& rover_name)
 {
     ROS_INFO("\033[1;33mReached all waypoints, stopping rover\033[0;m");
@@ -61,4 +60,31 @@ void utility_pkg::stop_rover(const std::string& rover_name)
     std::string cmd = "rostopic pub --once "+ topic_name + " std_msgs/Bool \"data: false\"";
 
     auto res = std::system(cmd.c_str());
+}
+
+std::string utility_pkg::exec_cmd(const std::string& cmd)
+{
+    std::array<char, 256> buffer;
+    std::string cmd_output;
+
+    FILE* pipe= popen(cmd.c_str(), "r");
+
+    if (!pipe)
+    { throw std::runtime_error("popen() failed"); }
+
+    while (!feof(pipe))
+    {
+        if (fgets(buffer.data(), 256, pipe) != nullptr)
+        { cmd_output += buffer.data(); }
+    }
+    pclose(pipe);
+    return cmd_output;
+}
+
+std::string utility_pkg::get_robot_name(char** argv)
+{
+    std::string exec_path(argv[0]);
+    std::string robot_name(exec_cmd("source "+ exec_path+"src/bash_scripts/this_robot_name.sh"));
+    robot_name = exec_cmd("echo $ROBOT_NAME");
+    return robot_name;
 }

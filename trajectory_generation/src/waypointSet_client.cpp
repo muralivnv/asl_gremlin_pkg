@@ -17,6 +17,7 @@
 #include <dynamic_reconfigure/Config.h>
 #include <string>
 #include <utility_pkg/CmdArgParser.h>
+#include <utility_pkg/utilities.h>
 #include <asl_gremlin_pkg/GetParam.h>
 
 int main(int argc, char** argv)
@@ -36,8 +37,14 @@ int main(int argc, char** argv)
 
     std::string nh_namespace(ros::this_node::getNamespace());
     if ( nh_namespace == "/" || nh_namespace == "//")
-    { nh_namespace = "/asl_gremlin1"; }
-    
+    { 
+        nh_namespace = utility_pkg::get_robot_name(argv);
+        if (nh_namespace == "")
+        {nh_namespace = "/asl_gremlin1";}
+        else
+        {nh_namespace = "/"+nh_namespace;}
+    }
+
     std::string waypoint_server_topic_name(nh_namespace+"/trajectory_generator/set_parameters");
 
 	try{
