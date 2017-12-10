@@ -1,7 +1,13 @@
 #!/bin/bash
 
+source this_robot_name.sh
+
 # give the robot a name, so all the nodes will be launched under it's namespace
-robot_name=asl_gremlin1
+robot_name=$ROBOT_NAME
+
+if [ "$robot_name" == "" ]; then
+	robot_name="asl_gremlin1"
+fi
 
 # defining IP address to which ROS-MASTER should register or connect(if already MASTER is running with this IP)
 IP=$(hostname -I | awk '{print $1}') # get the IP of the system

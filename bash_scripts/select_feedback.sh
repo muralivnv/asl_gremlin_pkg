@@ -1,5 +1,13 @@
 #!/bin/bash
-robot_name=asl_gremlin1
+
+source this_robot_name.sh
+
+# give the robot a name, so all the nodes will be launched under it's namespace
+robot_name=$ROBOT_NAME
+
+if [ "$robot_name" == "" ]; then
+	robot_name="asl_gremlin1"
+fi
 
 cyan='\033[0;36m'
 light_green='\033[1;32m'
