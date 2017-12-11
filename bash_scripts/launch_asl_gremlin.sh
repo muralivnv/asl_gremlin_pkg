@@ -10,8 +10,7 @@ if [ "$robot_name" == "" ]; then
 fi
 
 # defining IP address to which ROS-MASTER should register or connect(if already MASTER is running with this IP)
-IP=$(hostname -I) # get the IP of the system
-IP=$(echo "${IP}" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') # remove leading and trailing spaces
+IP=$(hostname -I | awk '{print $1}') # get the IP of the system
 
 # defining port number of Arduino which controls motors and gets encoder ticks
 arduino_port_num=/dev/ttyACM0

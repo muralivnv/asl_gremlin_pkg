@@ -23,23 +23,20 @@
 using namespace custom_type_traits;
 
 template<typename T, std::size_t array_size>
-std::array<T, array_size> create_container(std::array<T,array_size>& arr)
-{
-    return std::array<T,array_size>();
-}
+auto create_container(std::array<T,array_size>& arr)
+{ return std::array<T,array_size>(); }
 
 template<typename T>
-std::vector<T> create_container(std::vector<T>& vec)
-{
-    return std::vector<T>(vec.size());
-}
+auto create_container(std::vector<T>& vec)
+{ return std::vector<T>(vec.size()); }
+
 /*
  *              OPERATOR (+)
  */
 template<typename T, typename S>
 auto operator+(T&& container1, S&& container2)
-    -> typename std::enable_if< ((is_vector<RM_REF(T)>::value || is_array<RM_REF(T)>::value) &&
-                                (is_vector<RM_REF(S)>::value || is_array<RM_REF(S)>::value)), RM_REF(T)>::type
+    -> typename std::enable_if< (is_vector_or_array<RM_REF(T)>::value) &&
+                                 (is_vector_or_array<RM_REF(S)>::value), RM_REF(T)>::type
 {
     assert (container1.size() == container2.size());
 
@@ -54,7 +51,7 @@ auto operator+(T&& container1, S&& container2)
 
 template<typename T, typename S>
 auto operator+(T&& container, S&& scalar)
-    -> typename std::enable_if< (is_vector<RM_REF(T)>::value || is_array<RM_REF(T)>::value) &&
+    -> typename std::enable_if< (is_vector_or_array<RM_REF(T)>::value) &&
                 (std::is_floating_point<RM_REF(S)>::value || std::is_integral<RM_REF(S)>::value), RM_REF(T)>::type
 {
 
@@ -69,12 +66,10 @@ auto operator+(T&& container, S&& scalar)
 
 
 template<typename T, typename S>
-auto operator+(S&& scalar, T&& container)
-    -> typename std::enable_if< (is_vector<RM_REF(T)>::value || is_array<RM_REF(T)>::value) &&
+auto operator+(S&& scalar, T& container)
+    -> typename std::enable_if< (is_vector_or_array<RM_REF(T)>::value ) &&
                 (std::is_floating_point<RM_REF(S)>::value || std::is_integral<RM_REF(S)>::value), RM_REF(T)>::type
-{
-    return container + scalar;
-}
+{ return container + scalar; }
 
 
 /*
@@ -82,8 +77,8 @@ auto operator+(S&& scalar, T&& container)
  */
 template<typename T, typename S>
 auto operator-(T&& container1, S&& container2)
-    -> typename std::enable_if< (is_vector<RM_REF(T)>::value || is_array<RM_REF(T)>::value) &&
-                                (is_vector<RM_REF(S)>::value || is_array<RM_REF(S)>::value), RM_REF(T)>::type
+    -> typename std::enable_if< (is_vector_or_array<RM_REF(T)>::value) &&
+                                (is_vector_or_array<RM_REF(S)>::value), RM_REF(T)>::type
 {
     assert (container1.size() == container2.size());
 
@@ -98,7 +93,7 @@ auto operator-(T&& container1, S&& container2)
 
 template<typename T, typename S>
 auto operator-(T&& container, S&& scalar)
-    -> typename std::enable_if< (is_vector<RM_REF(T)>::value || is_array<RM_REF(T)>::value) &&
+    -> typename std::enable_if< (is_vector_or_array<RM_REF(T)>::value) &&
                 (std::is_floating_point<RM_REF(S)>::value || std::is_integral<RM_REF(S)>::value), RM_REF(T)>::type
 {
     RM_REF(T) result_container = create_container(container);
@@ -112,12 +107,10 @@ auto operator-(T&& container, S&& scalar)
 
 
 template<typename T, typename S>
-auto operator-(S&& scalar, T&& container)
-    -> typename std::enable_if< (is_vector<RM_REF(T)>::value || is_array<RM_REF(T)>::value) &&
+auto operator-(S&& scalar, T& container)
+    -> typename std::enable_if< (is_vector_or_array<RM_REF(T)>::value ) &&
                 (std::is_floating_point<RM_REF(S)>::value || std::is_integral<RM_REF(S)>::value), RM_REF(T)>::type
-{
-    return container - scalar;
-}
+{ return container - scalar; }
 
 
 /*
@@ -125,8 +118,8 @@ auto operator-(S&& scalar, T&& container)
  */
 template<typename T, typename S>
 auto operator*(T&& container1, S&& container2)
-    -> typename std::enable_if< (is_vector<RM_REF(T)>::value || is_array<RM_REF(T)>::value) &&
-                                (is_vector<RM_REF(S)>::value || is_array<RM_REF(S)>::value), RM_REF(T)>::type
+    -> typename std::enable_if< (is_vector_or_array<RM_REF(T)>::value) &&
+                                (is_vector_or_array<RM_REF(S)>::value), RM_REF(T)>::type
 {
     assert (container1.size() == container2.size());
 
@@ -141,7 +134,7 @@ auto operator*(T&& container1, S&& container2)
 
 template<typename T, typename S>
 auto operator*(T&& container, S&& scalar)
-    -> typename std::enable_if< (is_vector<RM_REF(T)>::value || is_array<RM_REF(T)>::value) &&
+    -> typename std::enable_if< (is_vector_or_array<RM_REF(T)>::value) &&
                 (std::is_floating_point<RM_REF(S)>::value || std::is_integral<RM_REF(S)>::value), RM_REF(T)>::type
 {
     RM_REF(T) result_container = create_container(container);
@@ -156,11 +149,9 @@ auto operator*(T&& container, S&& scalar)
 
 template<typename T, typename S>
 auto operator*(S&& scalar, T&& container)
-    -> typename std::enable_if< (is_vector<RM_REF(T)>::value || is_array<RM_REF(T)>::value) &&
+    -> typename std::enable_if< (is_vector_or_array<RM_REF(T)>::value) &&
                 (std::is_floating_point<RM_REF(S)>::value || std::is_integral<RM_REF(S)>::value), RM_REF(T)>::type
-{
-    return container * scalar;
-}
+{ return container * scalar; }
 
 
 /*
@@ -168,8 +159,8 @@ auto operator*(S&& scalar, T&& container)
  */
 template<typename T, typename S>
 auto operator/(T&& container1, S&& container2)
-    -> typename std::enable_if< (is_vector<RM_REF(T)>::value || is_array<RM_REF(T)>::value) &&
-                                (is_vector<RM_REF(S)>::value || is_array<RM_REF(S)>::value), RM_REF(T)>::type
+    -> typename std::enable_if< (is_vector_or_array<RM_REF(T)>::value) &&
+                                (is_vector_or_array<RM_REF(S)>::value), RM_REF(T)>::type
 {
     assert (container1.size() == container2.size());
 
@@ -184,7 +175,7 @@ auto operator/(T&& container1, S&& container2)
 
 template<typename T, typename S>
 auto operator/(T&& container, S&& scalar)
-    -> typename std::enable_if< (is_vector<RM_REF(T)>::value || is_array<RM_REF(T)>::value) &&
+    -> typename std::enable_if< (is_vector_or_array<RM_REF(T)>::value) &&
                 (std::is_floating_point<RM_REF(S)>::value || std::is_integral<RM_REF(S)>::value), RM_REF(T)>::type
 {
     RM_REF(T) result_container = create_container(container);
@@ -198,11 +189,9 @@ auto operator/(T&& container, S&& scalar)
 
 
 template<typename T, typename S>
-auto operator/(S&& scalar, T&& container)
-    -> typename std::enable_if< (is_vector<RM_REF(T)>::value || is_array<RM_REF(T)>::value) &&
+auto operator/(S&& scalar, T& container)
+    -> typename std::enable_if< (is_vector_or_array<RM_REF(T)>::value) &&
                 (std::is_floating_point<RM_REF(S)>::value || std::is_integral<RM_REF(S)>::value), RM_REF(T)>::type
-{
-    return container / scalar;
-}
+{ return container / scalar; }
 
 #endif

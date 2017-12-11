@@ -54,11 +54,11 @@ int main(int argc, char** argv)
     ros::NodeHandle enco2w_nh;
 
     std::string encoder_pub_name, ang_vel_topic;
-    encoder_pub_name = asl_gremlin_pkg::GetParam_with_shutdown<std::string>(enco2w_nh, "state_feedback/encoder/pose_topic",
-                                                                            __LINE__);
+    encoder_pub_name = asl_gremlin_pkg::GetParam_with_shutdown<std::string>
+                        (enco2w_nh, "state_feedback/encoder/pose_topic", __LINE__);
 
-    ang_vel_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>(enco2w_nh, "state_feedback/encoder/ang_vel_topic",
-                                                                            __LINE__);
+    ang_vel_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>
+                        (enco2w_nh, "state_feedback/encoder/ang_vel_topic", __LINE__);
 
     ros::Publisher encoder_data_pub = enco2w_nh.advertise<geometry_msgs::PointStamped>(encoder_pub_name,10);
 

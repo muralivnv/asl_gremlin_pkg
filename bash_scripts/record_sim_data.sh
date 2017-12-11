@@ -1,10 +1,19 @@
 #!/bin/bash
 
+source this_robot_name.sh
+
+# give the robot a name, so all the nodes will be launched under it's namespace
+robot_name=$ROBOT_NAME
+
+if [ "$robot_name" == "" ]; then
+	robot_name="asl_gremlin1"
+fi
+
 # Obtain the time of launch
 launch_time=$(date +%F-%H-%M-%S)
 
 # Create bag_file_name
-bag_file_name="asl_gremlin_pkg_${launch_time}.bag"
+bag_file_name="${robot_name}_${launch_time}.bag"
 
 # run process in background
 rosbag record -a -O $HOME/${bag_file_name} > /dev/null &

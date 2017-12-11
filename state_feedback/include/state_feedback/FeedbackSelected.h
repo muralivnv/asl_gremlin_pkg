@@ -31,7 +31,6 @@ enum Feedback{
     pure_gps
 };
 
-
 using pose_type = asl_gremlin_msgs::VehicleState;
 
 namespace state_feedback{
@@ -122,6 +121,7 @@ void FeedbackSelected<NumOfFeedback>::get_gps_data()
     
     pose_[0].pose.point  = (gps_pose_data_->get_data())->point;
     pose_[0].pose.header = (gps_pose_data_->get_data())->header;
+    pose_[0].pose.header.frame_id = "local_ENU/GPS+Compass";
     pose_[0].heading     = theta_enu;
 
     pose_[1].pose.point.z = (gps_pose_data_->get_data())->point.z;
@@ -132,6 +132,7 @@ void FeedbackSelected<NumOfFeedback>::get_gps_data()
 
     pose_[2].pose.point  = (gps_pose_data_->get_data())->point;
     pose_[2].pose.header = (gps_pose_data_->get_data())->header;
+    pose_[2].pose.header.frame_id = "local_ENU/Pure-GPS";
     pose_[2].heading     = theta_gps * 180.0/M_PI;
 }
 
@@ -140,15 +141,14 @@ template<int NumOfFeedback>
 void FeedbackSelected<NumOfFeedback>::get_enco_data()
 {
     pose_[1].pose.header = (enco_pose_data_->get_data())->header;
+    pose_[1].pose.header.frame_id = "local_ENU/Encoder+Compass";
     pose_[1].pose.point.x = (enco_pose_data_->get_data())->point.x;
     pose_[1].pose.point.y = (enco_pose_data_->get_data())->point.y;
 }
 
 template<int NumOfFeedback>
 void FeedbackSelected<NumOfFeedback>::publish()
-{
-    feedback_pub_.publish(pose_[feedback]);
-}
+{ feedback_pub_.publish(pose_[feedback]); }
 
 } // end namespace { state_feedback}
 
