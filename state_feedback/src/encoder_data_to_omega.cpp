@@ -59,7 +59,7 @@ int main(int argc, char** argv)
         if ( !initiated && (sim.get_data())->data )
         {
             encoder_data_to_omega.update_encoder_starting_values();
-            ROS_INFO("\033[1;32mInitialized\033[0;m:= Converting encoder ticks to angular velocity");
+            ROS_INFO("\033[1;32mStarted\033[0;m:= Converting encoder ticks to angular velocity");
             initiated = true;
         }
         if ( !(sim.get_data())->data && initiated)

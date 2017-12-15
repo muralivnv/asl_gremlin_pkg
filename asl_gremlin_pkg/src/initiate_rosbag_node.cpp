@@ -70,7 +70,7 @@ int main(int argc, char** argv)
         if ( (sim_start.get_data())->data && !initiated_sim)
         {
             rosbag_pid_process_num = exec_cmd("bash "+ pkg_directory +"src/bash_scripts/record_sim_data.sh");
-            ROS_INFO("\033[1;32mInitialized\033[0;m:= data recording");
+            ROS_INFO("\033[1;32mStarted\033[0;m:= data recording");
             initiated_sim = true;
         }
         else if (initiated_sim && !(sim_start.get_data())->data )

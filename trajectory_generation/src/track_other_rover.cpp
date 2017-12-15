@@ -166,7 +166,7 @@ int main(int argc, char** argv)
         }
         else if (!(sim.get_data())->data && initialized)
         {
-            ROS_INFO("\033[1;31mStopped\033[0;m:= Generating trajectory for given waypoints");
+            ROS_INFO("\033[1;31mStopped\033[0;m:= Tracking other rover");
             reached_waypoint = false;
             initialized = false;
             previously_switched_traj = false;

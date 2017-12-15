@@ -61,7 +61,7 @@ int main(int argc, char **argv)
 	{
         if ( (sim.get_data())->data && !initiated)
         {
-            ROS_INFO("\033[1;32mInitialized\033[0;m:= Local position from raw-GPS");
+            ROS_INFO("\033[1;32mStarted\033[0;m:= Local position from raw-GPS");
             gps2xy.reset();
             count = 0;
             initiated = true;

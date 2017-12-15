@@ -107,7 +107,7 @@ int main(int argc, char** argv)
     {
         if ( (sim.get_data())->data && !initiated)
         {
-            ROS_INFO("\033[1;32mInitialized\033[0;m:= Encoder based dead-reckoning");
+            ROS_INFO("\033[1;32mStarted\033[0;m:= Encoder based dead-reckoning");
             initial_states[0] = 0.0; initial_states[1] = 0.0;
             initiated = true;
         }

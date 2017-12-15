@@ -89,7 +89,7 @@ int main(int argc, char** argv)
                     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
                     waypoint_stack.reset_counter();
                     dist_to_wp->reset_vehicle_state();
-                    ROS_INFO("\033[1;32mInitialized\033[0;m:= Generating trajectory for given waypoints");
+                    ROS_INFO("\033[1;32mStarted\033[0;m:= Generating trajectory for given waypoints");
                     min_jerk_traj->set_ini_pose(0.0, 0.0);
 
                     waypoint = waypoint_stack.get_current_waypoint();

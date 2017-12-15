@@ -118,7 +118,7 @@ int main(int argc, char** argv)
                     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
                     waypoint_stack.reset_counter();
                     switch_trajectory->reset_vehicle_state();
-                    ROS_INFO("\033[1;32mInitialized\033[0;m:= Generating trajectory for given waypoints");
+                    ROS_INFO("\033[1;32mStarted\033[0;m:= Generating trajectory for given waypoints");
 
                     waypoint = waypoint_stack.get_current_waypoint();
                     switch_trajectory->change_next_desired_state(waypoint[0], waypoint[1]);

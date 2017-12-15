@@ -75,7 +75,7 @@ int main(int argc, char** argv)
             if (!initialized)
             {
                 std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-                ROS_INFO("\033[1;32mInitialized\033[0;m:= generating control commands");
+                ROS_INFO("\033[1;32mStarted\033[0;m:= generating control commands");
                 initialized = true;
             }
             controller->calculate_control_action(*(ref_traj.get_data()),
