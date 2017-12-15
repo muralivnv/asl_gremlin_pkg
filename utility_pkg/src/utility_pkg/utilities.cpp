@@ -84,7 +84,8 @@ std::string utility_pkg::exec_cmd(const std::string& cmd)
 std::string utility_pkg::get_robot_name(char** argv)
 {
     std::string exec_path(argv[0]);
-    std::string robot_name(exec_cmd("source "+ exec_path+"src/bash_scripts/this_robot_name.sh"));
+    std::string pkg_path = exec_path.substr(0, exec_path.find("devel"));
+    std::string robot_name(exec_cmd("source "+ pkg_path +"src/bash_scripts/this_robot_name.sh"));
     robot_name = exec_cmd("echo $ROBOT_NAME");
     return robot_name;
 }
