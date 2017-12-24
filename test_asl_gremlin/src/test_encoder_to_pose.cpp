@@ -4,7 +4,6 @@
 #include <asl_gremlin_pkg/SubscribeTopic.h>
 #include <asl_gremlin_msgs/MotorAngVel.h>
 #include <std_msgs/Float64.h>
-#include <asl_gremlin_pkg/GetParam.h>
 #include <utility_pkg/utilities.h>
 
 #include <array>
@@ -46,11 +45,11 @@ int main(int argc, char** argv)
     assert(out_file.is_open());
 
     std::string encoder_pub_name, ang_vel_topic;
-    encoder_pub_name = asl_gremlin_pkg::GetParam_with_shutdown<std::string>(enco2w_nh, "/state_feedback/encoder/pose_topic",
-                                                                            __LINE__);
+    if(!enco2w_nh.getParam("state_feedback/encoder/pose_topic",encoder_pub_name))
+    { encoder_pub_name = "state_feedback/position_from_encoder"; }
 
-    ang_vel_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>(enco2w_nh, "/state_feedback/encoder/ang_vel_topic",
-                                                                            __LINE__);
+    if(!enco2w_nh.getParam("state_feedback/encoder/ang_vel_topic", ang_vel_topic))
+    { ang_vel_topic = "state_feedback/encoder/actual_ang_vel"; }
 
     ros::Publisher encoder_data_pub = enco2w_nh.advertise<geometry_msgs::PointStamped>(encoder_pub_name,10);
 
