@@ -16,7 +16,6 @@
 #include <std_msgs/Bool.h>
 #include <asl_gremlin_pkg/SubscribeTopic.h>
 #include <asl_gremlin_msgs/RefTraj.h>
-#include <asl_gremlin_pkg/GetParam.h>
 #include <utility_pkg/utilities.h>
 
 #include <ros/ros.h>
@@ -59,9 +58,9 @@ int main(int argc, char** argv)
     asl_gremlin_pkg::SubscribeTopic<std_msgs::Bool> sim(traj_nh,"start_sim"); 
     
     std::string traj_pub_name;
-    
-    traj_pub_name = asl_gremlin_pkg::GetParam_with_shutdown<std::string>
-                    (traj_nh, "trajectory/publisher_topic", __LINE__);
+    if(!traj_nh.getParam("trajectory/publisher_topic", traj_pub_name))
+    { traj_pub_name = "trajectory_generation/reference_trajectory"; }
+
     ros::Publisher traj_pub = traj_nh.advertise<asl_gremlin_msgs::RefTraj>(traj_pub_name, 10);
 
     double rate = 10.0;

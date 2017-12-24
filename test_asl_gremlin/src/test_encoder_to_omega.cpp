@@ -1,7 +1,6 @@
 #include <ros/ros.h>
 #include <state_feedback/EncoderDataToOmega.h>
 #include <asl_gremlin_msgs/MotorAngVel.h>
-#include <asl_gremlin_pkg/GetParam.h>
 
 #include <cmath>
 #include <string>

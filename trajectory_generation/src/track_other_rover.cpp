@@ -17,7 +17,6 @@
 #include <std_msgs/Bool.h>
 #include <asl_gremlin_pkg/SubscribeTopic.h>
 #include <asl_gremlin_msgs/RefTraj.h>
-#include <asl_gremlin_pkg/GetParam.h>
 
 #include <ros/ros.h>
 #include <ros/time.h>
@@ -84,10 +83,9 @@ int main(int argc, char** argv)
     asl_gremlin_pkg::SubscribeTopic<std_msgs::Bool> sim(traj_nh,"start_sim"); 
     
     std::string traj_pub_name;
+    if(!traj_nh.getParam("trajectory/publisher_topic", traj_pub_name))
+    { traj_pub_name = "trajectory_generation/reference_trajectory"; }
     
-    traj_pub_name = asl_gremlin_pkg::GetParam_with_shutdown<std::string>
-                    (traj_nh, "trajectory/publisher_topic", __LINE__);
-
     ros::Publisher traj_pub = traj_nh.advertise<asl_gremlin_msgs::RefTraj>(traj_pub_name, 10);
 
     asl_gremlin_pkg::SubscribeTopic<asl_gremlin_msgs::VehicleState>

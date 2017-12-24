@@ -1,0 +1,4 @@
+backstepping_controller:
+    lambda_x: 0.2
+    lambda_y: 0.2
+    lambda_theta: 5.0

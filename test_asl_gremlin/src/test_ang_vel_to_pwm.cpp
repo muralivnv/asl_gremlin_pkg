@@ -1,7 +1,6 @@
 #include <ros/ros.h>
 #include <controller/OmegaToPWM.h>
 #include <asl_gremlin_msgs/MotorPwm.h>
-#include <asl_gremlin_pkg/GetParam.h>
 #include <string>
 #include <fstream>
 #include <cassert>
@@ -18,9 +17,8 @@ int main(int argc, char** argv)
     ros::spinOnce();
 
     std::string pwm_pub_topic;
-
-    pwm_pub_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>
-                    (w2pwm_nh,"/controller/cmd_pwm_topic", __LINE__); 
+    if(!w2pwm_nh.getParam("controller/cmd_pwm_topic",pwm_pub_topic))
+    {   pwm_pub_topic = "controller/cmd_motor_pwm"; }
 
     ros::Publisher pwm_pub = w2pwm_nh.advertise<asl_gremlin_msgs::MotorPwm>
                                                         (pwm_pub_topic,20);

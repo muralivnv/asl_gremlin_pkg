@@ -18,7 +18,6 @@
 #include <string>
 #include <utility_pkg/CmdArgParser.h>
 #include <utility_pkg/utilities.h>
-#include <asl_gremlin_pkg/GetParam.h>
 
 int main(int argc, char** argv)
 {

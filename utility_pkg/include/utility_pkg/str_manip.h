@@ -65,7 +65,7 @@ std::vector<OutputType> string_to_vector(std::string& S)
 template <typename T, typename S>
 std::ostream& operator<<(std::ostream& os, std::pair<T,S>& stl_pair)
 {
-	os << stl_pair.first << ' ' << stl_pair.second<<'\n';
+	os << stl_pair.first << ' ' << stl_pair.second <<'\n';
 	return os;
 }
 

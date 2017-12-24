@@ -18,13 +18,17 @@
 	<include file="$(find state_feedback)/launch/launch_state_feedback.launch" >
 		<arg name="robot_name" value="$(arg robot_name)" />
 	</include>
-
+    
+                        <!-- Launch rosbag recorder -->
 	<node   ns="$(arg robot_name)"
         pkg="asl_gremlin_pkg"
         name="record_data_to_rosbag"
         type="initiate_rosbag_node"
         respawn="true"
         output="screen" />
-        
 
+                       <!-- Launch tuned control gains -->
+    <rosparam   ns="$(arg robot_name)"
+                command="load"
+                file="$(find asl_gremlin_pkg)/config/tuned_control_gains.yaml" />
 </launch>

@@ -17,7 +17,6 @@
 #include <ros/ros.h>
 #include <asl_gremlin_msgs/VehicleState.h>
 #include <asl_gremlin_pkg/SubscribeTopic.h>
-#include <asl_gremlin_pkg/GetParam.h>
 #include <cmath>
 #include <string>
 

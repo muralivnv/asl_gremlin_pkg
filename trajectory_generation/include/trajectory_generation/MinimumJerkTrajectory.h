@@ -19,7 +19,6 @@
 #include <asl_gremlin_msgs/RefTraj.h>
 #include <asl_gremlin_msgs/VehicleState.h>
 #include <asl_gremlin_pkg/SubscribeTopic.h>
-#include <asl_gremlin_pkg/GetParam.h>
 #include <ros/ros.h>
 #include <ros/time.h>
 #include "EvaluatePolynomial.h"
@@ -60,8 +59,9 @@ class MinimumJerkTrajectory :
 template<typename ParamType>
 MinimumJerkTrajectory<ParamType>::MinimumJerkTrajectory(ros::NodeHandle& nh, ParamType* params)
 {
-	std::string feedback_selected_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>
-                                            (nh, "state_feedback/feedback_selected", __LINE__);
+	std::string feedback_selected_topic;
+    if(!nh.getParam("state_feedback/feedback_selected", feedback_selected_topic))
+    { feedback_selected_topic = "state_feedback/selected_feedback"; }
 
     vehicle_state_ = new asl_gremlin_pkg::SubscribeTopic<asl_gremlin_msgs::VehicleState>
                                                         (nh, feedback_selected_topic); 
