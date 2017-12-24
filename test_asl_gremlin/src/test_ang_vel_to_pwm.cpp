@@ -1,6 +1,7 @@
 #include <ros/ros.h>
 #include <controller/OmegaToPWM.h>
 #include <asl_gremlin_msgs/MotorPwm.h>
+#include <asl_gremlin_pkg/GetParam.h>
 #include <string>
 #include <fstream>
 #include <cassert>

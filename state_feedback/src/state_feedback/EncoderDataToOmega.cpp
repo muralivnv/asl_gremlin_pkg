@@ -18,21 +18,33 @@ using namespace asl_gremlin_pkg;
 
 EncoderDataToOmega::EncoderDataToOmega(ros::NodeHandle& nh)
 {
-    encoder_left_ticks_per_meter_ = GetParam_with_shutdown<double>
-                                    (nh, "motor/left_encoder_ticks_per_meter", __LINE__);
-
-    encoder_right_ticks_per_meter_ = GetParam_with_shutdown<double>
-                                    (nh, "motor/right_encoder_ticks_per_meter", __LINE__);
-
-    radius_of_wheel_ = GetParam_with_warn<double>
-                        (nh, "wheel/radius", __LINE__ );
+    auto node_namespace = ros::this_node::getNamespace().c_str();
+    if(!nh.getParam("motor/left_encoder_ticks_per_meter",encoder_left_ticks_per_meter_))
+    { 
+        ROS_ERROR("Can't access parameter '/%s/motor/left_encoder_ticks_per_meter', shutting down",
+                    node_namespace);
+        ros::shutdown();
+    }
+    if(!nh.getParam("motor/right_encoder_ticks_per_meter",encoder_right_ticks_per_meter_))
+    { 
+        ROS_ERROR("Can't access parameter '/%s/motor/right_encoder_ticks_per_meter', shutting down",
+                    node_namespace);
+        ros::shutdown();
+    }
+    if(!nh.getParam("wheel/radius",radius_of_wheel_))
+    { 
+        ROS_WARN("Can't access parameter '/%s/wheel/radius', setting to default 0.06858m",
+                    node_namespace);
+        radius_of_wheel_ = 0.06858;
+    }
 
     std::string encoder_left_topic, encoder_right_topic;
-    encoder_left_topic = GetParam_with_shutdown<std::string>
-                            (nh, "state_feedback/encoder/left_timeStamped_topic", __LINE__);
 
-    encoder_right_topic = GetParam_with_shutdown<std::string>
-                            (nh, "state_feedback/encoder/right_timeStamped_topic", __LINE__);
+    if(!nh.getParam("state_feedback/encoder/left_timeStamped_topic",encoder_left_topic))
+    { encoder_left_topic = "state_feedback/encoder_left_timeStamped"; }
+
+    if(!nh.getParam("state_feedback/encoder/right_timeStamped_topic",encoder_right_topic))
+    { encoder_right_topic = "state_feedback/encoder_right_timeStamped"; }
 
     left_wheel_data_  = new asl_gremlin_pkg::SubscribeTopic<std_msgs::Float64MultiArray>(nh, encoder_left_topic, 250);
     right_wheel_data_ = new asl_gremlin_pkg::SubscribeTopic<std_msgs::Float64MultiArray>(nh, encoder_right_topic, 250);

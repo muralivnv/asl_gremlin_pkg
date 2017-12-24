@@ -48,7 +48,7 @@ int main(int argc, char** argv)
             if(ros::service::call(nh_namespace+"/feedback_selected/set_parameters",srv_req, srv_resp) )
             { ROS_INFO("Selected feedback is set"); }
             else
-            { ROS_ERROR("Can't access topic '/asl_gremlin1/feedback_selected/set_parameters' "); }
+            { ROS_ERROR("Can't access topic %s/feedback_selected/set_parameters' ",nh_namespace.c_str()); }
         }
         catch (const char* error_msg)
         {

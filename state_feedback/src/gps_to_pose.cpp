@@ -19,7 +19,6 @@
 #include <std_msgs/Bool.h>
 #include <state_feedback/Gps2xy.h>
 #include <string>
-#include <asl_gremlin_pkg/GetParam.h>
 #include <asl_gremlin_pkg/SubscribeTopic.h>
 
 using namespace state_feedback;
@@ -33,8 +32,9 @@ int main(int argc, char **argv)
 
 	ros::NodeHandle nh; //creating nodehandle
 
-    std::string gps_pub_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>
-                                (nh,"state_feedback/gps/pose_topic", __LINE__);
+    std::string gps_pub_topic;
+    if(!nh.getParam("state_feedback/gps/pose_topic", gps_pub_topic))
+    { gps_pub_topic = "state_feedback/position_from_gps"; }
 
     // creating subscriber objects
 	ros::Subscriber gps_sub = nh.subscribe("mavros/global_position/global", 1000, 

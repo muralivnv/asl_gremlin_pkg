@@ -14,7 +14,6 @@
 #include <asl_gremlin_msgs/MotorPwm.h>
 #include <std_msgs/Bool.h>
 #include <asl_gremlin_pkg/SubscribeTopic.h>
-#include <asl_gremlin_pkg/GetParam.h>
 #include <std_msgs/Int16MultiArray.h>
 #include <string>
 
@@ -26,8 +25,8 @@ int main(int argc, char** argv)
 
     std::string cmd_pwm_topic;
 
-    cmd_pwm_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>
-                    (pwm2ard_nh,"controller/cmd_pwm_topic", __LINE__);
+    if(!pwm2ard_nh.getParam("controller/cmd_pwm_topic",cmd_pwm_topic))
+    { cmd_pwm_topic = "controller/cmd_motor_pwm"; }
 
     asl_gremlin_pkg::SubscribeTopic<asl_gremlin_msgs::MotorPwm> cmd_pwm(pwm2ard_nh, 
 																		cmd_pwm_topic);
@@ -36,7 +35,6 @@ int main(int argc, char** argv)
 
     ros::Publisher pwm_pub = pwm2ard_nh.advertise<std_msgs::Int16MultiArray>
                                                         ("arduino/cmd_pwm",20);
-
     double rate = 10.0;
     if (!pwm2ard_nh.getParam("sim/rate", rate))
     {
@@ -76,12 +74,11 @@ int main(int argc, char** argv)
     	else
     	{	pwm_left = 0; pwm_right = 0;	}
     	
-		pwm_arr.data[0] = -pwm_left;
+		pwm_arr.data[0] = pwm_left;
 		pwm_arr.data[1] = pwm_right;
         pwm_pub.publish(pwm_arr);
         
         ros::spinOnce();
         loop_rate.sleep();
     }
-
 }

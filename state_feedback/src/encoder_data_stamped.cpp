@@ -16,7 +16,6 @@
 #include <std_msgs/Int32.h>
 #include <std_msgs/Bool.h>
 #include <asl_gremlin_pkg/SubscribeTopic.h>
-#include <asl_gremlin_pkg/GetParam.h>
 
 int main(int argc, char** argv)
 {
@@ -29,11 +28,12 @@ int main(int argc, char** argv)
                                                         reset_encoder(nh, "reset_encoders", 10);
 
     std::string left_encoder_stamped_topic, right_encoder_stamped_topic;
-    left_encoder_stamped_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>
-                                    (nh, "state_feedback/encoder/left_timeStamped_topic", __LINE__);
+    if(!nh.getParam("state_feedback/encoder/left_timeStamped_topic", left_encoder_stamped_topic))
+    { left_encoder_stamped_topic = "state_feedback/encoder_left_timeStamped"; }
 
-    right_encoder_stamped_topic = asl_gremlin_pkg::GetParam_with_shutdown<std::string>
-                                    (nh, "state_feedback/encoder/right_timeStamped_topic", __LINE__);
+    if(!nh.getParam("state_feedback/encoder/right_timeStamped_topic", right_encoder_stamped_topic))
+    { right_encoder_stamped_topic = "state_feedback/encoder_right_timeStamped"; }
+
 
 	ros::Publisher left_encoder_data_stamped  = nh.advertise < std_msgs::Float64MultiArray >(left_encoder_stamped_topic, 250);
 	ros::Publisher right_encoder_data_stamped = nh.advertise < std_msgs::Float64MultiArray >(right_encoder_stamped_topic,250);

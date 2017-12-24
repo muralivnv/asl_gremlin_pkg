@@ -18,11 +18,19 @@ using namespace utility_pkg::custom_algorithms;
 
 OmegaToPWM::OmegaToPWM(ros::NodeHandle& nh)
 {
-    omega_lookup_ = asl_gremlin_pkg::GetParam_with_shutdown<std::vector<double>>
-                    (nh, "motor/omega_to_pwm/omega", __LINE__);
+	if (!nh.getParam("motor/omega_to_pwm/omega", omega_lookup_))
+	{ 
+		ROS_ERROR("Can't access parameter /%s/motor/omega_to_pwm/omega, shutting down", 
+					ros::this_node::getNamespace().c_str()); 
+		ros::shutdown();
+	}
 
-    pwm_lookup_ = asl_gremlin_pkg::GetParam_with_shutdown<std::vector<double>>
-                    (nh, "motor/omega_to_pwm/pwm", __LINE__);
+	if (!nh.getParam("motor/omega_to_pwm/pwm", pwm_lookup_))
+	{ 
+		ROS_ERROR("Can't access parameter /%s/motor/omega_to_pwm/pwm, shutting down", 
+					ros::this_node::getNamespace().c_str()); 
+		ros::shutdown();
+	}
 
     if (omega_lookup_.size() != pwm_lookup_.size())
     {
@@ -31,8 +39,9 @@ OmegaToPWM::OmegaToPWM(ros::NodeHandle& nh)
         ros::shutdown();
     }
 
-    std::string ang_vel_topic(asl_gremlin_pkg::GetParam_with_shutdown<std::string>
-                                (nh, "controller/cmd_angular_vel_topic",__LINE__));
+    std::string ang_vel_topic;
+    if(!nh.getParam("controller/cmd_angular_vel_topic", ang_vel_topic))
+    {	ang_vel_topic = "controller/cmd_angular_vel"; }
 
     pwm_cmd_ = new asl_gremlin_msgs::MotorPwm();
     omega_cmd_ = new asl_gremlin_pkg::SubscribeTopic<asl_gremlin_msgs::MotorAngVel>(nh, ang_vel_topic,20);
