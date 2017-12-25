@@ -27,7 +27,7 @@
         respawn="true"
         output="screen" />
 
-                       <!-- Launch tuned control gains -->
+                       <!-- Load tuned control gains -->
     <rosparam   ns="$(arg robot_name)"
                 command="load"
                 file="$(find asl_gremlin_pkg)/config/tuned_control_gains.yaml" />

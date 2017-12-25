@@ -14,9 +14,19 @@ pkg_head=$(echo "${script_path//bash_scripts/}")
 control_gains_file="${pkg_head}asl_gremlin_pkg/config/tuned_control_gains.yaml"
 control_gains_new_file=$(echo "${control_gains_file//tuned_control_gains.yaml/}tuned_control_gains_mod.yaml")
 
-lambda_x_data=$(rosparam get ${robot_name}/backstepping_controller/lambda_x)
-lambda_y_data=$(rosparam get ${robot_name}/backstepping_controller/lambda_y)
-lambda_theta_data=$(rosparam get ${robot_name}/backstepping_controller/lambda_theta)
+lambda_x_data=""
+lambda_y_data=""
+lambda_theta_data=""
+
+if [ "$#" == "1" ] && [ "$1" == "default" ]; then
+	lambda_x_data="0.2"
+	lambda_y_data="0.2"
+	lambda_theta_data="5.0"
+else
+	lambda_x_data=$(rosparam get ${robot_name}/backstepping_controller/lambda_x)
+	lambda_y_data=$(rosparam get ${robot_name}/backstepping_controller/lambda_y)
+	lambda_theta_data=$(rosparam get ${robot_name}/backstepping_controller/lambda_theta)
+fi
 
 awk '{if ($1=="lambda_x:"){$2=lx_data; print}
       else if ($1=="lambda_y:"){$2=ly_data; print}

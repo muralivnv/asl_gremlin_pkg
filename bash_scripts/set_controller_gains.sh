@@ -25,4 +25,3 @@ if [ "$#" == "0" ] || [ "$1" == "-h" ]; then
 else 
     rosrun controller controllerGainSet_client __ns:=${robot_name} $@
 fi
-

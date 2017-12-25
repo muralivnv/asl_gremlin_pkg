@@ -11,8 +11,8 @@
  * https://github.com/muralivnv/asl_gremlin_pkg/blob/master/LICENSE
  */
 
-#ifndef _asl_gremlin_pkg_SUBSCRIBERTOPIC_H_
-#define _asl_gremlin_pkg_SUBSCRIBERTOPIC_H_
+#ifndef _asl_gremlin_pkg_SUBSCRIBETOPIC_H_
+#define _asl_gremlin_pkg_SUBSCRIBETOPIC_H_
 
 #include <ros/ros.h>
 #include <iostream>
