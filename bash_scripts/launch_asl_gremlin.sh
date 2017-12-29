@@ -18,7 +18,19 @@ arduino_port_num=/dev/ttyACM0
 # ROS_MASTER_IP address
 MASTER_IP=$IP
 if [ "$#" == "1" ]; then
-	MASTER_IP=$1
+
+    default_IFS=$IFS
+    IFS='.'
+    master_ip_vec=($1)
+    IFS=$default_IFS
+
+    if [[ ${#master_ip_vec[@]} == 4 && ${master_ip_vec[0]} -le 255 &&  ${master_ip_vec[1]} -le 255\
+          && ${master_ip_vec[2]} -le 255 && ${master_ip_vec[3]} -le 255 ]]; then
+	    MASTER_IP=$1
+    else
+        echo "[ERROR] incorrect ROS_MASTER_IP provided $1, relaunch with correct IP"
+        exit 1
+    fi
 fi
 
 # Launch the nodes
