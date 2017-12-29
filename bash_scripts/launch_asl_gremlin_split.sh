@@ -15,9 +15,15 @@ IP=$(hostname -I | awk '{print $1}') # get the IP of the system
 # defining port number of Arduino which controls motors and gets encoder ticks
 arduino_port_num=/dev/ttyACM0
 
+# ROS_MASTER_IP address
+MASTER_IP=$IP
+if [ "$#" == "1" ]; then
+	MASTER_IP=$1
+fi
+
 # Launch the nodes
 export ROS_IP=$IP
-export ROS_MASTER_URI=http://$IP:11311
+export ROS_MASTER_URI=http://$MASTER_IP:11311
 
 session_name="asl_gremlin_session"
 
