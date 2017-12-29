@@ -1,6 +1,6 @@
 # asl_gremlin_pkg
 
-look at **project wiki** for configuration and setup.
+look at **[project wiki](https://github.com/muralivnv/asl_gremlin_pkg/wiki)** for configuration and setup.
 
 ### Publications
 
