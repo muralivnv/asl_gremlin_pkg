@@ -2,10 +2,20 @@
 
 import rosbag
 import matplotlib.pyplot as plt
-import sys
+import sys, os
 
 ## robot_name
-robot_name="/asl_gremlin1"
+file_path  = os.path.realpath(__file__)
+wrk_spc    = file_path[:file_path.find("src/") + len("src/")]
+
+robot_name_file = open( wrk_spc + "bash_scripts/this_robot_name.sh", "r")
+line_list = robot_name_file.readlines()
+robot_name_file.close()
+robot_name = line_list[-1].split('=')
+robot_name = ("/" + robot_name[1]).replace('"','')
+
+if robot_name == "" or robot_name == "/":
+	robot_name = "/asl_gremlin1"
 
 ## Read bagfile
 bag = rosbag.Bag(sys.argv[1])
